@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>金蝶云星空 ERP 零基础入门教程</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/themes/solarized-light.css">
+<link rel="stylesheet" href="assets/animations/animations.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="tpl-course-module" data-themes="solarized-light,corporate-clean,minimal-white,tokyo-night">
+<div class="deck">
+
+<!-- ==================== COVER ==================== -->
+<section class="slide full" data-title="封面">
+  <p class="kicker">ERP 零基础系统教程</p>
+  <h1 class="h1 mt-s">金蝶云星空<br><em>从入门到上手</em></h1>
+  <p class="lede mt-l" style="max-width:62ch">全面掌握金蝶云星空的模块架构与核心操作，覆盖财务、供应链、生产制造、全渠道等核心业务场景，帮你从零构建企业数字化管理思维。</p>
+  <div class="row mt-l" style="gap:16px">
+    <span class="pill-academic">~ 32 页 · 5 大模块</span>
+    <span class="pill-academic">零基础适用</span>
+    <span class="pill-academic">系统实操图解</span>
+  </div>
+  <div class="deck-footer"><span>金蝶云星空 · 入门教程 v1.0</span><span class="slide-number" data-current="1" data-total="32"></span></div>
+</section>
+
+<!-- ==================== COURSE MAP ==================== -->
+<section class="slide" data-title="课程导览">
+  <aside class="sidebar">
+    <div class="brand">云星空教程</div>
+    <h5>课程导览</h5>
+    <p class="dim" style="font-size:13px;line-height:1.6">本教程共 5 章，覆盖金蝶云星空核心业务模块，建议按顺序学习。</p>
+    <h5>学习建议</h5>
+    <p class="dim" style="font-size:13px;line-height:1.6">每章约 15-20 分钟，总计约 2 小时。配合系统实操效果更佳。</p>
+  </aside>
+  <div class="main">
+    <p class="kicker">课程总览</p>
+    <h2 class="h2 mt-s">五大模块学习路线图</h2>
+    <div class="stack mt-l" style="gap:12px">
+      <div class="concept-box" style="border-left:4px solid var(--accent)"><h4>第1章 · 金蝶云星空概述</h4><p class="dim">ERP 概念 → 金蝶产品线 → 云架构 → 系统导航 → 组织架构与基础资料</p></div>
+      <div class="concept-box" style="border-left:4px solid var(--accent-2)"><h4>第2章 · 财务管理</h4><p class="dim">总账 → 报表 → 应收应付 → 出纳 → 固定资产 → 智能会计平台</p></div>
+      <div class="concept-box" style="border-left:4px solid var(--accent-3)"><h4>第3章 · 供应链管理</h4><p class="dim">采购管理 → 销售管理 → 库存管理 → 组织间结算 → 信用管理</p></div>
+      <div class="concept-box" style="border-left:4px solid var(--good)"><h4>第4章 · 生产制造</h4><p class="dim">工程数据 → 计划管理 → 生产管理 → 车间管理 → 委外管理 → 成本管理</p></div>
+      <div class="concept-box" style="border-left:4px solid var(--warn)"><h4>第5章 · 全渠道与其他模块</h4><p class="dim">全渠道营销 → 人力资源 → 办公协同 → 移动端 → BOS平台</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 1: 金蝶云星空概述 ==================== -->
+
+<!-- 1.1 ERP 概念 -->
+<section class="slide" data-title="Chapter 1">
+  <aside class="sidebar">
+    <div class="brand">第1章 · 概述</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="current">理解ERP核心概念</li>
+      <li>认识金蝶产品线</li>
+      <li>了解云星空架构</li>
+      <li>掌握系统导航</li>
+      <li>熟悉基础资料管理</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第1章 · 01  ERP 概念</p>
+    <h2 class="h2 mt-s">什么是 ERP？</h2>
+    <p class="lede mt-m"><b>E</b>nterprise <b>R</b>esource <b>P</b>lanning — 企业资源计划。它不是一个软件，而是一套将企业所有业务环节（采购、销售、库存、生产、财务、HR）集成在一个统一平台上的管理思想与信息系统。</p>
+    <div class="grid g2 mt-l">
+      <div class="concept-box"><h4>数据集成</h4><p class="dim">各部门共享同一套主数据，消除信息孤岛。销售下单 → 自动触发采购/生产 → 实时反映到财务。</p></div>
+      <div class="concept-box"><h4>流程标准化</h4><p class="dim">将企业业务流程固化到系统中，减少人为差错，确保每笔业务有据可查、有迹可循。</p></div>
+    </div>
+    <div class="callout">
+      <b>核心价值.</b> 一个订单，从录入到收款，全程在同一个系统中流转，无需重复录入，数据实时同步。
+    </div>
+  </div>
+</section>
+
+<!-- 1.2 金蝶产品家族 -->
+<section class="slide" data-title="Chapter 1">
+  <aside class="sidebar">
+    <div class="brand">第1章 · 概述</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解ERP核心概念</li>
+      <li class="current">认识金蝶产品线</li>
+      <li>了解云星空架构</li>
+      <li>掌握系统导航</li>
+      <li>熟悉基础资料管理</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第1章 · 02  金蝶产品家族</p>
+    <h2 class="h2 mt-s">金蝶三大 ERP 产品线</h2>
+    <p class="lede mt-m">金蝶针对不同规模企业提供分层产品体系：</p>
+    <table class="info-table mt-m">
+      <tr><td>精斗云</td><td>小微企业和初创公司，财税一体化，SaaS 订阅模式</td></tr>
+      <tr><td style="color:var(--accent-2)">云星空</td><td style="color:var(--accent-2);font-weight:600">成长型企业首选 · 本教程主角 · 多组织、多核算体系、云+端混合部署</td></tr>
+      <tr><td>云苍穹</td><td>大型/超大型集团企业，PaaS 平台级，支持深度定制与生态集成</td></tr>
+    </table>
+    <div class="callout">
+      <b>云星空定位.</b> 覆盖财务、供应链、制造、全渠道、HR、办公等全场景，是成长型企业数字化转型的核心平台。
+    </div>
+  </div>
+</section>
+
+<!-- 1.3 B/S云架构 -->
+<section class="slide" data-title="Chapter 1">
+  <aside class="sidebar">
+    <div class="brand">第1章 · 概述</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解ERP核心概念</li>
+      <li class="done">认识金蝶产品线</li>
+      <li class="current">了解云星空架构</li>
+      <li>掌握系统导航</li>
+      <li>熟悉基础资料管理</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第1章 · 03  云星空架构</p>
+    <h2 class="h2 mt-s">B/S 架构：浏览器即客户端</h2>
+    <p class="lede mt-m">金蝶云星空采用 <b>B/S（Browser/Server）</b> 架构，用户只需浏览器即可登录使用，无需安装任何客户端软件。</p>
+    <div class="grid g2 mt-l">
+      <div class="concept-box"><h4>优势</h4><p class="dim">跨平台（Windows/Mac/Linux）、免安装、自动升级、外网可访问、移动办公</p></div>
+      <div class="concept-box"><h4>部署方式</h4><p class="dim">公有云（按需订阅）+ 私有云（本地部署）+ 混合云灵活组合</p></div>
+    </div>
+    <div class="flow mt-l">
+      <span class="step">浏览器</span><span class="arrow">→</span>
+      <span class="step">HTTPS</span><span class="arrow">→</span>
+      <span class="step">IIS/Web 服务器</span><span class="arrow">→</span>
+      <span class="step">应用服务器</span><span class="arrow">→</span>
+      <span class="step">SQL Server 数据库</span>
+    </div>
+  </div>
+</section>
+
+<!-- 1.4 系统界面导航 -->
+<section class="slide" data-title="Chapter 1">
+  <aside class="sidebar">
+    <div class="brand">第1章 · 概述</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解ERP核心概念</li>
+      <li class="done">认识金蝶产品线</li>
+      <li class="done">了解云星空架构</li>
+      <li class="current">掌握系统导航</li>
+      <li>熟悉基础资料管理</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第1章 · 04  系统导航</p>
+    <h2 class="h2 mt-s">主控台与常用功能区</h2>
+    <table class="info-table mt-m">
+      <tr><td>顶部菜单</td><td>功能模块切换：财务、供应链、制造、HR 等。右上角：消息中心、个人设置、退出登录。</td></tr>
+      <tr><td>左侧导航树</td><td>当前模块的功能菜单树，展开 → 子菜单 → 功能列表 / 报表。支持收藏常用功能。</td></tr>
+      <tr><td>我的工作台</td><td>待办任务、已办任务、审批流程集中管理。日常工作的入口。</td></tr>
+      <tr><td>快捷方式</td><td>收藏高频使用的单据入口（如采购订单新增、销售出库单等），提高效率。</td></tr>
+      <tr><td>搜索框</td><td>输入单据号 / 名称快速定位功能或单据，支持模糊搜索。</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- 1.5 基础资料与组织架构 -->
+<section class="slide" data-title="Chapter 1">
+  <aside class="sidebar">
+    <div class="brand">第1章 · 概述</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解ERP核心概念</li>
+      <li class="done">认识金蝶产品线</li>
+      <li class="done">了解云星空架构</li>
+      <li class="done">掌握系统导航</li>
+      <li class="current">熟悉基础资料管理</li>
+    </ul>
+    <h5>关键术语</h5>
+    <p class="dim" style="font-size:13px">组织 · 部门 · 物料 · 客户 · 供应商 · 科目 · 币别 · 计量单位</p>
+  </aside>
+  <div class="main">
+    <p class="kicker">第1章 · 05  基础资料</p>
+    <h2 class="h2 mt-s">组织架构与基础资料</h2>
+    <p class="lede mt-m">云星空是多组织架构系统，一个数据中心可以管理多个法人组织和业务组织。</p>
+    <div class="grid g2 mt-l">
+      <div class="concept-box"><h4>组织架构层级</h4><p class="dim">集团 → 公司（法人组织）→ 部门 → 岗位 → 员工。每个组织有独立的核算体系和业务范围。</p></div>
+      <div class="concept-box"><h4>基础资料</h4><p class="dim">物料、客户、供应商、科目、币别、计量单位等是系统的"字典"，是所有业务流程的基础数据来源。</p></div>
+    </div>
+    <div class="callout">
+      <b>分配策略.</b> 基础资料创建后需"分配"到各使用组织，一个集团创建，各子公司共享使用。
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 2: 财务管理 ==================== -->
+
+<!-- 2.1 总账管理 -->
+<section class="slide" data-title="Chapter 2">
+  <aside class="sidebar">
+    <div class="brand">第2章 · 财务</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="current">掌握总账凭证处理</li>
+      <li>学会报表查询分析</li>
+      <li>理解应收应付流程</li>
+      <li>掌握出纳日常操作</li>
+      <li>了解固定资产管理</li>
+      <li>理解智能会计平台</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第2章 · 01  总账管理</p>
+    <h2 class="h2 mt-s">总账：财务核算的核心</h2>
+    <p class="lede mt-m">总账模块是财务系统的枢纽，接收各业务模块生成的凭证，完成记账、结转和结账操作。</p>
+    <div class="stack mt-l" style="gap:10px">
+      <div class="concept-box"><h4>凭证录入与审核</h4><p class="dim">手工录入记账凭证（借/贷方科目+金额），或由业务模块（应收/应付/存货/资产等）自动生成凭证。凭证需经过审核后才能记账。</p></div>
+      <div class="concept-box"><h4>期末处理</h4><p class="dim">结转损益 → 期末调汇 → 结账。每月必须按时完成，结账后该期间数据锁定不可修改。</p></div>
+      <div class="concept-box"><h4>账簿查询</h4><p class="dim">总分类账、明细分类账、科目余额表、核算维度余额表，支持上查下钻（凭证→账簿→报表）。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2.2 报表系统 -->
+<section class="slide" data-title="Chapter 2">
+  <aside class="sidebar">
+    <div class="brand">第2章 · 财务</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">掌握总账凭证处理</li>
+      <li class="current">学会报表查询分析</li>
+      <li>理解应收应付流程</li>
+      <li>掌握出纳日常操作</li>
+      <li>了解固定资产管理</li>
+      <li>理解智能会计平台</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第2章 · 02  报表系统</p>
+    <h2 class="h2 mt-s">三大报表与自定义报表</h2>
+    <div class="grid g3 mt-m" style="gap:12px">
+      <div class="concept-box"><h4>资产负债表</h4><p class="dim">反映企业在某一时点的资产、负债和所有者权益状况。</p></div>
+      <div class="concept-box"><h4>利润表</h4><p class="dim">反映企业在一定期间的收入、费用和净利润。</p></div>
+      <div class="concept-box"><h4>现金流量表</h4><p class="dim">反映现金及现金等价物的流入与流出情况。</p></div>
+    </div>
+    <div class="callout">
+      <b>报表工具.</b> 云星空提供灵活的报表平台（类似 Excel 设计器），可根据企业需求自定义财务报表和管理报表，支持多组织合并报表。
+    </div>
+  </div>
+</section>
+
+<!-- 2.3 应收应付 -->
+<section class="slide" data-title="Chapter 2">
+  <aside class="sidebar">
+    <div class="brand">第2章 · 财务</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">掌握总账凭证处理</li>
+      <li class="done">学会报表查询分析</li>
+      <li class="current">理解应收应付流程</li>
+      <li>掌握出纳日常操作</li>
+      <li>了解固定资产管理</li>
+      <li>理解智能会计平台</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第2章 · 03  应收应付</p>
+    <h2 class="h2 mt-s">应收与应付管理</h2>
+    <p class="lede mt-m">应收、应付模块管理企业与客户、供应商之间的往来款项，是连接业务与财务的桥梁。</p>
+    <table class="info-table mt-m">
+      <tr><td>应收管理</td><td>销售出库 → 应收单 → 收款单 → 核销。支持预收款、应收冲应付、坏账处理。账龄分析表监控回款情况。</td></tr>
+      <tr><td>应付管理</td><td>采购入库 → 应付单 → 付款单 → 核销。支持预付款、应付冲应收。自动生成应付凭证传递到总账。</td></tr>
+      <tr><td>账龄分析</td><td>按客户/供应商维度显示未收/未付金额的时间分布（0-30天、31-60天、60-90天、90天以上）。</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- 2.4 出纳管理 -->
+<section class="slide" data-title="Chapter 2">
+  <aside class="sidebar">
+    <div class="brand">第2章 · 财务</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">掌握总账凭证处理</li>
+      <li class="done">学会报表查询分析</li>
+      <li class="done">理解应收应付流程</li>
+      <li class="current">掌握出纳日常操作</li>
+      <li>了解固定资产管理</li>
+      <li>理解智能会计平台</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第2章 · 04  出纳管理</p>
+    <h2 class="h2 mt-s">资金日常管理</h2>
+    <div class="stack mt-m" style="gap:10px">
+      <div class="concept-box"><h4>银行日记账与现金日记账</h4><p class="dim">记录每一笔银行和现金的流入流出，是出纳日常最核心的工作。可手工录入，也可从收/付款单自动生成。</p></div>
+      <div class="concept-box"><h4>银行对账</h4><p class="dim">将系统日记账与银行对账单逐笔勾对，生成余额调节表，确保账实相符。</p></div>
+      <div class="concept-box"><h4>票据管理</h4><p class="dim">管理汇票、本票、支票等票据的签发、背书、贴现、托收全生命周期。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2.5 固定资产 -->
+<section class="slide" data-title="Chapter 2">
+  <aside class="sidebar">
+    <div class="brand">第2章 · 财务</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">掌握总账凭证处理</li>
+      <li class="done">学会报表查询分析</li>
+      <li class="done">理解应收应付流程</li>
+      <li class="done">掌握出纳日常操作</li>
+      <li class="current">了解固定资产管理</li>
+      <li>理解智能会计平台</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第2章 · 05  固定资产</p>
+    <h2 class="h2 mt-s">资产全生命周期管理</h2>
+    <div class="flow mt-m">
+      <span class="step">新增卡片</span><span class="arrow">→</span>
+      <span class="step">折旧计提</span><span class="arrow">→</span>
+      <span class="step">变动记录</span><span class="arrow">→</span>
+      <span class="step">减值准备</span><span class="arrow">→</span>
+      <span class="step">清理报废</span>
+    </div>
+    <div class="grid g2 mt-l">
+      <div class="concept-box"><h4>折旧方法</h4><p class="dim">支持平均年限法、双倍余额递减法、年数总和法、工作量法等多种折旧方法，可按资产类别设置。</p></div>
+      <div class="concept-box"><h4>与总账对接</h4><p class="dim">每月折旧计提后自动生成折旧凭证传递到总账，固定资产对账确保卡片与总账数据一致。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2.6 智能会计平台 -->
+<section class="slide" data-title="Chapter 2">
+  <aside class="sidebar">
+    <div class="brand">第2章 · 财务</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">掌握总账凭证处理</li>
+      <li class="done">学会报表查询分析</li>
+      <li class="done">理解应收应付流程</li>
+      <li class="done">掌握出纳日常操作</li>
+      <li class="done">了解固定资产管理</li>
+      <li class="current">理解智能会计平台</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第2章 · 06  智能会计平台</p>
+    <h2 class="h2 mt-s">多核算体系与凭证自动化</h2>
+    <p class="lede mt-m">云星空的核心差异化优势：同一笔业务数据，可按不同会计准则自动生成多套凭证和报表。</p>
+    <div class="stack mt-m" style="gap:10px">
+      <div class="concept-box"><h4>多核算体系</h4><p class="dim">一套业务数据同时满足法人核算（对外的财务会计）和利润中心核算（对内的管理会计），并行不悖。</p></div>
+      <div class="concept-box"><h4>凭证模板</h4><p class="dim">配置业务单据到会计凭证的自动映射规则：按物料组/部门/客户等维度自动匹配科目，业务发生即生成凭证。</p></div>
+      <div class="concept-box"><h4>多账簿</h4><p class="dim">同一套数据可按中国大陆准则、香港准则、IFRS 等生成多套账簿，满足跨境合规需求。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 3: 供应链管理 ==================== -->
+
+<!-- 3.1 采购管理 -->
+<section class="slide" data-title="Chapter 3">
+  <aside class="sidebar">
+    <div class="brand">第3章 · 供应链</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="current">理解采购流程</li>
+      <li>掌握销售流程</li>
+      <li>熟悉库存管理</li>
+      <li>了解组织间结算</li>
+      <li>理解信用管理</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第3章 · 01  采购管理</p>
+    <h2 class="h2 mt-s">采购业务流程</h2>
+    <p class="lede mt-m">采购管理覆盖从需求到付款的全过程，核心单据流转如下：</p>
+    <div class="flow mt-m">
+      <span class="step">采购申请</span><span class="arrow">→</span>
+      <span class="step">采购订单</span><span class="arrow">→</span>
+      <span class="step">收料通知</span><span class="arrow">→</span>
+      <span class="step">采购入库</span><span class="arrow">→</span>
+      <span class="step">应付单</span><span class="arrow">→</span>
+      <span class="step">付款</span>
+    </div>
+    <div class="grid g2 mt-l">
+      <div class="concept-box"><h4>价格控制</h4><p class="dim">采购价格来源可设为供应商价目表、最新采购价、合同价等，超标需审批。</p></div>
+      <div class="concept-box"><h4>退料处理</h4><p class="dim">质检不合格 → 采购退料单 → 红字应付 → 冲减库存和往来账款。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3.2 销售管理 -->
+<section class="slide" data-title="Chapter 3">
+  <aside class="sidebar">
+    <div class="brand">第3章 · 供应链</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解采购流程</li>
+      <li class="current">掌握销售流程</li>
+      <li>熟悉库存管理</li>
+      <li>了解组织间结算</li>
+      <li>理解信用管理</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第3章 · 02  销售管理</p>
+    <h2 class="h2 mt-s">销售业务流程</h2>
+    <p class="lede mt-m">销售管理覆盖从报价到收款的全过程，核心单据流转如下：</p>
+    <div class="flow mt-m">
+      <span class="step">销售报价</span><span class="arrow">→</span>
+      <span class="step">销售订单</span><span class="arrow">→</span>
+      <span class="step">发货通知</span><span class="arrow">→</span>
+      <span class="step">销售出库</span><span class="arrow">→</span>
+      <span class="step">应收单</span><span class="arrow">→</span>
+      <span class="step">收款</span>
+    </div>
+    <table class="info-table mt-m">
+      <tr><td>价格与折扣</td><td>支持按客户/物料/数量阶梯定价，含税/不含税自动换算，折扣支持百分比和金额两种方式。</td></tr>
+      <tr><td>信用控制</td><td>下订单时自动检查客户信用额度，超出时需特批或预收款才能放行。</td></tr>
+      <tr><td>退货流程</td><td>销售退货单 → 红字应收 → 冲减收入和往来账款 → 退回库存。</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- 3.3 库存管理 -->
+<section class="slide" data-title="Chapter 3">
+  <aside class="sidebar">
+    <div class="brand">第3章 · 供应链</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解采购流程</li>
+      <li class="done">掌握销售流程</li>
+      <li class="current">熟悉库存管理</li>
+      <li>了解组织间结算</li>
+      <li>理解信用管理</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第3章 · 03  库存管理</p>
+    <h2 class="h2 mt-s">库存核心操作</h2>
+    <div class="grid g2 mt-m" style="gap:10px">
+      <div class="concept-box"><h4>入库类型</h4><p class="dim">采购入库、生产入库、委外入库、盘盈入库、其他入库</p></div>
+      <div class="concept-box"><h4>出库类型</h4><p class="dim">销售出库、生产领料、委外发料、盘亏出库、其他出库</p></div>
+      <div class="concept-box"><h4>库存盘点</h4><p class="dim">定期/不定期盘点，盘点方案 → 盘点表 → 盘盈/盘亏单 → 库存调整</p></div>
+      <div class="concept-box"><h4>批号与序列号</h4><p class="dim">物料可设批号管理（同一批次）或序列号管理（每件唯一），实现全程追溯</p></div>
+    </div>
+    <div class="callout">
+      <b>即时库存.</b> 实时查询任意仓库、任意物料的现有库存量、可用量、在途量，是供应链决策的基础。
+    </div>
+  </div>
+</section>
+
+<!-- 3.4 组织间结算 -->
+<section class="slide" data-title="Chapter 3">
+  <aside class="sidebar">
+    <div class="brand">第3章 · 供应链</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解采购流程</li>
+      <li class="done">掌握销售流程</li>
+      <li class="done">熟悉库存管理</li>
+      <li class="current">了解组织间结算</li>
+      <li>理解信用管理</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第3章 · 04  组织间结算</p>
+    <h2 class="h2 mt-s">多组织内部交易处理</h2>
+    <p class="lede mt-m">当集团公司内不同法人组织之间有采购、销售或跨组织调拨时，需要组织间结算来处理内部交易。</p>
+    <div class="stack mt-m" style="gap:10px">
+      <div class="concept-box"><h4>结算场景</h4><p class="dim">组织A向组织B采购物料、跨组织调拨、跨组织领料消耗、集中采购集中结算等。</p></div>
+      <div class="concept-box"><h4>加价规则</h4><p class="dim">可设置固定加价或百分比加价率，组织间交易自动生成双方的应收应付单据，计入各组织的独立账套。</p></div>
+      <div class="concept-box"><h4>结算清单</h4><p class="dim">期末生成组织间结算清单，汇总全部内部交易，自动创建内部应收应付单并传递至总账。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3.5 信用管理 -->
+<section class="slide" data-title="Chapter 3">
+  <aside class="sidebar">
+    <div class="brand">第3章 · 供应链</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解采购流程</li>
+      <li class="done">掌握销售流程</li>
+      <li class="done">熟悉库存管理</li>
+      <li class="done">了解组织间结算</li>
+      <li class="current">理解信用管理</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第3章 · 05  信用管理</p>
+    <h2 class="h2 mt-s">客户信用风险控制</h2>
+    <table class="info-table mt-m">
+      <tr><td>信用额度</td><td>为每个客户设置信用额度（可区分组织），超出额度时系统自动控制后续交易行为。</td></tr>
+      <tr><td>控制时点</td><td>销售订单保存 / 审核、发货通知、销售出库等环节均可设置信用检查点。</td></tr>
+      <tr><td>超额处理</td><td>选项：禁止交易 / 预警提示 / 需特批（走审批流）/ 预收款冲抵。</td></tr>
+      <tr><td>信用计算</td><td>信用占用 = 已出库未收款 + 已发货未出库 + 已下单未发货。可设置账期维度（如超过60天未收款自动停用信用）。</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- 3.6 供应链报表与分析 -->
+<section class="slide" data-title="Chapter 3">
+  <aside class="sidebar">
+    <div class="brand">第3章 · 供应链</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解采购流程</li>
+      <li class="done">掌握销售流程</li>
+      <li class="done">熟悉库存管理</li>
+      <li class="done">了解组织间结算</li>
+      <li class="done">理解信用管理</li>
+    </ul>
+    <h5>常用报表</h5>
+    <p class="dim" style="font-size:13px">库存台账 · 收发存汇总表 · 库龄分析 · 呆滞料分析 · 销售毛利表</p>
+  </aside>
+  <div class="main">
+    <p class="kicker">第3章 · 06  报表分析</p>
+    <h2 class="h2 mt-s">供应链关键报表</h2>
+    <div class="grid g2 mt-m" style="gap:10px">
+      <div class="concept-box"><h4>采购分析</h4><p class="dim">采购订单执行表（下单→入库→付款进度）、供应商价格对比、采购退货率统计</p></div>
+      <div class="concept-box"><h4>销售分析</h4><p class="dim">销售订单执行表（下单→出库→收款进度）、客户贡献排名、产品销售排行</p></div>
+      <div class="concept-box"><h4>库存分析</h4><p class="dim">库存周转率、库龄分析（呆滞料预警）、安全库存预警、收发存汇总</p></div>
+      <div class="concept-box"><h4>毛利分析</h4><p class="dim">按客户/物料/部门/业务员维度计算销售收入 − 销售成本 = 毛利，辅助决策</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 4: 生产制造 ==================== -->
+
+<!-- 4.1 工程数据 -->
+<section class="slide" data-title="Chapter 4">
+  <aside class="sidebar">
+    <div class="brand">第4章 · 制造</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="current">理解工程数据</li>
+      <li>掌握计划运算</li>
+      <li>熟悉生产管理</li>
+      <li>了解车间管理</li>
+      <li>理解委外管理</li>
+      <li>掌握成本核算</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第4章 · 01  工程数据</p>
+    <h2 class="h2 mt-s">BOM + 工艺路线</h2>
+    <p class="lede mt-m">工程数据是生产制造的"配方"和"步骤说明"：</p>
+    <div class="grid g2 mt-m">
+      <div class="concept-box"><h4>BOM（物料清单）</h4><p class="dim">定义产品由哪些物料组成，层级结构：成品 → 半成品 → 原材料。支持替代料、可配置BOM。</p></div>
+      <div class="concept-box"><h4>工艺路线</h4><p class="dim">定义产品加工的顺序步骤：工序1 → 工序2 → …… → 完工。每道工序指定工作中心、标准工时。</p></div>
+    </div>
+    <div class="callout">
+      <b>数据源头.</b> BOM 和工艺路线是 MRP 运算、生产发料、成本核算的基础，数据准确性直接影响后续所有环节。
+    </div>
+  </div>
+</section>
+
+<!-- 4.2 计划管理 -->
+<section class="slide" data-title="Chapter 4">
+  <aside class="sidebar">
+    <div class="brand">第4章 · 制造</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解工程数据</li>
+      <li class="current">掌握计划运算</li>
+      <li>熟悉生产管理</li>
+      <li>了解车间管理</li>
+      <li>理解委外管理</li>
+      <li>掌握成本核算</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第4章 · 02  计划管理</p>
+    <h2 class="h2 mt-s">MRP / MPS 运算逻辑</h2>
+    <div class="stack mt-m" style="gap:10px">
+      <div class="concept-box"><h4>MPS（主生产计划）</h4><p class="dim">对关键成品/半成品做计划，考虑销售预测、销售订单、库存，输出生产计划和采购建议。</p></div>
+      <div class="concept-box"><h4>MRP（物料需求计划）</h4><p class="dim">基于 BOM 层层展开，计算所有物料的需求量和需求时间：要什么？要多少？什么时候要？什么时候订？</p></div>
+      <div class="concept-box"><h4>运算逻辑</h4><p class="dim">毛需求 − 现有库存 − 在途量 + 安全库存 = 净需求 → 生成生产计划订单 / 采购申请。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4.3 生产管理 -->
+<section class="slide" data-title="Chapter 4">
+  <aside class="sidebar">
+    <div class="brand">第4章 · 制造</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解工程数据</li>
+      <li class="done">掌握计划运算</li>
+      <li class="current">熟悉生产管理</li>
+      <li>了解车间管理</li>
+      <li>理解委外管理</li>
+      <li>掌握成本核算</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第4章 · 03  生产管理</p>
+    <h2 class="h2 mt-s">生产订单全流程</h2>
+    <div class="flow mt-m">
+      <span class="step">计划订单</span><span class="arrow">→</span>
+      <span class="step">生产订单</span><span class="arrow">→</span>
+      <span class="step">生产领料</span><span class="arrow">→</span>
+      <span class="step">工序汇报</span><span class="arrow">→</span>
+      <span class="step">完工入库</span>
+    </div>
+    <div class="grid g2 mt-l">
+      <div class="concept-box"><h4>齐套分析</h4><p class="dim">开工前检查物料是否齐全，缺料时标红预警，避免停工待料。</p></div>
+      <div class="concept-box"><h4>倒冲领料</h4><p class="dim">完工入库时按 BOM 标准用量自动扣减库存，适合流水线连续生产模式。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4.4 车间管理 -->
+<section class="slide" data-title="Chapter 4">
+  <aside class="sidebar">
+    <div class="brand">第4章 · 制造</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解工程数据</li>
+      <li class="done">掌握计划运算</li>
+      <li class="done">熟悉生产管理</li>
+      <li class="current">了解车间管理</li>
+      <li>理解委外管理</li>
+      <li>掌握成本核算</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第4章 · 04  车间管理</p>
+    <h2 class="h2 mt-s">工序流转与进度跟踪</h2>
+    <div class="stack mt-m" style="gap:10px">
+      <div class="concept-box"><h4>工序计划</h4><p class="dim">生产订单审核后按工艺路线生成工序计划，明确每道工序的顺序、工作中心、计划工时。</p></div>
+      <div class="concept-box"><h4>工序汇报</h4><p class="dim">工人完成工序后报工：合格数量、废品数量、实际工时。系统自动计算完工进度和在制品数量。</p></div>
+      <div class="concept-box"><h4>工序转移</h4><p class="dim">支持顺序流转（完成A工序才能开始B）和并行流转（多工序同时加工），灵活适应不同生产模式。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4.5 委外管理 -->
+<section class="slide" data-title="Chapter 4">
+  <aside class="sidebar">
+    <div class="brand">第4章 · 制造</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解工程数据</li>
+      <li class="done">掌握计划运算</li>
+      <li class="done">熟悉生产管理</li>
+      <li class="done">了解车间管理</li>
+      <li class="current">理解委外管理</li>
+      <li>掌握成本核算</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第4章 · 05  委外管理</p>
+    <h2 class="h2 mt-s">外包加工全流程</h2>
+    <div class="flow mt-m">
+      <span class="step">委外订单</span><span class="arrow">→</span>
+      <span class="step">委外发料</span><span class="arrow">→</span>
+      <span class="step">加工完工</span><span class="arrow">→</span>
+      <span class="step">委外入库</span><span class="arrow">→</span>
+      <span class="step">委外应付</span>
+    </div>
+    <div class="callout mt-l">
+      <b>双库存管理.</b> 委外发料后物料进入"委外仓"（在途），完工入库时自动核销已发物料用量，剩余物料退回或结转。
+    </div>
+  </div>
+</section>
+
+<!-- 4.6 成本管理 -->
+<section class="slide" data-title="Chapter 4">
+  <aside class="sidebar">
+    <div class="brand">第4章 · 制造</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">理解工程数据</li>
+      <li class="done">掌握计划运算</li>
+      <li class="done">熟悉生产管理</li>
+      <li class="done">了解车间管理</li>
+      <li class="done">理解委外管理</li>
+      <li class="current">掌握成本核算</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第4章 · 06  成本管理</p>
+    <h2 class="h2 mt-s">生产成本核算</h2>
+    <p class="lede mt-m">产品成本 = 材料成本 + 人工成本 + 制造费用，云星空支持多种核算方法：</p>
+    <div class="grid g2 mt-m" style="gap:10px">
+      <div class="concept-box"><h4>品种法</h4><p class="dim">按产品品种归集成本，适合大批量单步骤生产</p></div>
+      <div class="concept-box"><h4>分批法</h4><p class="dim">按生产批次/订单归集成本，适合小批量多品种生产</p></div>
+      <div class="concept-box"><h4>分步法</h4><p class="dim">按生产步骤逐步结转，适合多工序连续加工</p></div>
+      <div class="concept-box"><h4>费用分配</h4><p class="dim">制造费用可按工时/产量/机时等标准分配到各产品</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 5: 全渠道与其他 ==================== -->
+
+<!-- 5.1 全渠道营销 -->
+<section class="slide" data-title="Chapter 5">
+  <aside class="sidebar">
+    <div class="brand">第5章 · 扩展</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="current">了解全渠道营销</li>
+      <li>认识人力资源管理</li>
+      <li>熟悉办公协同</li>
+      <li>了解移动端与BOS</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第5章 · 01  全渠道营销</p>
+    <h2 class="h2 mt-s">线上线下统一管理</h2>
+    <p class="lede mt-m">全渠道营销模块将线上电商、线下门店、分销商等不同渠道的订单统一接入 ERP 系统处理：</p>
+    <div class="stack mt-m" style="gap:10px">
+      <div class="concept-box"><h4>渠道接入</h4><p class="dim">对接淘宝、京东、拼多多、抖音等电商平台，以及自营小程序/APP，订单自动同步至云星空。</p></div>
+      <div class="concept-box"><h4>订单中心</h4><p class="dim">全渠道订单统一处理：审单 → 锁库 → 分仓发货 → 物流追踪，防超卖。</p></div>
+      <div class="concept-box"><h4>会员管理</h4><p class="dim">全渠道会员统一视图，积分/等级/优惠券跨渠道通用，支持精准营销。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5.2 人力资源管理 -->
+<section class="slide" data-title="Chapter 5">
+  <aside class="sidebar">
+    <div class="brand">第5章 · 扩展</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">了解全渠道营销</li>
+      <li class="current">认识人力资源管理</li>
+      <li>熟悉办公协同</li>
+      <li>了解移动端与BOS</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第5章 · 02  人力资源管理</p>
+    <h2 class="h2 mt-s">HR 核心功能</h2>
+    <table class="info-table mt-m">
+      <tr><td>组织人事</td><td>组织架构管理、岗位编制、员工档案（入职→转正→调动→离职）、合同管理。</td></tr>
+      <tr><td>薪酬管理</td><td>工资项目、个税计算、社保公积金、薪酬核算与发放，支持多工资方案。</td></tr>
+      <tr><td>考勤管理</td><td>排班方案、签卡记录、加班请假、考勤统计，支持对接考勤设备。</td></tr>
+      <tr><td>招聘与绩效</td><td>招聘流程管理、面试跟踪、绩效目标设定与评估。</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- 5.3 办公协同 -->
+<section class="slide" data-title="Chapter 5">
+  <aside class="sidebar">
+    <div class="brand">第5章 · 扩展</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">了解全渠道营销</li>
+      <li class="done">认识人力资源管理</li>
+      <li class="current">熟悉办公协同</li>
+      <li>了解移动端与BOS</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第5章 · 03  办公协同</p>
+    <h2 class="h2 mt-s">云之家集成与审批流</h2>
+    <div class="grid g2 mt-m">
+      <div class="concept-box"><h4>审批流引擎</h4><p class="dim">内置工作流引擎，支持审批、会签、条件分支、驳回、转交、加签等复杂流程，审批结果自动回写业务单据状态。</p></div>
+      <div class="concept-box"><h4>云之家</h4><p class="dim">金蝶旗下的企业协作平台，与云星空深度集成：移动审批、即时通讯、文件共享、日程管理。</p></div>
+    </div>
+    <div class="callout">
+      <b>移动审批.</b> 管理员通过手机即可审批采购、报销、请假等单据，大幅提升审批效率。
+    </div>
+  </div>
+</section>
+
+<!-- 5.4 移动端与BOS平台 -->
+<section class="slide" data-title="Chapter 5">
+  <aside class="sidebar">
+    <div class="brand">第5章 · 扩展</div>
+    <h5>学习目标</h5>
+    <ul class="obj-list">
+      <li class="done">了解全渠道营销</li>
+      <li class="done">认识人力资源管理</li>
+      <li class="done">熟悉办公协同</li>
+      <li class="current">了解移动端与BOS</li>
+    </ul>
+  </aside>
+  <div class="main">
+    <p class="kicker">第5章 · 04  移动端与BOS平台</p>
+    <h2 class="h2 mt-s">移动应用与二次开发</h2>
+    <div class="stack mt-m" style="gap:10px">
+      <div class="concept-box"><h4>移动端</h4><p class="dim">云星空 App（iOS/Android）：销售下单、库存查询、审批处理、报表查看。移动端界面自动适配，无需额外开发。</p></div>
+      <div class="concept-box"><h4>BOS 平台</h4><p class="dim">金蝶的业务开发平台：可视化的表单设计器、报表设计器、流程设计器。支持新增自定义单据、扩展标准字段、Python 插件开发，满足个性化需求。</p></div>
+      <div class="concept-box"><h4>集成能力</h4><p class="dim">开放 REST API + WebService，支持与 OA / MES / WMS / PLM 等异构系统对接，支持 EDI 电子数据交换。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SUMMARY ==================== -->
+
+<!-- Summary: 全模块串联案例 -->
+<section class="slide full" data-title="串联案例">
+  <p class="kicker">案例实战 · 全模块串联</p>
+  <h1 class="h1 mt-s">一笔订单的<em>全流程之旅</em></h1>
+  <p class="lede mt-l" style="max-width:70ch">看一笔销售业务如何贯穿企业五大模块：</p>
+  <div style="font-size:16px;color:var(--text-2);line-height:2;max-width:72ch;margin-top:24px">
+    <p><b style="color:var(--accent)">①</b> 客户在电商平台下单 → <b>全渠道营销</b> 接收订单同步至云星空</p>
+    <p><b style="color:var(--accent-2)">②</b> 系统进行信用检查 → 自动生成 <b>销售订单</b>（SD）</p>
+    <p><b style="color:var(--accent-3)">③</b> MRP 运算发现成品库存不足 → 生成 <b>生产计划订单</b>（PP）</p>
+    <p><b style="color:var(--good)">④</b> 生产领料、工序加工、完工入库 → <b>生产+车间+成本</b> 协同</p>
+    <p><b style="color:var(--warn)">⑤</b> 部分物料库存不足 → 自动生成 <b>采购申请</b>（MM）→ 采购入库</p>
+    <p><b style="color:var(--accent)">⑥</b> 仓库发货出库 → 生成 <b>应收单</b> → 客户付款 → <b>出纳</b> 记录到账</p>
+    <p style="color:var(--accent-2)"><b>⑦</b> 全部单据自动生成凭证 → <b>总账</b> 记账 → <b>报表</b> 实时反映</p>
+  </div>
+</section>
+
+<!-- Summary: 课后自测 MCQ -->
+<section class="slide" data-title="课后自测">
+  <aside class="sidebar">
+    <div class="brand">课后检验</div>
+    <h5>自测说明</h5>
+    <p class="dim" style="font-size:13px">以下5道选择题涵盖五大模块核心知识点，检测你的学习成果。每题只有一个正确答案。</p>
+    <h5>参考答案</h5>
+    <p class="dim" style="font-size:13px">1-C · 2-B · 3-D · 4-A · 5-C</p>
+  </aside>
+  <div class="main">
+    <p class="kicker">课后自测</p>
+    <h2 class="h2 mt-s">五个核心问题</h2>
+
+    <div class="mt-m" style="margin-bottom:12px">
+      <p style="margin:0 0 6px;color:var(--text-1);font-weight:700">1. 金蝶云星空采用什么架构，用户无需安装客户端？</p>
+      <div class="mcq"><div class="letter">A</div><div>C/S 架构 · 需安装桌面客户端</div></div>
+      <div class="mcq"><div class="letter">B</div><div>单机版 · 仅限本机使用</div></div>
+      <div class="mcq correct"><div class="letter">C</div><div>B/S 架构 · 浏览器登录即可</div></div>
+      <div class="mcq"><div class="letter">D</div><div>终端版 · 命令行操作</div></div>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <p style="margin:0 0 6px;color:var(--text-1);font-weight:700">2. 以下哪项不属于财务管理模块的核心内容？</p>
+      <div class="mcq"><div class="letter">A</div><div>总账凭证录入与审核</div></div>
+      <div class="mcq correct"><div class="letter">B</div><div>物料清单（BOM）管理</div></div>
+      <div class="mcq"><div class="letter">C</div><div>应收应付往来管理</div></div>
+      <div class="mcq"><div class="letter">D</div><div>固定资产折旧计提</div></div>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <p style="margin:0 0 6px;color:var(--text-1);font-weight:700">3. 采购管理的标准流程顺序是？</p>
+      <div class="mcq"><div class="letter">A</div><div>采购订单 → 付款 → 入库 → 采购申请</div></div>
+      <div class="mcq"><div class="letter">B</div><div>采购申请 → 付款 → 订单 → 入库</div></div>
+      <div class="mcq"><div class="letter">C</div><div>采购入库 → 申请 → 订单 → 付款</div></div>
+      <div class="mcq correct"><div class="letter">D</div><div>采购申请 → 订单 → 入库 → 应付 → 付款</div></div>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <p style="margin:0 0 6px;color:var(--text-1);font-weight:700">4. MRP运算的核心公式是？</p>
+      <div class="mcq correct"><div class="letter">A</div><div>净需求 = 毛需求 − 库存 − 在途 + 安全库存</div></div>
+      <div class="mcq"><div class="letter">B</div><div>净需求 = 毛需求 + 库存 + 在途</div></div>
+      <div class="mcq"><div class="letter">C</div><div>净需求 = 订单量 − 入库量</div></div>
+      <div class="mcq"><div class="letter">D</div><div>净需求 = 销售量 − 采购量</div></div>
+    </div>
+
+    <div>
+      <p style="margin:0 0 6px;color:var(--text-1);font-weight:700">5. BOS平台的主要用途是？</p>
+      <div class="mcq"><div class="letter">A</div><div>手机端审批功能</div></div>
+      <div class="mcq"><div class="letter">B</div><div>电商平台对接</div></div>
+      <div class="mcq correct"><div class="letter">C</div><div>可视化二次开发：自定义单据、报表、流程</div></div>
+      <div class="mcq"><div class="letter">D</div><div>财务报表生成</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== THANKS ==================== -->
+
+<section class="slide full" data-title="结语">
+  <p class="kicker">END OF COURSE</p>
+  <h1 class="h1 mt-s">恭喜完成<br><em>金蝶云星空入门之旅</em></h1>
+  <p class="lede mt-l" style="max-width:62ch">你已经掌握了云星空五大核心模块的基础知识。接下来建议在测试环境中登录系统，按照本教程的流程实际操作一遍——动手实践是掌握 ERP 的唯一捷径。</p>
+  <div class="row mt-l" style="gap:16px">
+    <span class="pill-academic">下步：动手实操</span>
+    <span class="pill-academic">进阶：深入各模块高级功能</span>
+    <span class="pill-academic">扩展：BOS 平台二次开发</span>
+  </div>
+  <div class="deck-footer"><span>金蝶云星空 · 入门教程</span><span class="slide-number"></span></div>
+</section>
+
+</div>
+<script src="assets/runtime.js"></script>
+</body>
+</html>
