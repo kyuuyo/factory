@@ -1,0 +1,55 @@
+/* github-pages-intro — tokyo-night layout */
+.tpl-ghp{font-family:'Inter','Noto Sans SC',sans-serif}
+.tpl-ghp .slide{padding:64px 80px;background:var(--bg);display:grid;grid-template-columns:1fr;align-content:start}
+.tpl-ghp .slide.col2{grid-template-columns:1fr 1fr;gap:48px;align-content:center}
+.tpl-ghp .slide.full{display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.tpl-ghp .h1{font-family:'Inter',sans-serif;font-size:74px;line-height:1.04;font-weight:800;letter-spacing:-.02em;color:var(--text-1)}
+.tpl-ghp .h2{font-family:'Inter',sans-serif;font-size:42px;line-height:1.12;font-weight:700;color:var(--text-1)}
+.tpl-ghp .h3{font-size:22px;font-weight:700;color:var(--text-1)}
+.tpl-ghp .kicker{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.12em;text-transform:uppercase}
+.tpl-ghp .lede{font-size:20px;color:var(--text-2);line-height:1.7;max-width:72ch}
+.tpl-ghp .slide.full .h1{font-size:88px}
+
+/* card */
+.tpl-ghp .card{border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;background:var(--surface)}
+.tpl-ghp .card h4{font-size:18px;font-weight:700;color:var(--text-1);margin:0 0 6px}
+.tpl-ghp .card p{color:var(--text-2);font-size:14px;line-height:1.6;margin:0}
+
+/* grid */
+.tpl-ghp .card-grid{display:grid;gap:14px}
+.tpl-ghp .card-grid.g2{grid-template-columns:1fr 1fr}
+.tpl-ghp .card-grid.g3{grid-template-columns:1fr 1fr 1fr}
+
+/* feature list */
+.tpl-ghp .flist{list-style:none;padding:0;margin:0}
+.tpl-ghp .flist li{padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-2);line-height:1.7;display:flex;gap:12px;font-size:16px}
+.tpl-ghp .flist li::before{content:"▸";color:var(--accent);flex:none;font-weight:700}
+.tpl-ghp .flist li b{color:var(--text-1)}
+
+/* code */
+.tpl-ghp .code-block{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text-1);line-height:1.8;overflow:auto}
+.tpl-ghp .code-block .cmt{color:var(--text-3)}
+.tpl-ghp .code-block .hl{color:var(--accent)}
+
+/* pill */
+.tpl-ghp .pill{display:inline-block;padding:3px 12px;border-radius:var(--radius-sm);background:var(--surface-2);border:1px solid var(--border);font-size:12px;color:var(--text-2);font-family:'JetBrains Mono',monospace}
+
+/* step flow */
+.tpl-ghp .steps{display:flex;gap:0;margin-top:20px}
+.tpl-ghp .steps .step{flex:1;padding:20px 16px;border:1px solid var(--border);text-align:center;border-right:none}
+.tpl-ghp .steps .step:last-child{border-right:1px solid var(--border)}
+.tpl-ghp .steps .step .n{font-size:32px;font-weight:800;color:var(--accent)}
+.tpl-ghp .steps .step .t{font-size:15px;font-weight:700;color:var(--text-1);margin-top:6px}
+.tpl-ghp .steps .step .d{font-size:12px;color:var(--text-3);margin-top:4px;line-height:1.5}
+
+/* table */
+.tpl-ghp .info-table{width:100%;border-collapse:collapse;font-size:15px;margin-top:16px}
+.tpl-ghp .info-table td{padding:10px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.6;color:var(--text-2)}
+.tpl-ghp .info-table td:first-child{font-weight:700;color:var(--text-1);white-space:nowrap;width:130px}
+.tpl-ghp .info-table tr:last-child td{border-bottom:none}
+
+/* callout */
+.tpl-ghp .callout{border-left:4px solid var(--accent);background:var(--surface-2);padding:18px 22px;border-radius:0 var(--radius) var(--radius) 0;margin-top:20px;font-size:15px;color:var(--text-2);line-height:1.6}
+.tpl-ghp .callout b{color:var(--accent)}
+
+.tpl-ghp .notes{display:none}
