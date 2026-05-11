@@ -1,0 +1,66 @@
+/* mfg-digital-systems — engineering-whiteprint layout */
+.tpl-mfg{font-family:'Inter','Noto Sans SC',sans-serif}
+.tpl-mfg .slide{padding:64px 80px;background:var(--bg);display:grid;grid-template-columns:1fr;align-content:start}
+.tpl-mfg .slide.half{grid-template-columns:1fr 1fr;gap:48px;align-content:center}
+.tpl-mfg .slide.full{display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.tpl-mfg .h1{font-family:'JetBrains Mono','Inter',monospace;font-size:72px;line-height:1.06;font-weight:700;letter-spacing:-.01em;color:var(--text-1);text-transform:uppercase}
+.tpl-mfg .h2{font-family:'JetBrains Mono','Inter',monospace;font-size:42px;line-height:1.15;font-weight:700;color:var(--text-1)}
+.tpl-mfg .h3{font-family:'JetBrains Mono','Inter',monospace;font-size:24px;font-weight:600;color:var(--text-1)}
+.tpl-mfg .kicker{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent-2);letter-spacing:.15em;text-transform:uppercase}
+.tpl-mfg .lede{font-size:20px;color:var(--text-2);line-height:1.7;max-width:72ch}
+.tpl-mfg .slide.full .h1{font-size:84px}
+/* system card */
+.tpl-mfg .sys-card{border:1.5px solid var(--border-strong);padding:28px 32px;background:var(--surface);font-size:14px}
+.tpl-mfg .sys-card h4{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--text-1);margin:0 0 8px}
+.tpl-mfg .sys-card .tag{display:inline-block;padding:2px 10px;border:1px solid var(--accent-2);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent-2);letter-spacing:.05em;white-space:nowrap}
+.tpl-mfg .sys-card ul{margin:10px 0 0;padding:0 0 0 18px;color:var(--text-2);line-height:1.9}
+/* grid system cards */
+.tpl-mfg .card-grid{display:grid;gap:16px}
+.tpl-mfg .card-grid.g2{grid-template-columns:1fr 1fr}
+.tpl-mfg .card-grid.g3{grid-template-columns:1fr 1fr 1fr}
+.tpl-mfg .card-grid.g4{grid-template-columns:1fr 1fr 1fr 1fr}
+/* ISA-95 pyramid */
+.tpl-mfg .pyramid{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:32px}
+.tpl-mfg .pyramid .layer{padding:16px 0;text-align:center;border:1.5px solid var(--border-strong);background:var(--surface-2);font-family:'JetBrains Mono',monospace;width:100%}
+.tpl-mfg .pyramid .layer:nth-child(1){width:40%}
+.tpl-mfg .pyramid .layer:nth-child(2){width:52%}
+.tpl-mfg .pyramid .layer:nth-child(3){width:64%}
+.tpl-mfg .pyramid .layer:nth-child(4){width:76%}
+.tpl-mfg .pyramid .layer:nth-child(5){width:88%}
+.tpl-mfg .pyramid .layer:nth-child(6){width:100%}
+.tpl-mfg .pyramid .layer .lvl{font-size:11px;font-weight:600;color:var(--accent-2);letter-spacing:.1em}
+.tpl-mfg .pyramid .layer .name{font-size:18px;font-weight:700;color:var(--text-1);margin-top:4px}
+.tpl-mfg .pyramid .layer .sub{font-size:13px;color:var(--text-2);margin-top:2px}
+.tpl-mfg .pyramid .layer.hl{background:rgba(10,30,70,.04);border-color:var(--accent-2)}
+/* flow row */
+.tpl-mfg .flow-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:20px}
+.tpl-mfg .flow-row .node{padding:10px 20px;border:1.5px solid var(--border-strong);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--text-1);white-space:nowrap}
+.tpl-mfg .flow-row .node.hl{border-color:var(--accent-2);color:var(--accent-2)}
+.tpl-mfg .flow-row .arr{font-size:20px;color:var(--text-3);font-weight:700}
+/* feature list */
+.tpl-mfg .feat-list{list-style:none;padding:0;margin:0}
+.tpl-mfg .feat-list li{padding:8px 0;border-bottom:1px solid var(--border);color:var(--text-2);line-height:1.6;display:flex;gap:12px}
+.tpl-mfg .feat-list li::before{content:"▹";color:var(--accent-2);flex:none;font-weight:700}
+.tpl-mfg .feat-list li b{color:var(--text-1)}
+/* integration diagram */
+.tpl-mfg .int-diagram{display:flex;justify-content:center;align-items:center;gap:0;margin-top:24px}
+.tpl-mfg .int-diagram .hub{width:160px;height:160px;border:2px solid var(--border-strong);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:18px;color:var(--text-1);text-align:center}
+.tpl-mfg .int-diagram .ring{position:absolute}
+/* data table */
+.tpl-mfg .spec-table{width:100%;border-collapse:collapse;font-size:14px}
+.tpl-mfg .spec-table th{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--accent-2);text-align:left;padding:8px 14px;border-bottom:2px solid var(--border-strong);letter-spacing:.08em}
+.tpl-mfg .spec-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.6;color:var(--text-2)}
+.tpl-mfg .spec-table td:first-child{font-weight:600;color:var(--text-1);white-space:nowrap}
+/* phase timeline */
+.tpl-mfg .phases{display:flex;gap:0;margin-top:24px}
+.tpl-mfg .phases .phase{flex:1;padding:24px 20px;border:1.5px solid var(--border-strong);border-left:none;text-align:center}
+.tpl-mfg .phases .phase:first-child{border-left:1.5px solid var(--border-strong)}
+.tpl-mfg .phases .phase .num{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;color:var(--accent-2)}
+.tpl-mfg .phases .phase .label{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--text-1);margin-top:8px}
+.tpl-mfg .phases .phase .desc{font-size:13px;color:var(--text-3);margin-top:6px;line-height:1.5}
+/* pill */
+.tpl-mfg .pill-mono{display:inline-block;padding:3px 10px;border:1px solid var(--border-strong);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2)}
+/* section divider */
+.tpl-mfg .section-div{border-bottom:1px solid var(--border-strong);padding-bottom:12px;margin-bottom:20px}
+/* notes */
+.tpl-mfg .notes{display:none}
