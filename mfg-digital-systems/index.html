@@ -12,40 +12,42 @@
 <body class="tpl-mfg" data-themes="engineering-whiteprint,blueprint,tokyo-night">
 <div class="deck">
 
-<!-- ========== 1. COVER ========== -->
+<!-- ====== 1. COVER ====== -->
 <section class="slide full" data-title="封面">
   <p class="kicker">MANUFACTURING DIGITALIZATION</p>
   <h1 class="h1 mt-s">制造业数字化<br><span style="color:var(--accent-2)">系统全景图</span></h1>
-  <p class="lede mt-l">从设备层到决策层，全面解析制造企业数字化转型所需的 12 类核心系统及其协作关系。</p>
-  <div class="row mt-l" style="gap:16px">
-    <span class="pill-mono">ERP · MES · PLM · WMS</span>
-    <span class="pill-mono">SCADA · IoT · APS · QMS</span>
-    <span class="pill-mono">EAM · SRM · BI · DT</span>
+  <p class="lede mt-l">从设备层到决策层，13 类核心系统逐一详解 —— 覆盖定位、核心能力、代表产品、集成关系。</p>
+  <div class="row mt-l" style="gap:12px">
+    <span class="pill-mono">ERP</span><span class="pill-mono">PLM</span><span class="pill-mono">MES</span>
+    <span class="pill-mono">WMS</span><span class="pill-mono">SCADA</span><span class="pill-mono">IIoT</span>
+    <span class="pill-mono">APS</span><span class="pill-mono">QMS</span><span class="pill-mono">EAM</span>
+    <span class="pill-mono">SRM</span><span class="pill-mono">CRM</span><span class="pill-mono">BI</span>
+    <span class="pill-mono">DT</span>
   </div>
-  <div class="deck-footer" style="margin-top:48px"><span style="color:var(--text-3)">制造企业数字化建设参考指南</span><span class="slide-number" data-current="1" data-total="16"></span></div>
+  <div class="deck-footer" style="margin-top:48px"><span style="color:var(--text-3)">制造企业数字化建设参考指南</span><span class="slide-number" data-current="1" data-total="18"></span></div>
 </section>
 
-<!-- ========== 2. ISA-95 PYRAMID ========== -->
+<!-- ====== 2. ISA-95 PYRAMID ====== -->
 <section class="slide full" data-title="ISA-95金字塔">
   <p class="kicker">ARCHITECTURE OVERVIEW</p>
   <h2 class="h2 mt-s">ISA-95 自动化金字塔</h2>
-  <p class="lede mt-s" style="font-size:16px">国际标准 ISA-95 将制造企业系统分为 5 个层级，从现场设备到企业决策逐级向上。</p>
+  <p class="lede mt-s" style="font-size:15px">国际标准 ISA-95 将制造企业系统分为 5 个层级，从设备层到企业决策层逐级向上。本教程覆盖的 13 类系统主要分布在 Level 2-4。</p>
 
   <div class="pyramid">
     <div class="layer">
       <div class="lvl">LEVEL 4 · 企业层</div>
       <div class="name">ERP · PLM · BI · SRM · CRM</div>
-      <div class="sub">企业资源计划 · 产品生命周期 · 商业智能</div>
+      <div class="sub">企业资源 · 产品生命周期 · 商业智能 · 客户/供应商关系</div>
     </div>
     <div class="layer hl">
       <div class="lvl">LEVEL 3 · 制造运营层</div>
-      <div class="name">MES / MOM · WMS · QMS · APS · EAM</div>
-      <div class="sub">制造执行 · 仓储管理 · 质量管理 · 排程 · 设备</div>
+      <div class="name">MES/MOM · WMS · QMS · APS · EAM</div>
+      <div class="sub">制造执行 · 仓储管理 · 质量 · 排程 · 设备资产</div>
     </div>
     <div class="layer">
       <div class="lvl">LEVEL 2 · 监控层</div>
-      <div class="name">SCADA · HMI · DCS</div>
-      <div class="sub">数据采集与监视控制 · 人机界面 · 集散控制</div>
+      <div class="name">SCADA · HMI · DCS · IIoT 平台</div>
+      <div class="sub">数据采集与监视控制 · 人机界面 · 工业物联网</div>
     </div>
     <div class="layer">
       <div class="lvl">LEVEL 1 · 控制层</div>
@@ -54,370 +56,313 @@
     </div>
     <div class="layer">
       <div class="lvl">LEVEL 0 · 现场层</div>
-      <div class="name">传感器 · 执行器 · 电机 · 传送带 · 扫码枪</div>
+      <div class="name">传感器 · 执行器 · 电机 · 传送带 · 扫码枪 · RFID</div>
       <div class="sub">物理设备与信号采集</div>
     </div>
-    <div style="text-align:center;margin-top:8px;font-size:12px;color:var(--text-3);font-family:'JetBrains Mono',monospace">
-      ▲ 层级越高数据量越小、决策影响越大 ｜ ▼ 层级越低实时性要求越高
+    <div style="text-align:center;margin-top:8px;font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace">
+      ▲ 越往上数据量越小、决策影响越大 · 越往下实时性要求越高 ▼
     </div>
   </div>
 </section>
 
-<!-- ========== 3. ERP ========== -->
-<section class="slide half" data-title="ERP">
-  <div>
-    <p class="kicker">LEVEL 4 · 企业层 · 01</p>
-    <h2 class="h2 mt-s">ERP</h2>
-    <p class="lede mt-m" style="font-size:16px">Enterprise Resource Planning<br>企业资源计划系统</p>
-    <p style="color:var(--text-2);line-height:1.7;margin-top:16px">管理企业核心业务流程的统一平台，涵盖财务、采购、销售、生产、库存、HR 等模块，是数字化建设的"地基"。</p>
-    <div class="sys-card mt-m">
-      <h4>代表产品</h4>
-      <p style="color:var(--text-2);margin:0">SAP S/4HANA · Oracle EBS · 金蝶云星空 · 用友 U9 cloud · Microsoft Dynamics 365</p>
-    </div>
+<!-- ====== 3. ERP 详解 ====== -->
+<section class="slide detail" data-title="ERP 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">ERP</span>
+    <span class="sys-full">Enterprise Resource Planning · 企业资源计划</span>
+    <span class="sys-lvl">LEVEL 4 · 企业层</span>
   </div>
-  <div>
-    <div class="section-div"><span class="tag" style="color:var(--text-1)">核心能力</span></div>
-    <ul class="feat-list">
-      <li><b>财务核算</b> — 总账 / 应收应付 / 资产 / 成本</li>
-      <li><b>供应链管理</b> — 采购到付款 / 订单到收款</li>
-      <li><b>生产管理</b> — 计划 / 排程 / 物料需求 (MRP)</li>
-      <li><b>多组织协同</b> — 集团管控 / 多账簿 / 合并报表</li>
-      <li><b>合规审计</b> — 全流程追溯 / SOX 合规</li>
-    </ul>
-    <div class="flow-row" style="margin-top:24px">
-      <span class="node">上游</span><span class="arr">←</span><span class="node hl">ERP</span><span class="arr">→</span><span class="node">下游</span>
-    </div>
-    <p style="font-size:12px;color:var(--text-3);margin-top:8px;font-family:'JetBrains Mono',monospace">SRM / CRM → ERP → MES / WMS</p>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 管理企业核心业务流程的统一平台，涵盖财务、采购、销售、生产、库存、HR 等模块。数字化建设的"地基"与"主干"。</p>
+  <div class="feat-grid g3">
+    <div class="f-card"><h4>财务管理</h4><div class="f-body">总账/应收/应付/资产/出纳/成本核算。支持多组织、多会计准则、多账簿并行。<ul class="f-list"><li>凭证自动生成 → 过账 → 结账</li><li>三大报表 + 自定义管理报表</li><li>预算编制与执行监控</li></ul></div></div>
+    <div class="f-card"><h4>供应链协同</h4><div class="f-body">采购到付款(P2P)、订单到收款(O2C)全流程管理。<ul class="f-list"><li>采购申请 → 订单 → 入库 → 应付 → 付款</li><li>销售报价 → 订单 → 出库 → 应收 → 收款</li><li>多级信用控制 · 价格策略 · 返利管理</li></ul></div></div>
+    <div class="f-card"><h4>生产与计划</h4><div class="f-body">MRP/MPS 物料需求运算，生产工单全生命周期管理。<ul class="f-list"><li>BOM + 工艺路线 + 工作中心</li><li>MPS 主生产计划 → MRP 物料需求展开</li><li>生产订单 → 领料 → 报工 → 入库</li></ul></div></div>
   </div>
+  <div class="flow-row">
+    <span class="node">上游 SRM</span><span class="arr">→</span><span class="node hl">ERP</span><span class="arr">→</span><span class="node">MES</span><span class="arr">→</span><span class="node">WMS</span>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">SAP S/4HANA</span><span class="v-tag hl">Oracle EBS/Fusion</span><span class="v-tag hl">金蝶云星空</span><span class="v-tag hl">用友 U9 cloud</span><span class="v-tag">Microsoft Dynamics 365</span><span class="v-tag">Infor LN</span></div>
 </section>
 
-<!-- ========== 4. PLM ========== -->
-<section class="slide half" data-title="PLM">
-  <div>
-    <p class="kicker">LEVEL 4 · 企业层 · 02</p>
-    <h2 class="h2 mt-s">PLM</h2>
-    <p class="lede mt-m" style="font-size:16px">Product Lifecycle Management<br>产品生命周期管理</p>
-    <p style="color:var(--text-2);line-height:1.7;margin-top:16px">管理产品从概念→设计→工艺→制造→服务→报废的全生命周期数据，是产品数据的"单一真相源"。</p>
-    <div class="sys-card mt-m">
-      <h4>代表产品</h4>
-      <p style="color:var(--text-2);margin:0">PTC Windchill · Siemens Teamcenter · Dassault ENOVIA · Aras Innovator</p>
-    </div>
+<!-- ====== 4. PLM 详解 ====== -->
+<section class="slide detail" data-title="PLM 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">PLM</span>
+    <span class="sys-full">Product Lifecycle Management · 产品生命周期管理</span>
+    <span class="sys-lvl">LEVEL 4 · 企业层</span>
   </div>
-  <div>
-    <div class="section-div"><span class="tag" style="color:var(--text-1)">核心能力</span></div>
-    <ul class="feat-list">
-      <li><b>文档管理</b> — CAD 图纸 / 规格书 / 变更记录集中管控</li>
-      <li><b>BOM 管理</b> — EBOM → MBOM → SBOM 多视图转换</li>
-      <li><b>变更管理</b> — ECO/ECN 流程：申请→评审→执行→通知</li>
-      <li><b>协同设计</b> — 多部门 / 多地 / 多供应商并行设计</li>
-      <li><b>合规管理</b> — RoHS / REACH / 行业认证</li>
-    </ul>
-    <div class="flow-row" style="margin-top:24px">
-      <span class="node hl">PLM</span><span class="arr">→</span><span class="node">ERP</span><span class="arr">→</span><span class="node">MES</span>
-    </div>
-    <p style="font-size:12px;color:var(--text-3);margin-top:8px;font-family:'JetBrains Mono',monospace">物料主数据 / BOM / 工艺路线 → ERP → 下发到 MES 执行</p>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 管理产品从概念→设计→工艺→制造→服务→报废的全生命周期数据与流程，是产品数据的"单一真相源"。</p>
+  <div class="feat-grid g3">
+    <div class="f-card"><h4>数据管理</h4><div class="f-body"><b>CAD 文档管理：</b>3D/2D 图纸版本控制、检入/检出、在线协同。<b>BOM 转换：</b>EBOM(设计) → MBOM(制造) → SBOM(服务) 多视图管理与同步。<b>变更管理：</b>ECO/ECN 流程 — 申请→评审→执行→通知，全追溯。</div></div>
+    <div class="f-card"><h4>协同设计</h4><div class="f-body"><b>多地协同：</b>跨部门/跨地区/跨供应商并行设计，实时数据同步。<b>合规管理：</b>物料 RoHS/REACH/冲突矿产等法规符合性检查。<b>项目管理：</b>新产品导入(NPI)阶段门控、任务分配、进度追踪。</div></div>
+    <div class="f-card"><h4>工艺管理</h4><div class="f-body"><b>工艺路线设计：</b>标准工序、SOP、标准工时定义。<b>资源关联：</b>工序与设备/工装/人员技能绑定。<b>仿真验证：</b>装配仿真、人因工程、可达性分析。<ul class="f-list"><li>输出 → ERP 物料主数据 + BOM + 工艺路线</li></ul></div></div>
   </div>
+  <div class="flow-row">
+    <span class="node hl">PLM</span><span class="arr">→</span><span class="node">ERP</span><span class="arr">→</span><span class="node">MES</span>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">PTC Windchill</span><span class="v-tag hl">Siemens Teamcenter</span><span class="v-tag hl">Dassault ENOVIA</span><span class="v-tag">Aras Innovator</span><span class="v-tag">Oracle Agile</span></div>
 </section>
 
-<!-- ========== 5. MES ========== -->
-<section class="slide half" data-title="MES">
-  <div>
-    <p class="kicker">LEVEL 3 · 制造运营层 · 03</p>
-    <h2 class="h2 mt-s">MES / MOM</h2>
-    <p class="lede mt-m" style="font-size:16px">Manufacturing Execution System<br>制造执行系统</p>
-    <p style="color:var(--text-2);line-height:1.7;margin-top:16px">连接 ERP 计划层与车间设备层的桥梁，实时管控生产过程，是智能制造的核心枢纽。</p>
-    <div class="sys-card mt-m">
-      <h4>代表产品</h4>
-      <p style="color:var(--text-2);margin:0">Siemens Opcenter · Rockwell FactoryTalk · GE Proficy · SAP ME · 盘古信息 · 赛意</p>
-    </div>
+<!-- ====== 5. MES/MOM 详解 ====== -->
+<section class="slide detail" data-title="MES 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">MES/MOM</span>
+    <span class="sys-full">Manufacturing Execution System · 制造执行系统</span>
+    <span class="sys-lvl">LEVEL 3 · 运营层</span>
   </div>
-  <div>
-    <div class="section-div"><span class="tag" style="color:var(--text-1)">核心能力</span></div>
-    <ul class="feat-list">
-      <li><b>工单管理</b> — 接收生产订单 → 排程 → 派工 → 报工</li>
-      <li><b>物料追踪</b> — 批次 / 序列号全程追溯（正向+反向）</li>
-      <li><b>质量管理</b> — 在线检测 / SPC 统计过程控制 / 不良品处理</li>
-      <li><b>设备管理</b> — OEE 计算 / 设备状态监控 / 维保计划</li>
-      <li><b>电子看板</b> — 实时产量 / 质量 / 设备状态可视化</li>
-    </ul>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 连接 ERP 计划层与车间设备层的核心桥梁。实时管控生产过程，是智能制造的中枢神经。MOM(制造运营管理)是 MES 的扩展概念，覆盖更广。</p>
+  <div class="feat-grid g3">
+    <div class="f-card"><h4>工单与排程</h4><div class="f-body">接收 ERP 生产订单 → 车间排程 → 派工到产线/工位。齐套检查、开工确认、完工汇报。<ul class="f-list"><li>支持混流/单车/批量生产模式</li><li>工单进度实时追踪 → 回传 ERP</li></ul></div></div>
+    <div class="f-card"><h4>物料与追溯</h4><div class="f-body"><b>批次追溯：</b>正向（批次→成品）/反向（成品→原材料）全程可查。<b>序列号追溯：</b>每件产品唯一标识，关联所有工序数据。<b>在制品管理：</b>WIP 库存实时可见，防呆防错。</div></div>
+    <div class="f-card"><h4>质量与设备</h4><div class="f-body"><b>在线质量：</b>SPC 统计过程控制、首件检验、不良品处理闭环。<b>设备监控：</b>OEE 实时计算、设备状态采集、停机原因分类。<b>电子看板：</b>Andon 安灯系统、产量/质量/设备状态可视化。</div></div>
   </div>
+  <div class="flow-row">
+    <span class="node">ERP</span><span class="arr">→</span><span class="node hl">MES</span><span class="arr">↔</span><span class="node">SCADA</span><span class="arr">→</span><span class="node">PLC/设备</span>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">Siemens Opcenter</span><span class="v-tag hl">Rockwell FactoryTalk</span><span class="v-tag hl">SAP ME/DM</span><span class="v-tag">GE Proficy</span><span class="v-tag">盘古信息</span><span class="v-tag">赛意</span></div>
 </section>
 
-<!-- ========== 6. WMS ========== -->
-<section class="slide half" data-title="WMS">
-  <div>
-    <p class="kicker">LEVEL 3 · 制造运营层 · 04</p>
-    <h2 class="h2 mt-s">WMS</h2>
-    <p class="lede mt-m" style="font-size:16px">Warehouse Management System<br>仓储管理系统</p>
-    <p style="color:var(--text-2);line-height:1.7;margin-top:16px">精细化管控仓库作业，优化库存布局与库内流程，是供应链效率的关键环节。</p>
-    <div class="sys-card mt-m">
-      <h4>代表产品</h4>
-      <p style="color:var(--text-2);margin:0">Blue Yonder · Manhattan · SAP EWM · 唯智 · 富勒 · Infor WMS</p>
-    </div>
+<!-- ====== 6. WMS 详解 ====== -->
+<section class="slide detail" data-title="WMS 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">WMS</span>
+    <span class="sys-full">Warehouse Management System · 仓储管理系统</span>
+    <span class="sys-lvl">LEVEL 3 · 运营层</span>
   </div>
-  <div>
-    <div class="section-div"><span class="tag" style="color:var(--text-1)">核心能力</span></div>
-    <ul class="feat-list">
-      <li><b>入库管理</b> — 收货 → 质检 → 上架 → 库位分配策略</li>
-      <li><b>出库管理</b> — 波次 → 拣货 → 复核 → 包装 → 发货</li>
-      <li><b>库内管理</b> — 盘点 / 移库 / 补货 / 库龄分析</li>
-      <li><b>智能策略</b> — ABC 分类存储 · 先进先出/后进先出</li>
-      <li><b>自动化集成</b> — AGV / 堆垛机 / 分拣线 / RFID</li>
-    </ul>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 精细化管控仓库作业全流程，优化库存布局与拣货效率。区别于 ERP 库存模块：WMS 管"物理库存+库位+作业"，ERP 管"账面库存+价值+财务"。</p>
+  <div class="feat-grid g3">
+    <div class="f-card"><h4>入库管理</h4><div class="f-body">ASN 预收货 → 质检判定 → 上架策略推荐（周转率/ABC/就近）。支持越库直发、托盘化收货。<ul class="f-list"><li>RF扫码 · RFID批量读取</li></ul></div></div>
+    <div class="f-card"><h4>出库管理</h4><div class="f-body">订单波次处理 → 拣货路径优化 → 复核包装 → 出库发运。<ul class="f-list"><li>摘果式/播种式拣货切换</li><li>FIFO/FEFO 批次自动锁定</li><li>快递面单对接</li></ul></div></div>
+    <div class="f-card"><h4>库内与协同</h4><div class="f-body">盘点（循环/全盘）、移库、补货、库龄分析、呆滞预警。<b>自动化集成：</b>AGV/AMR 搬运、堆垛机 AS/RS、分拣线、电子标签拣选 PTW。<b>多仓协同：</b>中央仓+前置仓调拨、多级库存可视。</div></div>
   </div>
+  <div class="flow-row">
+    <span class="node">ERP</span><span class="arr">→</span><span class="node hl">WMS</span><span class="arr">↔</span><span class="node">MES</span><span class="arr">↔</span><span class="node">AGV/设备</span>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">Blue Yonder</span><span class="v-tag hl">SAP EWM</span><span class="v-tag hl">Manhattan</span><span class="v-tag">唯智</span><span class="v-tag">富勒 FLUX</span><span class="v-tag">Infor WMS</span></div>
 </section>
 
-<!-- ========== 7. SCADA & IoT ========== -->
-<section class="slide half" data-title="SCADA & IoT">
-  <div>
-    <p class="kicker">LEVEL 2 · 监控层 · 05</p>
-    <h2 class="h2 mt-s">SCADA</h2>
-    <p class="lede mt-m" style="font-size:16px">Supervisory Control and Data Acquisition<br>数据采集与监视控制</p>
-    <p style="color:var(--text-2);line-height:1.7;margin-top:16px">连接现场 PLC/传感器，实现设备数据实时采集、可视化监控与远程控制。</p>
-    <div class="sys-card mt-m">
-      <h4>代表产品</h4>
-      <p style="color:var(--text-2);margin:0">Siemens WinCC · GE iFIX · Ignition · 力控 · 组态王 · Kepware</p>
-    </div>
+<!-- ====== 7. SCADA 详解 ====== -->
+<section class="slide detail" data-title="SCADA 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">SCADA</span>
+    <span class="sys-full">Supervisory Control and Data Acquisition · 数据采集与监视控制</span>
+    <span class="sys-lvl">LEVEL 2 · 监控层</span>
   </div>
-  <div>
-    <div class="section-div"><span class="tag" style="color:var(--text-1)">核心能力</span></div>
-    <ul class="feat-list">
-      <li><b>数据采集</b> — 设备运行参数 / 产量计数 / 能耗 / 温度压力</li>
-      <li><b>实时监控</b> — 组态画面 / 趋势图 / 报警管理</li>
-      <li><b>远程控制</b> — 设备启停 / 参数下发 / 配方管理</li>
-      <li><b>历史数据</b> — 时序数据库存储 / 历史趋势回溯</li>
-      <li><b>协议支持</b> — Modbus / OPC UA / MQTT / Profinet</li>
-    </ul>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 连接现场 PLC/传感器/仪表，实现设备数据的实时采集、组态可视化监控、远程控制与报警管理。是"数字工厂"的数据入口。</p>
+  <div class="feat-grid g3">
+    <div class="f-card"><h4>数据采集</h4><div class="f-body"><b>采集对象：</b>设备运行参数(转速/温度/压力/电流)、产量计数、能耗数据、质量检测值。<b>协议适配：</b>Modbus RTU/TCP、OPC UA/DA、Profinet、EtherNet/IP、MQTT。<b>采集频率：</b>毫秒级~秒级，写入时序数据库。</div></div>
+    <div class="f-card"><h4>实时监控</h4><div class="f-body"><b>组态画面：</b>工艺流程图、设备运行状态、仪表盘、趋势曲线。<b>报警管理：</b>多级报警（提示/预警/严重）、报警升级、联动停线。<b>远程控制：</b>设备启停、参数下发、配方切换。</div></div>
+    <div class="f-card"><h4>数据输出</h4><div class="f-body"><b>向上供给：</b>MES 需要产量/设备状态/质量数据 → SCADA 汇总提供。<b>历史回溯：</b>时序数据库长期存储，支持任意时段历史趋势查询。<b>边缘计算：</b>本地预处理、过滤、聚合后再上传，减少带宽占用。</div></div>
   </div>
+  <div class="flow-row">
+    <span class="node">PLC/传感器</span><span class="arr">→</span><span class="node hl">SCADA</span><span class="arr">→</span><span class="node">MES</span><span class="arr">→</span><span class="node">IoT 平台</span>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">Siemens WinCC</span><span class="v-tag hl">Ignition</span><span class="v-tag hl">GE iFIX</span><span class="v-tag">力控</span><span class="v-tag">组态王</span><span class="v-tag">Kepware</span></div>
 </section>
 
-<!-- ========== 8. IIoT Platform ========== -->
-<section class="slide half" data-title="工业物联网">
-  <div>
-    <p class="kicker">LEVEL 2–3 · 跨层 · 06</p>
-    <h2 class="h2 mt-s">IIoT 平台</h2>
-    <p class="lede mt-m" style="font-size:16px">Industrial Internet of Things<br>工业物联网平台</p>
-    <p style="color:var(--text-2);line-height:1.7;margin-top:16px">工业物联网连接设备、系统和人，实现数据汇聚、边缘计算和设备云端管理。</p>
-    <div class="sys-card mt-m">
-      <h4>代表产品</h4>
-      <p style="color:var(--text-2);margin:0">PTC ThingWorx · Siemens MindSphere · 树根互联 · 海尔 COSMOPlat · AWS IoT</p>
-    </div>
+<!-- ====== 8. IIoT 详解 ====== -->
+<section class="slide detail" data-title="IIoT 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">IIoT 平台</span>
+    <span class="sys-full">Industrial Internet of Things · 工业物联网平台</span>
+    <span class="sys-lvl">LEVEL 2–4 · 跨层</span>
   </div>
-  <div>
-    <div class="section-div"><span class="tag" style="color:var(--text-1)">核心能力</span></div>
-    <ul class="feat-list">
-      <li><b>设备连接</b> — 异构协议适配 / 边缘网关 / 设备模型化</li>
-      <li><b>数据湖</b> — 海量时序数据存储 / 冷热分层 / 数据清洗</li>
-      <li><b>规则引擎</b> — 异常检测 → 自动触发工单 / 报警 / 停线</li>
-      <li><b>数字孪生</b> — 设备/产线/工厂三维可视化与仿真</li>
-      <li><b>预测维护</b> — 设备健康评估 / 剩余寿命预测</li>
-    </ul>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 在 SCADA 之上建立企业级的设备数据平台，实现海量设备统一连接、数据湖存储、智能分析与应用赋能。</p>
+  <div class="feat-grid g3">
+    <div class="f-card"><h4>连接与建模</h4><div class="f-body"><b>异构接入：</b>支持数百种工业协议，通过边缘网关统一转换为标准数据模型。<b>设备孪生模型：</b>每台设备抽象为数字对象（属性/事件/指令/服务），语义化描述。<b>设备管理：</b>注册、配置、固件 OTA 升级、批量操作。</div></div>
+    <div class="f-card"><h4>数据平台</h4><div class="f-body"><b>时序数据湖：</b>海量设备数据存储，冷热分层（热数据→内存，冷数据→低成本存储）。<b>数据治理：</b>清洗、插值、聚合、异常值处理。<b>规则引擎：</b>自定义触发条件 → 自动执行动作 → 推送通知。</div></div>
+    <div class="f-card"><h4>预测与智能</h4><div class="f-body"><b>预测性维护：</b>基于振动/温度/电流历史数据，AI 评估设备健康度与剩余寿命。<b>能耗优化：</b>识别高能耗设备、空转检测、需量预测。<b>数字孪生：</b>为数字孪生提供实时数据驱动。</div></div>
   </div>
+  <div class="flow-row">
+    <span class="node">SCADA/PLC</span><span class="arr">→</span><span class="node hl">IIoT</span><span class="arr">→</span><span class="node">MES</span><span class="arr">→</span><span class="node">BI/DT</span>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">PTC ThingWorx</span><span class="v-tag hl">Siemens MindSphere</span><span class="v-tag hl">树根互联</span><span class="v-tag">海尔 COSMOPlat</span><span class="v-tag">AWS IoT</span><span class="v-tag">阿里云 IoT</span></div>
 </section>
 
-<!-- ========== 9. APS ========== -->
-<section class="slide half" data-title="APS">
-  <div>
-    <p class="kicker">LEVEL 3 · 制造运营层 · 07</p>
-    <h2 class="h2 mt-s">APS</h2>
-    <p class="lede mt-m" style="font-size:16px">Advanced Planning &amp; Scheduling<br>高级计划与排程</p>
-    <p style="color:var(--text-2);line-height:1.7;margin-top:16px">在有限产能约束下，通过优化算法自动生成最优生产排程计划，解决"先做哪个、用哪台机、排谁来做"的问题。</p>
-    <div class="sys-card mt-m">
-      <h4>代表产品</h4>
-      <p style="color:var(--text-2);margin:0">Asprova · Siemens Preactor · SAP APO · 安达发 · 永凯</p>
-    </div>
+<!-- ====== 9. APS 详解 ====== -->
+<section class="slide detail" data-title="APS 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">APS</span>
+    <span class="sys-full">Advanced Planning &amp; Scheduling · 高级计划与排程</span>
+    <span class="sys-lvl">LEVEL 3 · 运营层</span>
   </div>
-  <div>
-    <div class="section-div"><span class="tag" style="color:var(--text-1)">核心能力</span></div>
-    <ul class="feat-list">
-      <li><b>产能约束排程</b> — 考虑设备/模具/人员/物料四重约束</li>
-      <li><b>多目标优化</b> — 交期优先 vs 效率优先 vs 成本优先</li>
-      <li><b>What-if 分析</b> — 插单/退单/设备故障的快速重排</li>
-      <li><b>可视化甘特图</b> — 每台设备每张工单的起止时间</li>
-      <li><b>与 ERP/MES 集成</b> — ERP 给需求 → APS 排程 → MES 执行</li>
-    </ul>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 在有限产能约束下通过遗传/启发式/精确算法自动生成最优排产方案。回答"先做哪个、用哪台机、谁来操作、什么时候完工"。</p>
+  <div class="feat-grid g3">
+    <div class="f-card"><h4>排程引擎</h4><div class="f-body"><b>约束建模：</b>设备产能(速度/台数)、模具夹具数量、人员班次与技能、物料齐套时间。<b>多目标优化：</b>最短交期延迟、最大化 OEE、最小化换模次数、均衡负载。支持多目标加权与帕累托优化。</div></div>
+    <div class="f-card"><h4>可视化与交互</h4><div class="f-body"><b>甘特图：</b>每台设备每张工单的起止时间可视化，颜色区分工单类型。支持手动拖拽调整。<b>What-if 模拟：</b>插单/退单/设备故障 → 即时重排 → 对比方案影响。<b>KPI 对比：</b>不同排程方案的 OTD/利用率/成本对比。</div></div>
+    <div class="f-card"><h4>集成闭环</h4><div class="f-body">ERP → 给 APS 需求(工单+交期+物料)；APS → 向 MES 输出作业序列。<ul class="f-list"><li>MES 实时反馈实际进度 → APS 动态调整</li><li>设备故障 → APS 自动重新分配任务</li></ul></div></div>
   </div>
+  <div class="flow-row">
+    <span class="node">ERP</span><span class="arr">→</span><span class="node hl">APS</span><span class="arr">→</span><span class="node">MES</span><span class="arr">→</span><span class="node">生产线</span>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">Asprova</span><span class="v-tag hl">Siemens Preactor</span><span class="v-tag hl">SAP APO/IBP</span><span class="v-tag">安达发</span><span class="v-tag">永凯</span></div>
 </section>
 
-<!-- ========== 10. QMS ========== -->
-<section class="slide half" data-title="QMS">
-  <div>
-    <p class="kicker">LEVEL 3 · 制造运营层 · 08</p>
-    <h2 class="h2 mt-s">QMS</h2>
-    <p class="lede mt-m" style="font-size:16px">Quality Management System<br>质量管理系统</p>
-    <p style="color:var(--text-2);line-height:1.7;margin-top:16px">覆盖来料、过程、出货、售后四阶段，实现质量策划→控制→改进的 PDCA 闭环。</p>
-    <div class="sys-card mt-m">
-      <h4>代表产品</h4>
-      <p style="color:var(--text-2);margin:0">Siemens QMS · IQS · MasterControl · 库得克 · 盈飞无限</p>
-    </div>
+<!-- ====== 10. QMS 详解 ====== -->
+<section class="slide detail" data-title="QMS 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">QMS</span>
+    <span class="sys-full">Quality Management System · 质量管理系统</span>
+    <span class="sys-lvl">LEVEL 3 · 运营层</span>
   </div>
-  <div>
-    <div class="section-div"><span class="tag" style="color:var(--text-1)">核心能力</span></div>
-    <ul class="feat-list">
-      <li><b>来料检验 (IQC)</b> — 抽样方案 / 合格判定 / 供应商评分</li>
-      <li><b>过程控制 (IPQC)</b> — SPC 控制图 / CPK 分析 / 异常预警</li>
-      <li><b>出货检验 (OQC)</b> — 成品抽检 / 合格证管理</li>
-      <li><b>不合格品处理</b> — 8D 报告 / 纠正预防措施 (CAPA)</li>
-      <li><b>体系合规</b> — ISO 9001 / IATF 16949 / GMP</li>
-    </ul>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 覆盖来料(IQC)→过程(IPQC)→出货(OQC)→市场(CQA)四阶段，实现质量策划→控制→改进的 PDCA 数字化闭环。</p>
+  <div class="feat-grid g3">
+    <div class="f-card"><h4>检验管理</h4><div class="f-body"><b>IQC 来料：</b>抽样方案(GB2828/AQL)、检验标准、检验记录、合格放行/让步接收/退货。<b>IPQC 过程：</b>首件检验、巡检、末件检验，控制图(SPC)自动判异。<b>OQC 出货：</b>成品抽检、合格证签发。</div></div>
+    <div class="f-card"><h4>SPC 统计过程控制</h4><div class="f-body"><b>控制图：</b>X-bar R/X-bar S/P/Np/C/U 等常用控制图自动生成。<b>过程能力：</b>CP/CPK/PP/PPK 实时计算，异常点自动标红告警。<b>实时监控：</b>与检测设备/SCADA 直连，质量数据自动采集→实时判异。</div></div>
+    <div class="f-card"><h4>改进与合规</h4><div class="f-body"><b>不合格处理：</b>评审→返工/让步/报废→8D 报告→纠正预防(CAPA)→闭环验证。<b>体系合规：</b>ISO 9001 / IATF 16949 / GMP / AS9100 等体系文件与记录管控。<b>供应商质量：</b>来料合格率统计、供应商质量评分、整改追踪。</div></div>
   </div>
+  <div class="flow-row">
+    <span class="node">供应商</span><span class="arr">→</span><span class="node hl">QMS</span><span class="arr">↔</span><span class="node">MES</span><span class="arr">↔</span><span class="node">ERP</span>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">Siemens QMS Professional</span><span class="v-tag hl">IQS</span><span class="v-tag hl">盈飞无限</span><span class="v-tag">库得克</span><span class="v-tag">MasterControl</span></div>
 </section>
 
-<!-- ========== 11. EAM ========== -->
-<section class="slide half" data-title="EAM">
-  <div>
-    <p class="kicker">LEVEL 3 · 制造运营层 · 09</p>
-    <h2 class="h2 mt-s">EAM</h2>
-    <p class="lede mt-m" style="font-size:16px">Enterprise Asset Management<br>设备资产管理系统</p>
-    <p style="color:var(--text-2);line-height:1.7;margin-top:16px">对全厂设备资产进行全生命周期管理，从采购、安装、运维到报废，提升设备综合效率 OEE。</p>
-    <div class="sys-card mt-m">
-      <h4>代表产品</h4>
-      <p style="color:var(--text-2);margin:0">IBM Maximo · SAP PM · Infor EAM · 用友 AIoT · 鲁邦通</p>
-    </div>
+<!-- ====== 11. EAM 详解 ====== -->
+<section class="slide detail" data-title="EAM 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">EAM</span>
+    <span class="sys-full">Enterprise Asset Management · 设备资产管理系统</span>
+    <span class="sys-lvl">LEVEL 3 · 运营层</span>
   </div>
-  <div>
-    <div class="section-div"><span class="tag" style="color:var(--text-1)">核心能力</span></div>
-    <ul class="feat-list">
-      <li><b>设备台账</b> — 设备编码 / 规格 / 位置 / BOM 结构</li>
-      <li><b>预防性维护</b> — 点检计划 / 润滑计划 / 周期性保养</li>
-      <li><b>故障维修</b> — 报修 → 派工 → 维修 → 验收闭环</li>
-      <li><b>备件管理</b> — 安全库存 / 采购申请 / 以旧换新</li>
-      <li><b>OEE 分析</b> — 时间开动率 × 性能开动率 × 合格率</li>
-    </ul>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 对全厂设备资产进行全生命周期管理（采购→安装→运维→改造→报废），核心目标是最大化 OEE 和降低全寿命周期成本(LCC)。</p>
+  <div class="feat-grid g3">
+    <div class="f-card"><h4>设备台账</h4><div class="f-body"><b>资产编码：</b>唯一标识、设备树结构(总成→部件→零件)。<b>档案管理：</b>规格参数、采购信息、供应商、安装日期、质保期、技术文档关联。<b>位置追踪：</b>厂房→产线→工位层级绑定，支持移装调拨。</div></div>
+    <div class="f-card"><h4>维护管理</h4><div class="f-body"><b>预防性维护(PM)：</b>按周期/抄表/状态触发保养工单（日检/周检/月检/年检）。<b>故障维修(CM)：</b>报修→派工→维修记录→验收闭环。<b>备件管理：</b>安全库存、采购申请、以旧换新、备件消耗关联设备。</div></div>
+    <div class="f-card"><h4>OEE 与智能化</h4><div class="f-body"><b>OEE 公式：</b>时间开动率 × 性能开动率 × 合格率。<b>数据来源：</b>SCADA 自动采集停机/产量/废品，替代人工抄表。<b>预测维护：</b>结合 IoT 振动/温度/电流数据 → AI 预测故障 → 提前安排维修窗口。</div></div>
   </div>
+  <div class="flow-row">
+    <span class="node">SCADA/IoT</span><span class="arr">→</span><span class="node hl">EAM</span><span class="arr">→</span><span class="node">ERP</span><span class="arr">→</span><span class="node">采购/财务</span>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">IBM Maximo</span><span class="v-tag hl">SAP PM</span><span class="v-tag hl">Infor EAM</span><span class="v-tag">用友 AIoT</span><span class="v-tag">鲁邦通</span></div>
 </section>
 
-<!-- ========== 12. SRM & CRM ========== -->
-<section class="slide half" data-title="SRM & CRM">
-  <div>
-    <p class="kicker">LEVEL 4 · 企业层 · 10</p>
-    <h2 class="h2 mt-s">SRM &amp; CRM</h2>
-    <p class="lede mt-m" style="font-size:16px">Supplier / Customer Relationship Management<br>供应商 &amp; 客户关系管理</p>
-    <p style="color:var(--text-2);line-height:1.7;margin-top:16px">管理上下游伙伴关系，打通从供应商到客户的端到端价值链。</p>
+<!-- ====== 12. SRM 详解 ====== -->
+<section class="slide detail" data-title="SRM 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">SRM</span>
+    <span class="sys-full">Supplier Relationship Management · 供应商关系管理</span>
+    <span class="sys-lvl">LEVEL 4 · 企业层</span>
   </div>
-  <div>
-    <div style="margin-bottom:24px">
-      <div class="section-div"><span class="tag" style="color:var(--text-1)">SRM 供应商管理</span></div>
-      <ul class="feat-list">
-        <li><b>寻源与准入</b> — 供应商注册 / 评估 / 准入 / 分级</li>
-        <li><b>采购协同</b> — 订单协同 / 送货协同 / 对账协同</li>
-        <li><b>绩效管理</b> — QCD 评分 / 8D 整改 / 淘汰机制</li>
-      </ul>
-    </div>
-    <div>
-      <div class="section-div"><span class="tag" style="color:var(--text-1)">CRM 客户管理</span></div>
-      <ul class="feat-list">
-        <li><b>销售管理</b> — 线索 → 商机 → 报价 → 合同</li>
-        <li><b>服务管理</b> — 售后工单 / SLA / 客户满意度</li>
-        <li><b>营销自动化</b> — 客户画像 / 精准营销</li>
-      </ul>
-    </div>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 管理从寻源、准入、合作到绩效评估的供应商全生命周期，实现与上游供应商的端到端协同。</p>
+  <div class="feat-grid g3">
+    <div class="f-card"><h4>寻源与准入</h4><div class="f-body"><b>供应商注册：</b>企业信息、资质证书、生产能力自填。<b>评估与准入：</b>现场审核打分、样品验证、小批量试产，通过后入合格名录。<b>分级分类：</b>战略/核心/一般/试用，不同级别不同合作深度。</div></div>
+    <div class="f-card"><h4>采购协同</h4><div class="f-body"><b>订单协同：</b>ERP 采购订单自动推送到 SRM 门户，供应商在线确认交期。<b>送货协同：</b>ASN 预发货通知、标签打印、条码生成。<b>对账协同：</b>收货数量 vs 供应商发货数量自动对账，差异标红，电子签章确认。</div></div>
+    <div class="f-card"><h4>绩效管理</h4><div class="f-body"><b>QCD 评分模型：</b>Quality(来料合格率/退货率) · Cost(价格竞争力/降本率) · Delivery(准时率/准确率)。<b>8D 整改：</b>质量问题在线发起 8D 报告 → 供应商回复 → 闭环验证。<b>淘汰机制：</b>连续季度评分垫底 → 降级/减少份额/清退。</div></div>
   </div>
+  <div class="flow-row">
+    <span class="node hl">SRM</span><span class="arr">↔</span><span class="node">ERP</span><span class="arr">→</span><span class="node">WMS</span><span class="arr">→</span><span class="node">QMS</span>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">SAP Ariba</span><span class="v-tag hl">Coupa</span><span class="v-tag hl">甄云</span><span class="v-tag">企企通</span><span class="v-tag">用友 SRM</span></div>
 </section>
 
-<!-- ========== 13. BI & Digital Twin ========== -->
-<section class="slide half" data-title="BI & 数字孪生">
-  <div>
-    <p class="kicker">LEVEL 4 · 决策层 · 11</p>
-    <h2 class="h2 mt-s">BI &amp; 数字孪生</h2>
-    <p class="lede mt-m" style="font-size:16px">Business Intelligence &amp; Digital Twin<br>商业智能 &amp; 数字孪生</p>
-    <p style="color:var(--text-2);line-height:1.7;margin-top:16px">将全链路数据转化为决策洞察，用虚拟模型映射物理世界，是智能工厂的"大脑"。</p>
+<!-- ====== 13. CRM 详解 ====== -->
+<section class="slide detail" data-title="CRM 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">CRM</span>
+    <span class="sys-full">Customer Relationship Management · 客户关系管理</span>
+    <span class="sys-lvl">LEVEL 4 · 企业层</span>
   </div>
-  <div>
-    <div style="margin-bottom:20px">
-      <div class="section-div"><span class="tag" style="color:var(--text-1)">BI 商业智能</span></div>
-      <ul class="feat-list">
-        <li>多系统数据 ETL 汇聚 → 数据仓库 / 数据湖</li>
-        <li>管理驾驶舱：OEE / 产量 / 良率 / 能耗一屏展示</li>
-        <li>自助分析：拖拽式报表 / 多维下钻 / 预警推送</li>
-        <li><span class="pill-mono">Power BI · FineBI · Tableau · 帆软</span></li>
-      </ul>
-    </div>
-    <div>
-      <div class="section-div"><span class="tag" style="color:var(--text-1)">数字孪生</span></div>
-      <ul class="feat-list">
-        <li>3D 虚拟工厂 → 1:1 还原产线 / 设备 / 物流</li>
-        <li>实时数据驱动 → 虚拟与物理同步运行</li>
-        <li>仿真推演 → 新产线规划 / 瓶颈分析 / What-if</li>
-        <li><span class="pill-mono">Unity · Unreal · NVIDIA Omniverse · 优锘</span></li>
-      </ul>
-    </div>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 管理客户、销售、营销和服务的全流程。在制造业中与 ERP 打通，实现从线索到收款的端到端闭环。</p>
+  <div class="feat-grid g3">
+    <div class="f-card"><h4>销售管理</h4><div class="f-body"><b>L2O 流程：</b>线索→商机→报价→合同→订单（转 ERP）。<b>客户 360°：</b>联系人、历史询价、历史订单、应收余额、信用状况一站式视图。<b>价格管理：</b>分级价目表、特价审批、合同价锁定。</div></div>
+    <div class="f-card"><h4>营销自动化</h4><div class="f-body"><b>客户画像：</b>行业/规模/采购偏好/历史成交数据建模。<b>精准营销：</b>根据画像推荐产品、触发邮件/短信营销。<b>ROI 分析：</b>营销活动投入产出比、转化漏斗分析。</div></div>
+    <div class="f-card"><h4>服务管理</h4><div class="f-body"><b>售后工单：</b>报修→派工→上门→维修记录→客户确认→费用结算。<b>SLA 管理：</b>按合同定义响应时间/解决时间，超时自动升级。<b>满意度：</b>服务后回访评分，NPS 净推荐值追踪。</div></div>
   </div>
+  <div class="flow-row">
+    <span class="node hl">CRM</span><span class="arr">→</span><span class="node">ERP</span><span class="arr">→</span><span class="node">MES</span><span class="arr">→</span><span class="node">物流</span>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">Salesforce</span><span class="v-tag hl">Microsoft Dynamics 365</span><span class="v-tag hl">纷享销客</span><span class="v-tag">销售易</span><span class="v-tag">HubSpot</span></div>
 </section>
 
-<!-- ========== 14. 系统集成全景图 ========== -->
-<section class="slide full" data-title="系统集成">
+<!-- ====== 14. BI 详解 ====== -->
+<section class="slide detail" data-title="BI 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">BI</span>
+    <span class="sys-full">Business Intelligence · 商业智能</span>
+    <span class="sys-lvl">LEVEL 4 · 决策层</span>
+  </div>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 汇聚全链路数据，通过可视化分析将数据转化为决策洞察。制造企业的 BI 核心是"管理驾驶舱"——一屏看全局。</p>
+  <div class="feat-grid g2">
+    <div class="f-card"><h4>数据接入与处理</h4><div class="f-body"><b>ETL 管道：</b>从 ERP/PLM/MES/WMS/SCADA 等多系统抽取数据 → 清洗 → 转换 → 加载入数据仓库/数据湖。<b>数据建模：</b>星型/雪花模型、维度建模、指标定义(KPI)。<b>数据质量：</b>重复检测、空值处理、一致性校验。</div></div>
+    <div class="f-card"><h4>分析应用</h4><div class="f-body"><b>管理驾驶舱：</b>产量/良率/OEE/能耗/订单交付率一屏展示。<b>自助分析：</b>拖拽式报表、多维下钻(年→月→周→日→班组)、条件筛选、预警推送。<b>移动 BI：</b>手机端查看核心指标，异常 Push 通知。<div class="metric-row"><div class="metric"><div class="val">6</div><div class="lbl">大屏主题</div></div><div class="metric"><div class="val">20+</div><div class="lbl">KPI 指标</div></div><div class="metric"><div class="val">8</div><div class="lbl">数据源</div></div></div></div></div>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">Microsoft Power BI</span><span class="v-tag hl">帆软 FineBI</span><span class="v-tag hl">Tableau</span><span class="v-tag">Qlik</span><span class="v-tag">观远</span></div>
+</section>
+
+<!-- ====== 15. 数字孪生 详解 ====== -->
+<section class="slide detail" data-title="数字孪生 详解">
+  <div class="detail-hdr">
+    <span class="sys-name">Digital Twin</span>
+    <span class="sys-full">数字孪生 · 虚拟工厂</span>
+    <span class="sys-lvl">LEVEL 4 · 决策层</span>
+  </div>
+  <p class="lede" style="font-size:15px;margin-bottom:24px"><b>定位.</b> 创建物理工厂的 1:1 虚拟镜像，实时数据驱动同步运行，支持仿真推演与决策优化。是智能制造的终极形态。</p>
+  <div class="feat-grid g2">
+    <div class="f-card"><h4>三维可视化工厂</h4><div class="f-body"><b>场景构建：</b>1:1 还原产线布局、设备外形、物流通道、管线桥架。<b>实时映射：</b>IoT/SCADA 数据驱动设备动画（运转/停机/报警颜色变化），物料 AGV 位置实时更新。<b>交互操作：</b>点击设备查看实时 OEE、点检记录、工艺参数；支持 360°旋转/缩放/剖切。</div></div>
+    <div class="f-card"><h4>仿真与推演</h4><div class="f-body"><b>产线规划：</b>新产线布局模拟→物流路径优化→产能验证，投产前发现瓶颈。<b>What-if 分析：</b>"如果把这条线的节拍缩短 5 秒，整体产出增加多少？"<b>排程推演：</b>在数字孪生中预演 APS 排程方案，观察是否出现拥堵/等待。<b>能耗仿真：</b>模拟不同生产节奏下的能耗变化，优化能耗成本。</div></div>
+  </div>
+  <div class="flow-row">
+    <span class="node">IoT/SCADA</span><span class="arr">→</span><span class="node hl">DT</span><span class="arr">→</span><span class="node">BI</span><span class="arr">→</span><span class="node">APS</span><span class="arr">→</span><span class="node">MES</span>
+  </div>
+  <div class="vendor-row"><span class="v-tag hl">NVIDIA Omniverse</span><span class="v-tag hl">Unity</span><span class="v-tag hl">优锘 ThingJS</span><span class="v-tag">Siemens Tecnomatix</span><span class="v-tag">达索 DELMIA</span></div>
+</section>
+
+<!-- ====== 16. 系统集成全景图 ====== -->
+<section class="slide" data-title="系统集成">
   <p class="kicker">INTEGRATION ARCHITECTURE</p>
   <h2 class="h2 mt-s">系统集成全景图</h2>
-  <p class="lede mt-s" style="font-size:16px">各系统并非孤立运行，通过数据总线 (ESB/API Gateway) 实现互联互通</p>
-
-  <table class="spec-table mt-l">
-    <thead><tr><th>集成对</th><th>数据流向</th><th>集成内容</th><th>协议</th></tr></thead>
+  <p class="lede mt-s" style="font-size:15px">通过 ESB（企业服务总线）/ API Gateway / 消息队列实现各系统互联互通</p>
+  <table class="spec-table mt-m">
+    <thead><tr><th>集成对</th><th>方向</th><th>传递数据</th><th>推荐协议</th></tr></thead>
     <tbody>
-      <tr><td>PLM → ERP</td><td>单向</td><td>物料主数据 · BOM · 工艺路线 · 变更通知</td><td>API / ESB</td></tr>
-      <tr><td>ERP → MES</td><td>双向</td><td>生产订单 ↓ / 完工汇报 ↑ / 物料消耗 ↑</td><td>API / 中间表</td></tr>
-      <tr><td>ERP → WMS</td><td>双向</td><td>出入库指令 ↓ / 库存异动 ↑ / 库存量同步</td><td>API / WebService</td></tr>
-      <tr><td>MES ↔ SCADA</td><td>双向</td><td>工单参数 ↓ / 设备状态 ↑ / 产量计数 ↑</td><td>OPC UA / MQTT</td></tr>
-      <tr><td>SCADA → IoT Platform</td><td>单向</td><td>设备实时数据 · 报警事件 · 能耗数据</td><td>MQTT / Kafka</td></tr>
-      <tr><td>IoT → APS</td><td>单向</td><td>设备实时产能 · 故障预测 → 动态重排程</td><td>API / MQ</td></tr>
-      <tr><td>MES → QMS</td><td>双向</td><td>检测任务 ↓ / 检测结果 ↑ / 不合格品处理</td><td>API / 中间表</td></tr>
-      <tr><td>All → BI</td><td>单向</td><td>全系统数据 ETL 汇聚 → 数据仓库 → 驾驶舱</td><td>JDBC / API</td></tr>
+      <tr><td>PLM → ERP</td><td>单向</td><td>物料主数据 · BOM(EBOM→MBOM) · 工艺路线 · 工程变更通知(ECN)</td><td>REST API / ESB</td></tr>
+      <tr><td>ERP → MES</td><td>双向</td><td>生产订单 ↓ · 完工汇报/物料消耗 ↑ · 在制品信息 ↑</td><td>REST API / DB-Link</td></tr>
+      <tr><td>ERP ↔ WMS</td><td>双向</td><td>出入库指令 ↓ · 库存异动/盘点差异 ↑ · 库位数据同步</td><td>WebService / API</td></tr>
+      <tr><td>MES ↔ SCADA</td><td>双向</td><td>工单参数/配方 ↓ · 设备状态/产量/报警 ↑</td><td>OPC UA / MQTT</td></tr>
+      <tr><td>SCADA → IoT</td><td>单向</td><td>设备实时数据流 · 报警事件 · 能耗数据</td><td>MQTT / Kafka</td></tr>
+      <tr><td>IoT → APS</td><td>单向</td><td>设备实时产能/可用性 · 故障预测 → 动态重排程触发</td><td>API / 消息队列</td></tr>
+      <tr><td>MES ↔ QMS</td><td>双向</td><td>检测任务 ↓ · 检测结果/不良品处置 ↑ · SPC 触发停线 ↓</td><td>API / 中间表</td></tr>
+      <tr><td>EAM ↔ SCADA/IoT</td><td>双向</td><td>巡检计划 ↓ · 设备运行/故障数据 ↑ · 预测维护建议 ↑</td><td>MQTT / API</td></tr>
+      <tr><td>SRM/CRM ↔ ERP</td><td>双向</td><td>采购/销售订单同步 · 送货/收货状态 · 对账数据</td><td>REST API</td></tr>
+      <tr><td>All → BI</td><td>单向</td><td>全系统数据 ETL 汇聚 → 数据仓库 → 驾驶舱/报表</td><td>JDBC / API / CDC</td></tr>
     </tbody>
   </table>
 </section>
 
-<!-- ========== 15. 建设路径建议 ========== -->
+<!-- ====== 17. 建设路径 ====== -->
 <section class="slide full" data-title="建设路径">
   <p class="kicker">IMPLEMENTATION ROADMAP</p>
   <h2 class="h2 mt-s">数字化建设路径建议</h2>
-  <p class="lede mt-s" style="font-size:16px">不必一步到位，建议分三阶段逐步落地：</p>
-
+  <p class="lede mt-s" style="font-size:15px">制造业数字化是系统工程，建议分三个"3 年计划"逐步推进：</p>
   <div class="phases">
-    <div class="phase">
-      <div class="num">P1</div>
-      <div class="label">夯基础</div>
-      <div class="desc">ERP + PLM<br>先建立企业级的<br>数据标准和核心流程<br>1–2 年</div>
-    </div>
-    <div class="phase">
-      <div class="num">P2</div>
-      <div class="label">通现场</div>
-      <div class="desc">MES + WMS + SCADA<br>打通车间与仓库<br>实时数据采集<br>2–3 年</div>
-    </div>
-    <div class="phase">
-      <div class="num">P3</div>
-      <div class="label">智运营</div>
-      <div class="desc">APS + IoT + QMS + BI<br>智能排程 · 预测维护<br>数据驱动决策<br>3–5 年</div>
-    </div>
+    <div class="phase"><div class="num">P1</div><div class="label">夯基础（1–2 年）</div><div class="desc">ERP + PLM 先行<br>建立主数据标准<br>核心流程线上化<br>组织变革同步启动</div></div>
+    <div class="phase"><div class="num">P2</div><div class="label">通现场（2–3 年）</div><div class="desc">MES + WMS + SCADA<br>打通车间与仓库<br>实时数据采集上线<br>质量追溯体系建立</div></div>
+    <div class="phase"><div class="num">P3</div><div class="label">智运营（3–5 年）</div><div class="desc">APS + IoT + QMS + BI<br>智能排程 · 预测维护<br>数字孪生 · 管理驾驶舱<br>数据驱动持续优化</div></div>
   </div>
-
   <div class="sys-card mt-l" style="width:100%;border-left:4px solid var(--accent-2)">
-    <h4>关键成功要素</h4>
-    <p style="color:var(--text-2);line-height:1.8;margin:8px 0 0">
-      <b>① 主数据先行：</b>物料编码 / BOM / 工艺路线标准化是所有系统的基础 ···
-      <b>② 流程先于系统：</b>先梳理优化业务流程，再选型匹配的系统 ···
-      <b>③ 集成规划：</b>提前设计 ESB/API 架构，避免后期形成新的数据孤岛 ···
-      <b>④ 一把手工程</b>
+    <h4>五个关键成功要素</h4>
+    <p style="color:var(--text-2);line-height:1.9;margin:8px 0 0;font-size:14px">
+      <b>① 主数据先行：</b>物料编码/分类/BOM/工艺路线标准化是所有系统的基础，主数据不清后面全乱<br>
+      <b>② 流程先于系统：</b>先梳理优化业务流程，再选型系统。不要试图用系统来固化低效流程<br>
+      <b>③ 集成规划前置：</b>提前设计 ESB/API 架构，避免后期形成新的数据孤岛，集成成本远超系统本身<br>
+      <b>④ 分步实施：</b>一阶段只上线 1–2 个系统，稳定运行 3–6 个月后再启动下一阶段<br>
+      <b>⑤ 一把手工程：</b>数字化是管理变革，不是 IT 项目。需要最高管理者持续推动
     </p>
   </div>
 </section>
 
-<!-- ========== 16. 总结 ========== -->
+<!-- ====== 18. 总结 ====== -->
 <section class="slide full" data-title="总结">
   <p class="kicker">SUMMARY</p>
   <h1 class="h1 mt-s">总结</h1>
-  <p class="lede mt-xl" style="font-size:18px;line-height:2.2">
-    制造业数字化转型不是单一系统能完成的，而是<br>
-    <b style="color:var(--accent-2)">ERP 管资源</b> ＋
-    <b style="color:var(--accent-2)">PLM 管产品</b> ＋
-    <b style="color:var(--accent-2)">MES 管执行</b> ＋
-    <b style="color:var(--accent-2)">WMS 管仓储</b> ＋<br>
-    <b style="color:var(--accent-2)">SCADA 采数据</b> ＋
-    <b style="color:var(--accent-2)">APS 优排程</b> ＋
-    <b style="color:var(--accent-2)">QMS 保质量</b> ＋<br>
-    <b style="color:var(--accent-2)">EAM 管设备</b> ＋
-    <b style="color:var(--accent-2)">IoT 联万物</b> ＋
-    <b style="color:var(--accent-2)">BI 助决策</b><br><br>
-    共同构成一个完整的<b style="border-bottom:3px solid var(--accent-2)">数字化制造生态系统</b>。
+  <div class="card-grid g3 mt-l" style="width:100%">
+    <div class="sys-card"><h4>企业层 (L4)</h4><p style="margin:0;color:var(--text-2);font-size:14px;line-height:1.8">ERP 管资源 · PLM 管产品<br>SRM 管供应商 · CRM 管客户<br>BI 管决策 · DT 管仿真</p></div>
+    <div class="sys-card"><h4>运营层 (L3)</h4><p style="margin:0;color:var(--text-2);font-size:14px;line-height:1.8">MES 管执行 · WMS 管仓储<br>QMS 管质量 · APS 管排程<br>EAM 管设备</p></div>
+    <div class="sys-card"><h4>监控与控制 (L0–2)</h4><p style="margin:0;color:var(--text-2);font-size:14px;line-height:1.8">SCADA 采数据 · IoT 联万物<br>PLC 控设备 · 传感器 测物理量<br>HMI 人机交互</p></div>
+  </div>
+  <p class="lede mt-l" style="font-size:17px;line-height:2.2;text-align:center;max-width:100%">
+    数字化转型不是引入单一系统，而是构建一个<br>
+    <b style="color:var(--accent-2);border-bottom:3px solid var(--accent-2)">互联互通、数据驱动、持续优化的数字化生态系统</b>。
   </p>
   <div class="deck-footer" style="margin-top:48px"><span style="color:var(--text-3)">制造企业数字化建设参考指南</span><span class="slide-number"></span></div>
 </section>
