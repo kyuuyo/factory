@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="assets/base.css">
 <link rel="stylesheet" href="assets/themes/engineering-whiteprint.css">
 <link rel="stylesheet" href="assets/animations/animations.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:"neutral",themeVariables:{fontFamily:"JetBrains Mono, Inter, Noto Sans SC, sans-serif",fontSize:"13px"}})</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="tpl-mf" data-themes="engineering-whiteprint,blueprint,tokyo-night">
@@ -35,12 +37,16 @@
 <section class="slide flow" data-title="四阶段全景">
   <p class="kicker">OVERVIEW · 4 PHASES</p>
   <h2 class="h2 mt-s">从 ERP 销售订单到销售出库四阶段</h2>
-  <div class="flow-h" style="margin-top:32px">
-    <div class="step hl"><div class="num">P1</div><div class="t">数据接入</div><div class="d">ERP 销售订单同步<br>→ M_WareHouseOrder</div></div>
-    <div class="step"><div class="num">P2</div><div class="t">FHTZ 发货通知</div><div class="d">创建发货通知单<br>手动/Excel 导入</div><div class="api">/api/wms/fhtz</div></div>
-    <div class="step hl"><div class="num">P3</div><div class="t">仓库出库执行</div><div class="d">选料→扫码→提交<br>两条路径并行</div><div class="api">/api/wms/inout<br>/api/wms/dg/fhtz</div></div>
-    <div class="step"><div class="num">P4</div><div class="t">ERP 回写</div><div class="d">MOM → 金蝶 ERP<br>SAL_OUTSTOCK Save</div><div class="api">K3Cloud WebAPI</div></div>
-  </div>
+  <pre class="mermaid" style="margin-top:20px;font-size:12px">
+flowchart LR
+  A["P1: 数据接入<br>ERP销售订单同步<br>→ M_WareHouseOrder"] --> B["P2: FHTZ发货通知<br>手动/Excel导入<br>/api/wms/fhtz"]
+  B --> C["P3: 仓库出库执行<br>选料→扫码→提交<br>Web+PDA双路径"]
+  C --> D["P4: ERP回写<br>MOM→金蝶SAL_OUTSTOCK<br>K3Cloud WebAPI"]
+  style A fill:#0a1e46,color:#fff
+  style C fill:#1e5ac4,color:#fff
+  style B fill:#eaf0fb,stroke:#0a1e46
+  style D fill:#eaf0fb,stroke:#0a1e46
+  </pre>
   <div class="co"><b>核心链路：</b> 金蝶 ERP 销售订单 → 定时同步 → MOM 本地表 → FHTZ 发货通知 → Web选料扫码 或 PDA扫描 → Submit → ERP SAL_OUTSTOCK 回写</div>
 </section>
 
@@ -50,26 +56,20 @@
 <section class="slide" data-title="两条路径">
   <p class="kicker">PHASE 3 · TWO PATHS</p>
   <h2 class="h2 mt-s">P3 阶段的两条并行路径</h2>
-  <div class="card-grid g2 mt-m" style="gap:16px">
-    <div class="d-card" style="border-color:var(--accent-2)">
-      <h4>路径 A · Web/PC 端</h4>
-      <div class="flow-v" style="margin-top:10px">
-        <div class="vstep hl"><span class="vn">1</span><span class="vt">Pick 选料</span><span class="vd">saleOutPickMaterialSave</span></div>
-        <div class="vstep hl"><span class="vn">2</span><span class="vt">OutSave 扫码</span><span class="vd">outSave</span></div>
-        <div class="vstep hl"><span class="vn">3</span><span class="vt">Submit 提交</span><span class="vd">submit / submitByWarehouse</span></div>
-      </div>
-      <p style="font-size:12px;color:var(--text-3);margin-top:10px">流程：先选料(预占库存) → 再逐件扫码(AI) → 全部发完提交</p>
-    </div>
-    <div class="d-card">
-      <h4>路径 B · PDA/DG 端</h4>
-      <div class="flow-v" style="margin-top:10px">
-        <div class="vstep"><span class="vn">1</span><span class="vt">Label 校验</span><span class="vd">GetXSCKLabelInfo</span></div>
-        <div class="vstep"><span class="vn">2</span><span class="vt">SaveXSCK 出库</span><span class="vd">saveXSCK</span></div>
-        <div class="vstep"><span class="vn">3</span><span class="vt">PushToErp 回写</span><span class="vd">pushToErp</span></div>
-      </div>
-      <p style="font-size:12px;color:var(--text-3);margin-top:10px">流程：扫码标签 → 校验+出库一步完成 → 手动触发 ERP 回写</p>
-    </div>
-  </div>
+  <pre class="mermaid" style="margin-top:20px;font-size:12px">
+flowchart TD
+  subgraph Web["路径 A: Web/PC端"]
+    W1["Pick 选料<br>saleOutPickMaterialSave<br>5道校验+FIFO"] --> W2["OutSave 扫码<br>outSave<br>9道关卡"] --> W3["Submit 提交<br>submit/submitByWarehouse<br>自动拆子单"]
+  end
+  subgraph PDA["路径 B: PDA/DG端"]
+    P1["Label校验<br>GetXSCKLabelInfo<br>5道校验"] --> P2["SaveXSCK 出库<br>saveXSCK<br>11道校验"] --> P3["PushToErp<br>手动触发<br>ERP回写"]
+  end
+  FHTZ["FHTZ发货通知"] --> Web
+  FHTZ --> PDA
+  style FHTZ fill:#0a1e46,color:#fff
+  style W2 fill:#1e5ac4,color:#fff
+  style P2 fill:#1e5ac4,color:#fff
+  </pre>
   <div class="co"><b>关键差异：</b> Web 路径"Pick + OutSave"两步操作，库存分两次状态转换(0→1→2)；PDA 路径一步到位(0→2)。Web 路径 Submit 时自动触发出库后推 ERP；PDA 路径需手动触发 pushToErp。</div>
 </section>
 
@@ -676,50 +676,32 @@
 <section class="slide flow" data-title="泳道图">
   <p class="kicker">END-TO-END LANE DIAGRAM</p>
   <h2 class="h2 mt-s">全流程泳道图: ERP ↔ MOM ↔ 仓库库存</h2>
-  <div class="flow-h" style="margin-top:20px;font-size:11px">
-    <div class="step hl" style="flex:1.5">
-      <div class="num">P1</div><div class="t">ERP 销售订单</div>
-      <div class="d">K3Cloud 销售订单<br>→ 后台同步 <br>→ M_WareHouseOrder</div>
-    </div>
-    <div class="step" style="flex:1.5">
-      <div class="num">P2</div><div class="t">FHTZ 创建</div>
-      <div class="d">手动/Excel创建<br>发货通知单<br>关联ERP订单号</div>
-    </div>
-    <div class="step hl" style="flex:2">
-      <div class="num">P3 Web</div><div class="t">选料 Pick</div>
-      <div class="d">5道校验+FIFO<br>生单 Create(0)→Pick(1)<br>StockTrace 履历</div>
-    </div>
-    <div class="step hl" style="flex:2">
-      <div class="num">P3 Web</div><div class="t">扫码 OutSave</div>
-      <div class="d">9道关卡 逐件扫描<br>Pick(1)→Send(2)<br>Detail.ActQty 累加</div>
-    </div>
-    <div class="step" style="flex:1.5">
-      <div class="num">P3 Web</div><div class="t">Submit</div>
-      <div class="d">提交出库<br>拆子单<br>ErpStatus=0</div>
-    </div>
-    <div class="step" style="flex:2">
-      <div class="num">P3 PDA</div><div class="t">PDA 出库</div>
-      <div class="d">Label校验+Save<br>Create(0)→Send(2)<br>Label→XSCKOut</div>
-    </div>
-    <div class="step" style="flex:1.5">
-      <div class="num">P3 PDA</div><div class="t">PushToErp</div>
-      <div class="d">手动触发<br>组装请求体<br>调用ERP Save</div>
-    </div>
-    <div class="step hl" style="flex:2">
-      <div class="num">P4</div><div class="t">ERP SAL_OUTSTOCK</div>
-      <div class="d">MOM_Save 回写ERP<br>含FID+FEntryId<br>AutoSubmitAndAudit</div>
-    </div>
-  </div>
-  <div style="display:flex;gap:8px;margin-top:16px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-3)">
-    <span style="flex:1.5">上游: 金蝶 ERP</span>
-    <span style="flex:1.5">···</span>
-    <span style="flex:2;color:var(--accent-2)">MOM Web端</span>
-    <span style="flex:2;color:var(--accent-2)">MOM Web端</span>
-    <span style="flex:1.5;color:var(--accent-2)">···</span>
-    <span style="flex:2;color:var(--warn)">MOM PDA端</span>
-    <span style="flex:1.5;color:var(--warn)">···</span>
-    <span style="flex:2">金蝶 ERP</span>
-  </div>
+  <pre class="mermaid" style="margin-top:16px;font-size:11px">
+flowchart TD
+  S1["P1: ERP销售订单同步<br>K3Cloud→M_WareHouseOrder"] --> S2["P2: FHTZ创建<br>手动/Excel/WEB→发货通知"]
+  S2 --> S3["P3 Web: Pick选料<br>saleOutPickMaterialSave<br>5道校验+FIFO Create→Pick"]
+  S3 --> S4["P3 Web: OutSave扫码<br>outSave 9道关卡<br>Pick→Send/Delivering"]
+  S4 --> S5["P3 Web: Submit提交<br>满数卡控/拆子单<br>Order→Outbounded"]
+  S2 --> P1["P3 PDA: Label校验<br>GetXSCKLabelInfo<br>5道预校验"]
+  P1 --> P2["P3 PDA: SaveXSCK<br>11道校验+FIFO<br>Create→Send Label→XSCKOut"]
+  P2 --> P3["P3 PDA: PushToErp<br>手动触发 → 组装请求体"]
+  S5 --> E1["P4: ERP SAL_OUTSTOCK<br>MOM_Save回写金蝶<br>FID+FEntryId关联"]
+  P3 --> E1
+  E1 --> E2["Done. ErpStatus=1<br>日志记录"]
+  E1 -.->|"失败"| E3["ErpStatus=2<br>→ rePush重推 → 0"]
+  E3 -.->|"重推"| E1
+  style S1 fill:#0a1e46,color:#fff
+  style S3 fill:#1e5ac4,color:#fff
+  style S4 fill:#1e5ac4,color:#fff
+  style P2 fill:#1e5ac4,color:#fff
+  style E1 fill:#0a1e46,color:#fff
+  style S2 fill:#eaf0fb,stroke:#0a1e46
+  style S5 fill:#eaf0fb,stroke:#0a1e46
+  style P1 fill:#eaf0fb,stroke:#0a1e46
+  style P3 fill:#eaf0fb,stroke:#0a1e46
+  style E2 fill:#859900,color:#fff
+  style E3 fill:#dc322f,color:#fff
+  </pre>
 </section>
 
 <!-- ================================================================ -->

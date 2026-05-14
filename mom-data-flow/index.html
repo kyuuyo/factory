@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="assets/base.css">
 <link rel="stylesheet" href="assets/themes/engineering-whiteprint.css">
 <link rel="stylesheet" href="assets/animations/animations.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:"neutral",themeVariables:{fontFamily:"JetBrains Mono, Inter, Noto Sans SC, sans-serif",fontSize:"13px"}})</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="tpl-mf" data-themes="engineering-whiteprint,blueprint,tokyo-night">
@@ -37,17 +39,26 @@
 <!-- ================================ 03 库存状态机 ================================ -->
 <section class="slide flow" data-title="库存状态机">
   <p class="kicker">STATE MACHINE · STOCK</p><h2 class="h2 mt-s">WareHouseStock 库存状态机</h2>
-  <div style="display:flex;align-items:center;justify-content:center;gap:20px;margin-top:24px;flex-wrap:wrap">
-    <div style="border:2px solid var(--text-3);padding:28px 22px;text-align:center"><div style="font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;color:var(--text-3)">0</div><div style="font-size:13px;font-weight:700;color:var(--text-1);margin-top:4px">Create</div><div style="font-size:10px;color:var(--text-3)">在库可用</div></div>
-    <span style="font-size:24px;color:var(--accent-2)">→</span>
-    <div style="border:2px solid var(--warn);padding:28px 22px;text-align:center;background:rgba(180,137,0,.05)"><div style="font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;color:var(--warn)">1</div><div style="font-size:13px;font-weight:700;color:var(--text-1);margin-top:4px">Pick</div><div style="font-size:10px;color:var(--text-3)">已选料(预占)</div></div>
-    <span style="font-size:24px;color:var(--accent-2)">→</span>
-    <div style="border:2px solid var(--accent-2);padding:28px 22px;text-align:center;background:rgba(30,90,196,.05)"><div style="font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;color:var(--accent-2)">2</div><div style="font-size:13px;font-weight:700;color:var(--text-1);margin-top:4px">Send</div><div style="font-size:10px;color:var(--text-3)">已出库</div></div>
-  </div>
-  <div style="display:flex;justify-content:center;gap:16px;margin-top:16px;flex-wrap:wrap">
-    <span class="p" style="font-size:10px">3=Receitping(分条)</span><span class="p" style="font-size:10px">4=CancelReceitping</span>
-    <span class="p" style="font-size:10px">5=BLTransfer(废料转换)</span><span class="p" style="font-size:10px">6=Splitted(拆包)</span>
-    <span class="p" style="font-size:10px">7=OtherOutbound</span><span class="p" style="font-size:10px">8=CX(拆卸)</span>
+  <pre class="mermaid" style="margin-top:8px;font-size:13px">
+stateDiagram-v2
+    [*] --> Create: 入库生成
+    Create --> Pick: Web选料
+    Pick --> Send: Web扫码
+    Create --> Send: PDA直接出库
+    Send --> [*]
+    Create --> Receitping: 分条操作
+    Receitping --> CancelReceitping: 取消分条
+    Create --> BLTransfer: 废料转换
+    Create --> Splitted: 拆包
+    Create --> OtherOutbound: 其他出库
+    Create --> CX: 拆卸
+    note right of Pick: Web路径:0→1→2三跳
+    note left of Send: PDA路径:0→2一跳
+  </pre>
+  <div style="display:flex;justify-content:center;gap:12px;margin-top:8px;flex-wrap:wrap;font-size:10px">
+    <span class="p" style="font-size:10px">3=Receitping</span><span class="p" style="font-size:10px">4=CancelReceitping</span>
+    <span class="p" style="font-size:10px">5=BLTransfer</span><span class="p" style="font-size:10px">6=Splitted</span>
+    <span class="p" style="font-size:10px">7=OtherOutbound</span><span class="p" style="font-size:10px">8=CX</span>
   </div>
   <div class="co" style="margin-top:20px"><b>PDA 路径跳过 Pick(1)：</b> Create(0) 直接 → Send(2)，无中间预占态。Web 路径走完整 0→1→2 三态转换。</div>
 </section>
@@ -55,27 +66,25 @@
 <!-- ================================ 04 单据状态机 ================================ -->
 <section class="slide flow" data-title="单据状态机">
   <p class="kicker">STATE MACHINE · ORDERS</p><h2 class="h2 mt-s">单据状态机: InOutStaus / FHTZStatus / DGFHTZStatus</h2>
-  <div class="card-grid g3 mt-m">
-    <div class="d-card" style="border-color:var(--accent-2)"><h4>InOutStaus (出库单)</h4>
-      <div class="flow-v" style="margin-top:8px;gap:4px">
-        <div class="vstep" style="font-size:11px;padding:6px 10px"><span class="vn">1</span><span class="vt">WaitOutbound</span><span class="vd">待出库</span></div>
-        <div class="vstep hl" style="font-size:11px;padding:6px 10px"><span class="vn">2</span><span class="vt">Outbounding</span><span class="vd">出库中</span></div>
-        <div class="vstep" style="font-size:11px;padding:6px 10px"><span class="vn">3</span><span class="vt">Outbounded</span><span class="vd">已出库</span></div>
-      </div>
-    </div>
-    <div class="d-card"><h4>FHTZStatus (发货通知)</h4>
-      <div class="flow-v" style="margin-top:8px;gap:4px">
-        <div class="vstep" style="font-size:11px;padding:6px 10px"><span class="vn">1</span><span class="vt">WaitDeliver</span><span class="vd">待交付</span></div>
-        <div class="vstep" style="font-size:11px;padding:6px 10px"><span class="vn">2</span><span class="vt">Delivering</span><span class="vd">交付未完成</span></div>
-        <div class="vstep hl" style="font-size:11px;padding:6px 10px"><span class="vn">3</span><span class="vt">Delivered</span><span class="vd">交付完成</span></div>
-      </div>
-    </div>
-    <div class="d-card"><h4>DGFHTZ/XSCKStatus (PDA)</h4>
-      <div class="flow-v" style="margin-top:8px;gap:4px">
-        <div class="vstep" style="font-size:11px;padding:6px 10px"><span class="vn">1</span><span class="vt">Normal</span><span class="vd">正常</span></div>
-        <div class="vstep hl" style="font-size:11px;padding:6px 10px"><span class="vn">2</span><span class="vt">AutoClosed</span><span class="vd">自动关闭</span></div>
-        <div class="vstep" style="font-size:11px;padding:6px 10px"><span class="vn">3</span><span class="vt">HandClosed</span><span class="vd">手动关闭</span></div>
-      </div>
+  <div class="card-grid g2 mt-m">
+    <div class="d-card" style="border-color:var(--accent-2)"><h4>InOutStaus + FHTZStatus + ErpStatus</h4>
+      <pre class="mermaid" style="font-size:11px">
+stateDiagram-v2
+    WaitOutbound --> Outbounding: 扫码
+    Outbounding --> Outbounded: Submit
+    state FHTZ {
+        WaitDeliver --> Delivering: 创建XSOUT
+        Delivering --> Delivered: 全部发出
+    }
+    state ERP {
+        state "0 待处理" as s0
+        state "1 已推送" as s1
+        state "2 推送失败" as s2
+        s0 --> s1: 推送成功
+        s0 --> s2: 推送失败
+        s2 --> s0: rePush重推
+    }
+      </pre>
     </div>
   </div>
   <div class="co"><b>ErpStatus 独立状态机：</b> 0=待处理 → 1=已推送成功(ErpOrder=ERP单号) → 2=推送失败(ErpMsg=错误)</div>
@@ -84,11 +93,30 @@
 <!-- ================================ 05 WareHouseOrder 三部曲 ================================ -->
 <section class="slide flow" data-title="三部曲">
   <p class="kicker">CORE ENTITY · 1-N-N</p><h2 class="h2 mt-s">WareHouseOrder → Detail → Receive 三部曲</h2>
-  <div class="flow-h" style="margin-top:20px">
-    <div class="step hl" style="flex:2"><div class="num">1</div><div class="t">WareHouseOrder 主单</div><div class="d">OrderNo · BusinessTypeCode · ProductStatus · SourceOrderNo · CustomerCode · DeliverTime · ErpStatus</div></div>
-    <div class="step" style="flex:1.5"><div class="num">N</div><div class="t">WareHouseOrderDetail</div><div class="d">每条物料一行<br>MaterialId · Qty · ActQty<br>CustomerMaterialCode</div></div>
-    <div class="step" style="flex:1.5"><div class="num">N</div><div class="t">WareHouseOrderReceive</div><div class="d">每个扫描条码一行<br>Barcode · Qty · Lotno<br>Warehouse · Position</div></div>
-  </div>
+  <pre class="mermaid" style="margin-top:16px;font-size:12px">
+erDiagram
+    WareHouseOrder ||--o{ WareHouseOrderDetail : "1→N"
+    WareHouseOrderDetail ||--o{ WareHouseOrderReceive : "1→N"
+    WareHouseOrder {
+        string OrderNo PK
+        string BusinessTypeCode
+        string ProductStatus
+        string SourceOrderNo
+        string ErpStatus
+    }
+    WareHouseOrderDetail {
+        string MaterialCode
+        decimal Qty
+        decimal ActQty
+        string CustomerMaterialCode
+    }
+    WareHouseOrderReceive {
+        string Barcode
+        decimal Qty
+        string Lotno
+        string WarehouseCode
+    }
+  </pre>
   <div class="co"><b>关系：</b> 1 个出库单 → N 条物料行(Detail) → 每行 N 个批次条码(Receive)。所有操作记 Trace。</div>
 </section>
 

@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="assets/base.css">
 <link rel="stylesheet" href="assets/themes/engineering-whiteprint.css">
 <link rel="stylesheet" href="assets/animations/animations.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:"neutral",themeVariables:{fontFamily:"JetBrains Mono, Inter, Noto Sans SC, sans-serif",fontSize:"13px"}})</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="tpl-mf" data-themes="engineering-whiteprint,blueprint,tokyo-night">
@@ -38,54 +40,78 @@
 <!-- ================================ 03 销售出库 ================================ -->
 <section class="slide flow" data-title="销售出库">
   <p class="kicker">BUSINESS FLOW · 01</p><h2 class="h2 mt-s">销售出库全流程</h2>
-  <div class="flow-h" style="margin-top:20px">
-    <div class="step hl"><div class="num">1</div><div class="t">ERP销售订单同步</div><div class="d">后台定时拉取<br>→ M_WareHouseOrder</div></div>
-    <div class="step"><div class="num">2</div><div class="t">创建FHTZ发货通知</div><div class="d">手动/Excel导入<br>关联ERP订单号</div></div>
-    <div class="step hl"><div class="num">3</div><div class="t">选料 Pick</div><div class="d">FIFO校验+5道关卡<br>Create(0)→Pick(1)</div></div>
-    <div class="step hl"><div class="num">4</div><div class="t">扫码 OutSave</div><div class="d">9道关卡逐件扫描<br>Pick(1)→Send(2)</div></div>
-    <div class="step"><div class="num">5</div><div class="t">提交 Submit</div><div class="d">满数卡控<br>自动拆子单</div></div>
-    <div class="step hl"><div class="num">6</div><div class="t">ERP SAL_OUTSTOCK</div><div class="d">19字段回写金蝶<br>FEntity_Link关联</div></div>
-  </div>
+  <pre class="mermaid" style="margin-top:16px;font-size:11px">
+flowchart LR
+  A["ERP销售订单同步<br>后台拉取→M_WareHouseOrder"] --> B["创建FHTZ发货通知<br>手动/Excel导入"]
+  B --> C["选料 Pick<br>FIFO+5道校验<br>Create→Pick"]
+  C --> D["扫码 OutSave<br>9道关卡<br>Pick→Send"]
+  D --> E["提交 Submit<br>满数卡控/拆子单"]
+  E --> F["ERP SAL_OUTSTOCK<br>19字段回写金蝶"]
+  style A fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style C fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style D fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style F fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style B fill:#eaf0fb,stroke:#0a1e46
+  style E fill:#eaf0fb,stroke:#0a1e46
+  </pre>
 </section>
 
 <!-- ================================ 04 生产领料 ================================ -->
 <section class="slide flow" data-title="生产领料">
   <p class="kicker">BUSINESS FLOW · 02</p><h2 class="h2 mt-s">生产领料 (YCOUT/FGOUT)</h2>
-  <div class="flow-h" style="margin-top:20px">
-    <div class="step hl"><div class="num">1</div><div class="t">生产工单</div><div class="d">ERP车间工单下发<br>ShopOrderSub</div></div>
-    <div class="step"><div class="num">2</div><div class="t">BOM齐套检查</div><div class="d">子件物料匹配<br>ShopOrderBomSend</div></div>
-    <div class="step hl"><div class="num">3</div><div class="t">选料 Pick</div><div class="d">工单关联批号<br>YCOUT/FGOUT区分</div></div>
-    <div class="step hl"><div class="num">4</div><div class="t">扫码 OutSave</div><div class="d">条码校验+数量校验<br>Pick(1)→Send(2)</div></div>
-    <div class="step"><div class="num">5</div><div class="t">Submit 提交</div><div class="d">工单校验<br>全部发完</div></div>
-    <div class="step hl"><div class="num">6</div><div class="t">ERP PRD_PickMtrl</div><div class="d">写入生产领料单<br>库存同步金蝶</div></div>
-  </div>
+  <pre class="mermaid" style="margin-top:16px;font-size:11px">
+flowchart LR
+  A["ERP车间工单<br>ShopOrderSub"] --> B["BOM齐套检查<br>ShopOrderBomSend"]
+  B --> C["选料 Pick<br>YCOUT/FGOUT<br>Create→Pick"]
+  C --> D["扫码 OutSave<br>FGOUT豁免QC锁定<br>Pick→Send"]
+  D --> E["Submit提交<br>工单校验 全部发完"]
+  E --> F["ERP PRD_PickMtrl<br>生产领料单回写"]
+  style A fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style C fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style D fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style F fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style B fill:#eaf0fb,stroke:#0a1e46
+  style E fill:#eaf0fb,stroke:#0a1e46
+  </pre>
   <div class="co"><b>FGOUT 特殊处理：</b>返工工单(type=返工)使用 BusinessType=FGOUT，OutSave 时<b>豁免 QC 质量锁定校验</b>，允许对锁定批次进行返工领料。</div>
 </section>
 
 <!-- ================================ 05 采购入库 ================================ -->
 <section class="slide flow" data-title="采购入库">
   <p class="kicker">BUSINESS FLOW · 03</p><h2 class="h2 mt-s">采购入库流程</h2>
-  <div class="flow-h" style="margin-top:20px">
-    <div class="step hl"><div class="num">1</div><div class="t">ERP采购订单</div><div class="d">金蝶采购订单下发</div></div>
-    <div class="step"><div class="num">2</div><div class="t">到货通知 CGDH</div><div class="d">采购到货单创建<br>BusinessType=CGDH</div></div>
-    <div class="step hl"><div class="num">3</div><div class="t">IQC 来料检验</div><div class="d">抽样方案AQL<br>合格/让步/退货</div></div>
-    <div class="step"><div class="num">4</div><div class="t">上架入库</div><div class="d">条码打印+贴标<br>库位分配上架</div></div>
-    <div class="step hl"><div class="num">5</div><div class="t">CPIN/InBound</div><div class="d">Stock 创建<br>ProductionStatus=Create(0)</div></div>
-    <div class="step"><div class="num">6</div><div class="t">ERP STK_InStock</div><div class="d">回写采购入库单<br>与采购订单关联</div></div>
-  </div>
+  <pre class="mermaid" style="margin-top:16px;font-size:11px">
+flowchart LR
+  A["ERP采购订单<br>金蝶下发"] --> B["到货通知 CGDH<br>采购到货单创建"]
+  B --> C["采购收料 CGSL<br>收货确认/标签打印"]
+  C --> D["IQC 来料检验<br>AQL抽样 合格/让步/退货"]
+  D --> E["CGRK 采购入库<br>上架+Stock创建<br>ProductionStatus=Create"]
+  E --> F["ERP STK_InStock<br>采购入库单回写金蝶"]
+  style A fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style C fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style E fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style F fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style B fill:#eaf0fb,stroke:#0a1e46
+  style D fill:#eaf0fb,stroke:#0a1e46
+  </pre>
 </section>
 
 <!-- ================================ 06 成品入库 ================================ -->
 <section class="slide flow" data-title="成品入库">
   <p class="kicker">BUSINESS FLOW · 04</p><h2 class="h2 mt-s">成品入库流程</h2>
-  <div class="flow-h" style="margin-top:20px">
-    <div class="step hl"><div class="num">1</div><div class="t">ERP生产订单</div><div class="d">金蝶生产订单下发<br>→ 生成车间工单</div></div>
-    <div class="step"><div class="num">2</div><div class="t">完工汇报</div><div class="d">工序完成→报工<br>良品/不良品统计</div></div>
-    <div class="step hl"><div class="num">3</div><div class="t">包装</div><div class="d">产品包装打标签<br>IronCorePkg关联</div></div>
-    <div class="step"><div class="num">4</div><div class="t">OQC出货检验</div><div class="d">成品抽检+判定</div></div>
-    <div class="step hl"><div class="num">5</div><div class="t">CPIN/InBound入库</div><div class="d">Stock 创建<br>Label 状态更新</div></div>
-    <div class="step"><div class="num">6</div><div class="t">ERP PRD_INSTOCK</div><div class="d">生产入库单回写<br>PRD_MO→PRD_MORPT</div></div>
-  </div>
+  <pre class="mermaid" style="margin-top:16px;font-size:11px">
+flowchart LR
+  A["ERP生产订单<br>金蝶工单下发"] --> B["完工汇报<br>工序报工 良品/不良品"]
+  B --> C["包装<br>产品打包+标签<br>IronCorePkg"]
+  C --> D["OQC出货检验<br>成品抽检+判定"]
+  D --> E["CPIN/InBound<br>成品入库 Stock创建"]
+  E --> F["ERP PRD_INSTOCK<br>PRD_MO→PRD_MORPT<br>生产入库单回写"]
+  style A fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style C fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style E fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style F fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style B fill:#eaf0fb,stroke:#0a1e46
+  style D fill:#eaf0fb,stroke:#0a1e46
+  </pre>
 </section>
 
 <!-- ================================ 07 IQC 来料检验 ================================ -->
@@ -95,17 +121,18 @@
     <div class="co"><b>触发点：</b>采购到货(CGDH)后 → 库管创建检验任务 → IQC 执行</div>
   </div>
   <div>
-    <div class="flow-v">
-      <div class="vstep hl"><span class="vn">1</span><span class="vt">到货通知</span><span class="vd">CGDH 创建</span></div>
-      <div class="vstep"><span class="vn">2</span><span class="vt">抽样方案(AQL)</span><span class="vd">GB2828 查表确定样本量</span></div>
-      <div class="vstep hl"><span class="vn">3</span><span class="vt">检验执行</span><span class="vd">外观/尺寸/性能测试</span></div>
-      <div class="vstep"><span class="vn">4</span><span class="vt">判定结果 → 三条路径</span><span class="vd">合格/让步/退货</span></div>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <div class="d-card" style="flex:1;border-color:var(--good)"><h4>✓ 合格</h4><div class="row" style="font-size:11px">放行入库<br>→ 上架生成Stock</div></div>
-      <div class="d-card" style="flex:1;border-color:var(--warn)"><h4>△ 让步接收</h4><div class="row" style="font-size:11px">标识让步标识<br>→ 有条件入库</div></div>
-      <div class="d-card" style="flex:1;border-color:var(--bad)"><h4>✗ 退货</h4><div class="row" style="font-size:11px">PUR_MRB 退货<br>→ 退回供应商</div></div>
-    </div>
+    <pre class="mermaid" style="margin-top:12px;font-size:11px">
+flowchart TD
+  A["CGDH到货通知"] --> B["抽样方案AQL<br>GB2828查表"]
+  B --> C["检验执行<br>外观/尺寸/性能"]
+  C --> D{判定结果}
+  D -->|"合格"| E["放行 CGRK入库<br>上架生成Stock"]
+  D -->|"让步"| F["让步标识<br>有条件入库"]
+  D -->|"退货"| G["PUR_MRB退货<br>退回供应商"]
+  style D fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style E fill:#85990022,stroke:#859900
+  style G fill:#dc322f22,stroke:#dc322f
+  </pre>
   </div>
 </section>
 
@@ -144,39 +171,56 @@
 <!-- ================================ 09 库存盘点 ================================ -->
 <section class="slide flow" data-title="库存盘点">
   <p class="kicker">BUSINESS FLOW · 07</p><h2 class="h2 mt-s">库存盘点流程</h2>
-  <div class="flow-h" style="margin-top:20px">
-    <div class="step hl"><div class="num">1</div><div class="t">创建盘点方案</div><div class="d">可选择仓库/物料范围<br>循环盘点/全盘</div></div>
-    <div class="step"><div class="num">2</div><div class="t">生成盘点表</div><div class="d">CountOrder 生成<br>PDA端查询显示</div></div>
-    <div class="step hl"><div class="num">3</div><div class="t">PDA 现场盘点</div><div class="d">扫描条码+输入实盘数<br>支持盲盘/明盘</div></div>
-    <div class="step"><div class="num">4</div><div class="t">差异分析</div><div class="d">系统自动比对<br>账面 vs 实盘</div></div>
-    <div class="step hl"><div class="num">5</div><div class="t">盘盈盘亏调整</div><div class="d">盘盈入库/盘亏出库<br>Stock 数量调整</div></div>
-    <div class="step"><div class="num">6</div><div class="t">ERP 库存同步</div><div class="d">差异数据推送金蝶<br>ERP 账面库存同步</div></div>
-  </div>
+  <pre class="mermaid" style="margin-top:16px;font-size:11px">
+flowchart LR
+  A["创建盘点方案<br>仓库/物料范围"] --> B["生成盘点表<br>CountOrder"]
+  B --> C["PDA现场盘点<br>扫条码+录数量"]
+  C --> D["差异分析<br>账面vs实盘"]
+  D --> E["盘盈盘亏调整<br>Stock数量更新"]
+  E --> F["ERP库存同步<br>金蝶账面同步"]
+  style A fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style C fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style E fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style F fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style B fill:#eaf0fb,stroke:#0a1e46
+  style D fill:#eaf0fb,stroke:#0a1e46
+  </pre>
 </section>
 
 <!-- ================================ 10 委外管理 ================================ -->
 <section class="slide flow" data-title="委外管理">
   <p class="kicker">BUSINESS FLOW · 08</p><h2 class="h2 mt-s">委外管理流程</h2>
-  <div class="flow-h" style="margin-top:20px">
-    <div class="step hl"><div class="num">1</div><div class="t">委外订单</div><div class="d">ERP委外订单下发<br>SUB 类型</div></div>
-    <div class="step"><div class="num">2</div><div class="t">委外发料</div><div class="d">原材料出库<br>WWFLOut(委外仓)</div></div>
-    <div class="step hl"><div class="num">3</div><div class="t">委外加工</div><div class="d">供应商加工期间<br>委外在途库存跟踪</div></div>
-    <div class="step"><div class="num">4</div><div class="t">委外完工入库</div><div class="d">成品入库<br>自动核销已发物料</div></div>
-    <div class="step hl"><div class="num">5</div><div class="t">委外退料</div><div class="d">剩余物料退回<br>委外仓→正常仓</div></div>
-    <div class="step"><div class="num">6</div><div class="t">ERP 委外单据</div><div class="d">SUB_PickMtrl 发料<br>PRD_INSTOCK 入库</div></div>
-  </div>
+  <pre class="mermaid" style="margin-top:16px;font-size:11px">
+flowchart LR
+  A["委外订单<br>ERP SUB下发"] --> B["委外发料<br>WWFLOut 委外仓"]
+  B --> C["委外加工<br>供应商在途跟踪"]
+  C --> D["委外完工入库<br>核销已发物料"]
+  D --> E["委外退料<br>剩余物料退回"]
+  E --> F["ERP委外单据<br>SUB_PickMtrl→PRD_INSTOCK"]
+  style A fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style B fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style D fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style F fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style C fill:#eaf0fb,stroke:#0a1e46
+  style E fill:#eaf0fb,stroke:#0a1e46
+  </pre>
 </section>
 
 <!-- ================================ 11 调拨管理 ================================ -->
 <section class="slide flow" data-title="调拨管理">
   <p class="kicker">BUSINESS FLOW · 09</p><h2 class="h2 mt-s">调拨管理流程</h2>
-  <div class="flow-h" style="margin-top:20px">
-    <div class="step hl"><div class="num">1</div><div class="t">调拨申请</div><div class="d">组织间/仓库间<br>调拨需求</div></div>
-    <div class="step"><div class="num">2</div><div class="t">调拨出库</div><div class="d">源仓库装车出库<br>ProductionStatus→Send(2)</div></div>
-    <div class="step hl"><div class="num">3</div><div class="t">在途跟踪</div><div class="d">TransferIn/Out 记录<br>在途库存可视化</div></div>
-    <div class="step"><div class="num">4</div><div class="t">调拨入库</div><div class="d">目标仓库收货<br>Stock 创建入库</div></div>
-    <div class="step hl"><div class="num">5</div><div class="t">ERP 直接调拨</div><div class="d">STK_TransferDirect<br>金蝶同步</div></div>
-  </div>
+  <pre class="mermaid" style="margin-top:16px;font-size:11px">
+flowchart LR
+  A["调拨申请<br>组织间/仓库间"] --> B["调拨出库<br>源仓装车 Send(2)"]
+  B --> C["在途跟踪<br>TransferIn/Out"]
+  C --> D["调拨入库<br>目标仓收货 Stock创建"]
+  D --> E["ERP 直接调拨<br>STK_TransferDirect"]
+  style A fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style B fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style E fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style C fill:#eaf0fb,stroke:#0a1e46
+  style D fill:#eaf0fb,stroke:#0a1e46
+  </pre>
   <div class="co"><b>DBOut/调拨出库类型：</b>Label 状态标记为 DBOut，Trace 记录 BusinessTypeCode=DBOut。</div>
 </section>
 
@@ -186,29 +230,35 @@
     <p class="kicker">BUSINESS FLOW · 10</p><h2 class="h2 mt-s">不良品处理<br>多路径</h2>
   </div>
   <div>
-    <div class="flow-v">
-      <div class="vstep hl"><span class="vn">1</span><span class="vt">不良品发现</span><span class="vd">IQC/IPQC/OQC/生产</span></div>
-      <div class="vstep"><span class="vn">2</span><span class="vt">QC Hold 质量锁定</span><span class="vd">批次级+SN级双锁</span></div>
-      <div class="vstep hl"><span class="vn">3</span><span class="vt">不良品评审(8D)</span><span class="vd">BPM审批流判定</span></div>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <div class="d-card" style="flex:1;border-color:var(--warn)"><h4>返工</h4><div class="row" style="font-size:11px">FGOUT 返工领料<br>豁免QC锁定</div></div>
-      <div class="d-card" style="flex:1;border-color:var(--bad)"><h4>报废</h4><div class="row" style="font-size:11px">BLBFOUT 报废出库<br>→ 废料仓</div></div>
-      <div class="d-card" style="flex:1;border-color:var(--bad)"><h4>MRB退货</h4><div class="row" style="font-size:11px">PUR_MRB 退供应商</div></div>
-    </div>
+    <pre class="mermaid" style="margin-top:12px;font-size:11px">
+flowchart TD
+  A["不良品发现<br>IQC/IPQC/OQC/生产"] --> B["QC Hold 锁定<br>批次+SN双锁"]
+  B --> C["不良品评审<br>BPM审批+8D"]
+  C --> D{处置判定}
+  D -->|"返工"| E["FGOUT返工领料<br>豁免QC锁定"]
+  D -->|"报废"| F["BLBFOUT报废<br>→废料仓"]
+  D -->|"退货"| G["PUR_MRB<br>退供应商"]
+  style C fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style D fill:#0a1e46,color:#fff
+  </pre>
   </div>
 </section>
 
 <!-- ================================ 13 标签打印 ================================ -->
 <section class="slide flow" data-title="标签打印">
   <p class="kicker">BUSINESS FLOW · 11</p><h2 class="h2 mt-s">标签打印与管理</h2>
-  <div class="flow-h" style="margin-top:20px">
-    <div class="step hl"><div class="num">1</div><div class="t">标签生成</div><div class="d">入库/包装时<br>自动生成条码</div></div>
-    <div class="step"><div class="num">2</div><div class="t">打印机校验</div><div class="d">PrintLicense 验证<br>打印机授权检查</div></div>
-    <div class="step hl"><div class="num">3</div><div class="t">标签打印</div><div class="d">BatchLabelPrint<br>IP+端口+模板</div></div>
-    <div class="step"><div class="num">4</div><div class="t">打印记录</div><div class="d">Receipting+<br>ReceiptingPrint 双表</div></div>
-    <div class="step hl"><div class="num">5</div><div class="t">标签状态跟踪</div><div class="d">创建→打印→入库<br>→出库→完成</div></div>
-  </div>
+  <pre class="mermaid" style="margin-top:16px;font-size:11px">
+flowchart LR
+  A["标签生成<br>入库/包装自动生成"] --> B["打印机校验<br>PrintLicense验证"]
+  B --> C["标签打印<br>IP+端口+模板"]
+  C --> D["打印记录<br>Receipting双表"]
+  D --> E["标签状态跟踪<br>生成→打印→入库→出库"]
+  style A fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style C fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style E fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style B fill:#eaf0fb,stroke:#0a1e46
+  style D fill:#eaf0fb,stroke:#0a1e46
+  </pre>
 </section>
 
 <!-- ================================ 14 设备 ANDON ================================ -->
@@ -217,13 +267,18 @@
     <p class="kicker">BUSINESS FLOW · 12</p><h2 class="h2 mt-s">TPM 设备<br>ANDON 管理</h2>
   </div>
   <div>
-    <div class="flow-v">
-      <div class="vstep hl"><span class="vn">1</span><span class="vt">模具→设备绑定</span><span class="vd">ANDON 绑定关系</span></div>
-      <div class="vstep"><span class="vn">2</span><span class="vt">设备→模具绑定</span><span class="vd">反向映射建立</span></div>
-      <div class="vstep hl"><span class="vn">3</span><span class="vt">设备借用</span><span class="vd">BorrowReturn 借用记录</span></div>
-      <div class="vstep"><span class="vn">4</span><span class="vt">设备归还</span><span class="vd">归还操作+状态恢复</span></div>
-      <div class="vstep hl"><span class="vn">5</span><span class="vt">设备领用入库</span><span class="vd">PickInbound 操作</span></div>
-    </div>
+    <pre class="mermaid" style="margin-top:12px;font-size:11px">
+flowchart TD
+  A["模具→设备绑定<br>ANDON绑定"] --> B["设备→模具绑定<br>反向映射"]
+  B --> C["设备借用<br>BorrowReturn"]
+  C --> D["设备归还<br>状态恢复"]
+  D --> E["设备领用入库<br>PickInbound"]
+  style A fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style C fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style E fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style B fill:#eaf0fb,stroke:#0a1e46
+  style D fill:#eaf0fb,stroke:#0a1e46
+  </pre>
   </div>
 </section>
 
@@ -233,26 +288,32 @@
     <p class="kicker">BUSINESS FLOW · 13</p><h2 class="h2 mt-s">FHTZ 发货通知<br>全生命周期</h2>
   </div>
   <div>
-    <div class="flow-v">
-      <div class="vstep hl"><span class="vn">1</span><span class="vt">创建 FHTZ</span><span class="vd">手动/Excel导入</span></div>
-      <div class="vstep"><span class="vn">2</span><span class="vt">状态: WaitDeliver</span><span class="vd">待交付</span></div>
-      <div class="vstep hl"><span class="vn">3</span><span class="vt">创建XSOUT选料出库</span><span class="vd">关联FHTZ单号</span></div>
-      <div class="vstep"><span class="vn">4</span><span class="vt">扫码→ActQty累加</span><span class="vd">状态→Delivering</span></div>
-      <div class="vstep hl"><span class="vn">5</span><span class="vt">全部发出</span><span class="vd">→ Delivered(Web)<br>→ AutoClosed(PDA)</span></div>
-    </div>
+    <pre class="mermaid" style="margin-top:12px;font-size:11px">
+stateDiagram-v2
+    [*] --> WaitDeliver: 创建FHTZ
+    WaitDeliver --> Delivering: 创建XSOUT+扫码
+    Delivering --> Delivered: Web全部发出
+    Delivering --> AutoClosed: PDA全部发出
+    note right of Delivering: Web: Delivering<br>PDA: AutoClosed
+    </pre>
   </div>
 </section>
 
 <!-- ================================ 16 包装管理 ================================ -->
 <section class="slide flow" data-title="包装管理">
   <p class="kicker">BUSINESS FLOW · 14</p><h2 class="h2 mt-s">包装管理流程</h2>
-  <div class="flow-h" style="margin-top:20px">
-    <div class="step hl"><div class="num">1</div><div class="t">包装创建</div><div class="d">产品→包装容器<br>包装操作记录</div></div>
-    <div class="step"><div class="num">2</div><div class="t">扫码关联</div><div class="d">产品条码<br>与包装容器绑定</div></div>
-    <div class="step hl"><div class="num">3</div><div class="t">包装打印</div><div class="d">包装标签生成<br>打印校验</div></div>
-    <div class="step"><div class="num">4</div><div class="t">入库</div><div class="d">包装入库<br>标签+库存关联</div></div>
-    <div class="step hl"><div class="num">5</div><div class="t">出库</div><div class="d">包装出库<br>IronCorePkg.InOutStatus→2</div></div>
-  </div>
+  <pre class="mermaid" style="margin-top:16px;font-size:11px">
+flowchart LR
+  A["包装创建<br>产品→容器"] --> B["扫码关联<br>条码绑定容器"]
+  B --> C["包装打印<br>标签生成+校验"]
+  C --> D["入库<br>标签+库存关联"]
+  D --> E["出库<br>IronCorePkg→2"]
+  style A fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style C fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style E fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style B fill:#eaf0fb,stroke:#0a1e46
+  style D fill:#eaf0fb,stroke:#0a1e46
+  </pre>
 </section>
 
 <!-- ================================ 17 BPM 审批 ================================ -->
@@ -262,12 +323,16 @@
     <div class="co"><b>触发：</b>QC Hold 质量锁定后 → 启动不良品评审流程</div>
   </div>
   <div>
-    <div class="flow-v">
-      <div class="vstep hl"><span class="vn">1</span><span class="vt">不良品锁定</span><span class="vd">QC Hold 触发</span></div>
-      <div class="vstep"><span class="vn">2</span><span class="vt">缺陷审批提交</span><span class="vd">workRepoetDefectExamine</span></div>
-      <div class="vstep hl"><span class="vn">3</span><span class="vt">8D 报告流</span><span class="vd">D1建组→D2描述→D3遏制→D4根因→D5纠正→D6验证→D7预防→D8总结</span></div>
-      <div class="vstep"><span class="vn">4</span><span class="vt">CAPA 闭环</span><span class="vd">纠正预防措施执行+验证</span></div>
-    </div>
+    <pre class="mermaid" style="margin-top:12px;font-size:11px">
+flowchart TD
+  A["不良品锁定<br>QC Hold"] --> B["缺陷审批提交<br>workRepoetDefectExamine"]
+  B --> C["8D报告<br>D1建组→D2描述→D3遏制<br>→D4根因→D5纠正<br>→D6验证→D7预防→D8总结"]
+  C --> D["CAPA闭环<br>纠正预防措施验证"]
+  style B fill:#1e5ac4,color:#fff,stroke:#1e5ac4
+  style C fill:#0a1e46,color:#fff,stroke:#0a1e46
+  style A fill:#eaf0fb,stroke:#0a1e46
+  style D fill:#eaf0fb,stroke:#0a1e46
+  </pre>
   </div>
 </section>
 
@@ -276,22 +341,28 @@
   <p class="kicker">BUSINESS FLOW · 16</p><h2 class="h2 mt-s">异常处理机制</h2>
   <div class="card-grid g2 mt-m">
     <div class="d-card" style="border-color:var(--bad)"><h4>DeleteOut 扫码回退</h4>
-      <div class="flow-v" style="margin-top:8px;gap:4px">
-        <div class="vstep" style="font-size:11px"><span class="vn">1</span><span class="vt">校验未Outbounded</span></div>
-        <div class="vstep" style="font-size:11px"><span class="vn">2</span><span class="vt">ActQty 扣回</span></div>
-        <div class="vstep" style="font-size:11px"><span class="vn">3</span><span class="vt">Stock→Create(0)</span></div>
-        <div class="vstep" style="font-size:11px"><span class="vn">4</span><span class="vt">FHTZ Source 回退</span></div>
-        <div class="vstep" style="font-size:11px"><span class="vn">5</span><span class="vt">Order→WaitOutbound</span></div>
-      </div>
+      <pre class="mermaid" style="font-size:10px">
+flowchart TD
+  A[校验未Outbounded] --> B[ActQty扣回]
+  B --> C["Stock→Create(0)"]
+  C --> D[FHTZ Source回退]
+  D --> E["Order→WaitOutbound"]
+  style A fill:#dc322f,color:#fff
+  style E fill:#859900,color:#fff
+      </pre>
     </div>
     <div class="d-card" style="border-color:var(--warn)"><h4>ERP 推送失败重推</h4>
-      <div class="flow-v" style="margin-top:8px;gap:4px">
-        <div class="vstep" style="font-size:11px"><span class="vn">1</span><span class="vt">ErpStatus=2 发现</span></div>
-        <div class="vstep" style="font-size:11px"><span class="vn">2</span><span class="vt">rePush→重置为 0</span></div>
-        <div class="vstep" style="font-size:11px"><span class="vn">3</span><span class="vt">后台Job 重推</span></div>
-        <div class="vstep" style="font-size:11px"><span class="vn">4</span><span class="vt">成功→1 失败→2</span></div>
-        <div class="vstep" style="font-size:11px"><span class="vn">5</span><span class="vt">超 N 次→人工</span></div>
-      </div>
+      <pre class="mermaid" style="font-size:10px">
+flowchart TD
+  A[ErpStatus=2发现] --> B[rePush重置为0]
+  B --> C[后台Job重推]
+  C --> D{结果}
+  D -->|成功| E["→1"]
+  D -->|失败| F["→2. 超N次→人工"]
+  style A fill:#dc322f,color:#fff
+  style E fill:#859900,color:#fff
+  style F fill:#dc322f22,stroke:#dc322f
+      </pre>
     </div>
   </div>
 </section>

@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="assets/base.css">
 <link rel="stylesheet" href="assets/themes/engineering-whiteprint.css">
 <link rel="stylesheet" href="assets/animations/animations.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:"neutral",themeVariables:{fontFamily:"JetBrains Mono, Inter, Noto Sans SC, sans-serif",fontSize:"13px"}})</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="tpl-mf" data-themes="engineering-whiteprint,blueprint,tokyo-night">
@@ -24,15 +26,21 @@
 <!-- ================================ 02 四层架构 ================================ -->
 <section class="slide flow" data-title="四层架构">
   <p class="kicker">ARCHITECTURE · LAYERED</p><h2 class="h2 mt-s">整体四层分层架构</h2>
-  <div class="flow-v" style="margin:24px auto 0;max-width:800px">
-    <div class="vstep hl" style="padding:16px"><span class="vn" style="font-size:18px">L1</span><span class="vt" style="font-size:16px">WebApi 层</span><span class="vd">ZY.MOM.WebApi / ZY.MOM.WebModel</span></div>
-    <div class="vstep" style="padding:12px;justify-content:center;color:var(--accent-2);font-weight:700">↓ 依赖注入 (DI)</div>
-    <div class="vstep" style="padding:16px"><span class="vn" style="font-size:18px">L2</span><span class="vt" style="font-size:16px">BusinessContract 接口层</span><span class="vd">ZY.{Module}.BusinessContract</span></div>
-    <div class="vstep" style="padding:12px;justify-content:center;color:var(--accent-2);font-weight:700">↓ 实现继承</div>
-    <div class="vstep hl" style="padding:16px"><span class="vn" style="font-size:18px">L3</span><span class="vt" style="font-size:16px">BusinessService 业务层</span><span class="vd">ZY.{Module}.BusinessService</span></div>
-    <div class="vstep" style="padding:12px;justify-content:center;color:var(--accent-2);font-weight:700">↓ ORM 访问</div>
-    <div class="vstep" style="padding:16px"><span class="vn" style="font-size:18px">L4</span><span class="vt" style="font-size:16px">DataAccess 数据层</span><span class="vd">ZY.MOM.DataAccess · EF Core + SqlSugar + Dapper</span></div>
-  </div>
+  <pre class="mermaid" style="margin:12px auto 0;max-width:700px;font-size:12px">
+graph TB
+    L1["L1: WebApi 层<br>ZY.MOM.WebApi<br>Controllers"] -->|"DI注入"| L2["L2: BusinessContract<br>接口层<br>ZY.Xxx.BusinessContract"]
+    L2 -->|"实现"| L3["L3: BusinessService<br>业务层<br>ZY.Xxx.BusinessService"]
+    L3 -->|"ORM"| L4["L4: DataAccess<br>数据层<br>EF Core+SqlSugar+Dapper"]
+    X["横切层: Utility + ExternalContract + ExternalModel"] -.-> L1
+    X -.-> L2
+    X -.-> L3
+    X -.-> L4
+    style L1 fill:#0a1e46,color:#fff
+    style L3 fill:#1e5ac4,color:#fff
+    style L4 fill:#0a1e46,color:#fff
+    style L2 fill:#eaf0fb,stroke:#0a1e46
+    style X fill:#c42a1022,stroke:#c42a10
+  </pre>
   <div class="co" style="text-align:center"><b>横切层：</b> ZY.MOM.Utility (工具类) · ZY.MOM.ExternalContract (外部接口) · ZY.MOM.ExternalModel (外部模型)</div>
 </section>
 
@@ -102,15 +110,22 @@
 <!-- ================================ 07 模块化设计 ================================ -->
 <section class="slide flow" data-title="模块化">
   <p class="kicker">MODULE DESIGN</p><h2 class="h2 mt-s">6 大业务模块 + 1 工具模块</h2>
-  <div class="flow-h" style="margin-top:20px">
-    <div class="step hl" style="flex:1.2"><div class="num" style="font-size:22px">ERP</div><div class="t">ERP 桥接</div><div class="d">ERPLoginService<br>19 种 ERP Service<br>登录/查询/保存/删除</div></div>
-    <div class="step" style="flex:1.2"><div class="num" style="font-size:22px">MES</div><div class="t">制造执行</div><div class="d">ShopOrder/WorkReport<br>Package/MaterialStock<br>TransferInOut/Label</div></div>
-    <div class="step" style="flex:1.2"><div class="num" style="font-size:22px">WMS</div><div class="t">仓储管理</div><div class="d">WareHouseOrder<br>WareHouseStock<br>CountOrder/Pallet</div></div>
-    <div class="step" style="flex:1.2"><div class="num" style="font-size:22px">QMS</div><div class="t">质量管理</div><div class="d">Defect/QCHold<br>IPQC/SOP/OQC<br>PDAQC/WebQC</div></div>
-    <div class="step" style="flex:1.2"><div class="num" style="font-size:22px">TPM</div><div class="t">设备管理</div><div class="d">ANDON绑定<br>BorrowReturn<br>PickInbound</div></div>
-    <div class="step" style="flex:1.2"><div class="num" style="font-size:22px">Basics</div><div class="t">基础资料</div><div class="d">BOM/Material<br>Route/SerialRule<br>SOP/Terminal/Files</div></div>
-  </div>
-  <div style="text-align:center;margin-top:16px"><span class="p" style="font-size:12px">ZY.MOM.Utility — 工具模块: Attribute/Constant/Enum/Interface 跨模块共享</span></div>
+  <pre class="mermaid" style="margin-top:16px;font-size:11px">
+graph LR
+    ERP["ERP 桥接<br>19 ERP Service"] --> WEBAPI["WebApi 层"]
+    MES["MES 制造执行<br>34 Controller"] --> WEBAPI
+    WMS["WMS 仓储管理<br>19 Controller"] --> WEBAPI
+    QMS["QMS 质量管理<br>13 Controller"] --> WEBAPI
+    TPM["TPM 设备管理<br>4 Controller"] --> WEBAPI
+    BAS["Basics 基础资料<br>28 Controller"] --> WEBAPI
+    SYS["SYS 系统管理<br>4 Controller"] --> WEBAPI
+    WEBAPI --> DATA["DataAccess<br>EF+SqlSugar+Dapper"]
+    UTIL["Utility 工具<br>Enum/Attribute/Constant"] -.-> WEBAPI
+    style ERP fill:#0a1e46,color:#fff
+    style DATA fill:#0a1e46,color:#fff
+    style WEBAPI fill:#1e5ac4,color:#fff
+    style UTIL fill:#eaf0fb,stroke:#0a1e46
+  </pre>
 </section>
 
 <!-- ================================ 08 ERP 桥接模块 ================================ -->
