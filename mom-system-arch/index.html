@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MOM 系统架构剖析</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/themes/engineering-whiteprint.css">
+<link rel="stylesheet" href="assets/animations/animations.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="tpl-mf" data-themes="engineering-whiteprint,blueprint,tokyo-night">
+<div class="deck">
+
+<!-- ================================ 01 COVER ================================ -->
+<section class="slide full" data-title="封面">
+  <p class="kicker">MANUFACTURING OPERATIONS MANAGEMENT</p>
+  <h1 class="h1 mt-s">MOM 系统<br><span style="color:var(--accent-2)">架构剖析</span></h1>
+  <p class="lede mt-l">基于 DG-MOM .NET 5 代码：四层分层架构 · 6 大业务模块 · 外部集成 · 技术栈全景。</p>
+  <div class="row mt-l" style="gap:10px"><span class="p hl">.NET 5</span><span class="p hl">EF Core+SqlSugar+Dapper</span><span class="p">SQL Server</span><span class="p">REST API</span></div>
+  <div class="deck-footer" style="margin-top:48px"><span style="color:var(--text-3)">MOM 系统 · 架构剖析</span><span class="slide-number" data-current="1" data-total="18"></span></div>
+</section>
+
+<!-- ================================ 02 四层架构 ================================ -->
+<section class="slide flow" data-title="四层架构">
+  <p class="kicker">ARCHITECTURE · LAYERED</p><h2 class="h2 mt-s">整体四层分层架构</h2>
+  <div class="flow-v" style="margin:24px auto 0;max-width:800px">
+    <div class="vstep hl" style="padding:16px"><span class="vn" style="font-size:18px">L1</span><span class="vt" style="font-size:16px">WebApi 层</span><span class="vd">ZY.MOM.WebApi / ZY.MOM.WebModel</span></div>
+    <div class="vstep" style="padding:12px;justify-content:center;color:var(--accent-2);font-weight:700">↓ 依赖注入 (DI)</div>
+    <div class="vstep" style="padding:16px"><span class="vn" style="font-size:18px">L2</span><span class="vt" style="font-size:16px">BusinessContract 接口层</span><span class="vd">ZY.{Module}.BusinessContract</span></div>
+    <div class="vstep" style="padding:12px;justify-content:center;color:var(--accent-2);font-weight:700">↓ 实现继承</div>
+    <div class="vstep hl" style="padding:16px"><span class="vn" style="font-size:18px">L3</span><span class="vt" style="font-size:16px">BusinessService 业务层</span><span class="vd">ZY.{Module}.BusinessService</span></div>
+    <div class="vstep" style="padding:12px;justify-content:center;color:var(--accent-2);font-weight:700">↓ ORM 访问</div>
+    <div class="vstep" style="padding:16px"><span class="vn" style="font-size:18px">L4</span><span class="vt" style="font-size:16px">DataAccess 数据层</span><span class="vd">ZY.MOM.DataAccess · EF Core + SqlSugar + Dapper</span></div>
+  </div>
+  <div class="co" style="text-align:center"><b>横切层：</b> ZY.MOM.Utility (工具类) · ZY.MOM.ExternalContract (外部接口) · ZY.MOM.ExternalModel (外部模型)</div>
+</section>
+
+<!-- ================================ 03 WebApi 层 ================================ -->
+<section class="slide" data-title="WebApi 层">
+  <p class="kicker">LAYER 1 · WEBAPI</p><h2 class="h2 mt-s">WebApi 控制器层</h2>
+  <p class="lede" style="font-size:14px">位于 <code>ZY.MOM.WebApi/Controllers/</code>，按业务模块分目录，共 7 组 90+ 个 Controller。</p>
+  <table class="dt mt-m">
+    <thead><tr><th>分组</th><th>数量</th><th>典型 Controller</th><th>核心功能</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--accent-2)">ERP</td><td>2</td><td>ERPLoginController, ERPReportController</td><td>ERP登录/报表查询</td></tr>
+      <tr><td style="color:var(--accent-2)">MES</td><td>34</td><td>ShopOrder, WorkReport, Package, MaterialStock</td><td>工单/报工/包装/物料</td></tr>
+      <tr><td style="color:var(--accent-2)">WMS</td><td>19</td><td>FHTZ, InOut, WareHouseStock, CountOrder, Pallet</td><td>仓储出入库/盘点/托</td></tr>
+      <tr><td style="color:var(--accent-2)">QMS</td><td>13</td><td>Defect, QCHold, IPQC, SOP, OQC, PDAQC, WebQC</td><td>质量检验全链路</td></tr>
+      <tr><td style="color:var(--accent-2)">TPM</td><td>4</td><td>ANDON, BorrowReturn, PickInbound</td><td>设备模具管理</td></tr>
+      <tr><td style="color:var(--accent-2)">Basics</td><td>28</td><td>BOM, Material, Route, SerialRule, SOP, Terminal, Files</td><td>基础数据管理</td></tr>
+      <tr><td style="color:var(--accent-2)">SYS</td><td>4</td><td>SysLogin, RolePermission, Menu</td><td>用户权限菜单</td></tr>
+    </tbody>
+  </table>
+  <div class="co"><b>统一基类：</b> BaseController 封装 TimeHelper、BaseResponseModel 统一返回格式、UserFriendlyException 业务异常捕获。</div>
+</section>
+
+<!-- ================================ 04 Contract + Service ================================ -->
+<section class="slide col2" data-title="Contract+Service">
+  <div>
+    <p class="kicker">LAYER 2 + 3</p><h2 class="h2 mt-s">Contract &amp;<br>Service 层</h2>
+    <div class="co"><b>接口驱动设计：</b> 每个模块独立 BusinessContract 项目定义接口 → Service 项目实现。</div>
+  </div>
+  <div>
+    <div class="card-grid" style="gap:10px">
+      <div class="d-card" style="border-color:var(--accent-2)"><h4>BusinessContract 接口层</h4><div class="row" style="font-size:12px">· IXXXService 接口定义<br>· 按模块分文件夹(ModuleName)<br>· 控制器通过 DI 注入获取<br>· 7对接口: ERP/MES/QMS/WMS/TPM/Basics/SYS</div></div>
+      <div class="d-card"><h4>BusinessService 实现层</h4><div class="row" style="font-size:12px">· 继承接口 + 实现业务逻辑<br>· Manage 管理类(ERPManage/ShareLogManage/SqlSugarManage)<br>· DAO 数据访问辅助<br>· 事务包裹(数据库事务)</div></div>
+    </div>
+    <div class="co" style="margin-top:12px"><b>依赖注入注册：</b> Startup.ConfigureServices 中批量注册 Service → Controller 构造函数注入使用。</div>
+  </div>
+</section>
+
+<!-- ================================ 05 Model 层 ================================ -->
+<section class="slide" data-title="Model 层">
+  <p class="kicker">LAYER · MODELS</p><h2 class="h2 mt-s">BusinessModel / WebModel / ExternalModel</h2>
+  <div class="card-grid g3 mt-m">
+    <div class="d-card" style="border-color:var(--accent-2)"><h4>BusinessModel</h4><div class="row" style="font-size:12px;line-height:1.8">业务对象层定义 Info/DTO：<br>· 模块数据实体<br>· SearchCriteriaModel 搜索<br>· ExportModel 导出<br>· 7 个模块独立项目</div></div>
+    <div class="d-card"><h4>WebModel</h4><div class="row" style="font-size:12px;line-height:1.8">前端交互 DTO 层：<br>· 请求 AddDto<br>· 响应 ResponseDto<br>· 分页 DataPageResponseModel<br>· 单项 ResponseModel&lt;T&gt;</div></div>
+    <div class="d-card"><h4>ExternalModel</h4><div class="row" style="font-size:12px;line-height:1.8">外部服务交互模型：<br>· ERP 请求/响应 DTO<br>· SSO/打印/MinIO 模型<br>· WCF Connected Services<br>· 按外部系统名分文件夹</div></div>
+  </div>
+  <div class="co"><b>命名规范：</b> 每个模块的 BusinessModel 按功能分文件夹：ERPRequest → ERPSave/ERPQuery/ERPMOMDto。</div>
+</section>
+
+<!-- ================================ 06 DataAccess 层 ================================ -->
+<section class="slide col2" data-title="DataAccess 层">
+  <div>
+    <p class="kicker">LAYER 4 · DATAACCESS</p><h2 class="h2 mt-s">DataAccess<br>三 ORM 共存</h2>
+  </div>
+  <div>
+    <table class="dt" style="font-size:12px">
+      <thead><tr><th>ORM</th><th>用途</th><th>特点</th></tr></thead>
+      <tbody>
+        <tr><td class="p hl">Entity Framework Core</td><td>主 ORM</td><td>ApplicationDBContext 主上下文，DbSet 管理实体，Migration 迁移</td></tr>
+        <tr><td class="p hl">SqlSugar</td><td>辅助 ORM</td><td>ERP 接口日志查询、动态条件构建、SugarRepository 仓储模式</td></tr>
+        <tr><td class="p hl">Dapper</td><td>高性能 SQL</td><td>原始 SQL 直接执行、SqlConnection 连接、复杂报表查询场景</td></tr>
+      </tbody>
+    </table>
+    <div class="d-card mt-s" style="border-color:var(--accent-2)"><h4>实体类目录结构</h4><div class="row" style="font-size:12px">· Comm/ — 公共实体(WareHouseStock/Trace, QCSnHoldDetail)<br>· Erp/ — ERP 中间表(M_WareHouseOrder, M_MaterialStockDetail)<br>· DG/ — PDA 端实体(Label, LabelTrace, XSCKOrder)<br>· 按模块文件夹组织 + IAuditable 接口统一审计字段</div></div>
+  </div>
+</section>
+
+<!-- ================================ 07 模块化设计 ================================ -->
+<section class="slide flow" data-title="模块化">
+  <p class="kicker">MODULE DESIGN</p><h2 class="h2 mt-s">6 大业务模块 + 1 工具模块</h2>
+  <div class="flow-h" style="margin-top:20px">
+    <div class="step hl" style="flex:1.2"><div class="num" style="font-size:22px">ERP</div><div class="t">ERP 桥接</div><div class="d">ERPLoginService<br>19 种 ERP Service<br>登录/查询/保存/删除</div></div>
+    <div class="step" style="flex:1.2"><div class="num" style="font-size:22px">MES</div><div class="t">制造执行</div><div class="d">ShopOrder/WorkReport<br>Package/MaterialStock<br>TransferInOut/Label</div></div>
+    <div class="step" style="flex:1.2"><div class="num" style="font-size:22px">WMS</div><div class="t">仓储管理</div><div class="d">WareHouseOrder<br>WareHouseStock<br>CountOrder/Pallet</div></div>
+    <div class="step" style="flex:1.2"><div class="num" style="font-size:22px">QMS</div><div class="t">质量管理</div><div class="d">Defect/QCHold<br>IPQC/SOP/OQC<br>PDAQC/WebQC</div></div>
+    <div class="step" style="flex:1.2"><div class="num" style="font-size:22px">TPM</div><div class="t">设备管理</div><div class="d">ANDON绑定<br>BorrowReturn<br>PickInbound</div></div>
+    <div class="step" style="flex:1.2"><div class="num" style="font-size:22px">Basics</div><div class="t">基础资料</div><div class="d">BOM/Material<br>Route/SerialRule<br>SOP/Terminal/Files</div></div>
+  </div>
+  <div style="text-align:center;margin-top:16px"><span class="p" style="font-size:12px">ZY.MOM.Utility — 工具模块: Attribute/Constant/Enum/Interface 跨模块共享</span></div>
+</section>
+
+<!-- ================================ 08 ERP 桥接模块 ================================ -->
+<section class="slide flow" data-title="ERP 桥接">
+  <p class="kicker">MODULE · ERP BRIDGE</p><h2 class="h2 mt-s">ERP 桥接模块: ZY.ERP.*</h2>
+  <div class="card-grid g2 mt-m">
+    <div class="d-card" style="border-color:var(--accent-2)"><h4>ERPLoginService</h4><div class="row" style="font-size:12px">统一 ERP HTTP 通信层：<br>· Login → KDSVCSessionId<br>· MOM_Query → View 查询<br>· MOM_BillQuery → ExecuteBillQuery<br>· MOM_Push → 下推(工单→报工)<br>· MOM_Save → 保存+自动审核<br>· MOM_Delete/UnAudit → 删除/反审核</div></div>
+    <div class="d-card"><h4>19 种 ERP Service</h4><div class="row" style="font-size:11px;line-height:1.8">STK_InStock(采购入库) · PRD_INSTOCK(生产入库)<br>SAL_OUTSTOCK(销售出库) · PRD_PickMtrl(生产领料)<br>PRD_ReturnMtrl(生产退料) · PUR_MRB(采购退货)<br>SAL_RETURNSTOCK(销售退货) · STK_TransferDirect(调拨)<br>STK_LOTADJUST(批号调整) · STK_AssembledApp(组装拆卸)<br>PECL_WasteMatTrans(废料转移) · SUB_PickMtrl(委外发料)<br>SUB_RETURNMTRL(委外退料)</div></div>
+  </div>
+  <div class="co"><b>服务地址：</b> http://apierp.zy-fst.com/k3cloud/ · 组织 207 · 用户 SZMES</div>
+</section>
+
+<!-- ================================ 09 MES 模块 ================================ -->
+<section class="slide" data-title="MES 模块">
+  <p class="kicker">MODULE · MES</p><h2 class="h2 mt-s">MES 制造执行模块 (34 Controller)</h2>
+  <div class="card-grid g3 mt-m" style="gap:8px">
+    <div class="d-card"><h4>ShopOrder 工单</h4><div class="row" style="font-size:11px">生产工单查询/拆分(拆转工单)<br>工单状态跟踪<br>SU_ShopOrder/Sub</div></div>
+    <div class="d-card"><h4>WorkReport 报工</h4><div class="row" style="font-size:11px">良品/不良品报工<br>SN级缺陷上报<br>缺陷审批(BPM)<br>数量修正审计</div></div>
+    <div class="d-card"><h4>Package 包装</h4><div class="row" style="font-size:11px">产品包装操作<br>打印/取消打印<br>解锁管理<br>状态跟踪</div></div>
+    <div class="d-card"><h4>MaterialStock 物料</h4><div class="row" style="font-size:11px">物料库存批次级追踪<br>数量修改/重打印<br>TransferIn/Out 转序</div></div>
+    <div class="d-card"><h4>Label 标签</h4><div class="row" style="font-size:11px">LabelManagement 标签管理<br>标签打印/状态管理</div></div>
+  </div>
+</section>
+
+<!-- ================================ 10 WMS 模块 ================================ -->
+<section class="slide" data-title="WMS 模块">
+  <p class="kicker">MODULE · WMS</p><h2 class="h2 mt-s">WMS 仓储管理模块 (19 Controller)</h2>
+  <div class="card-grid g3 mt-m" style="gap:8px">
+    <div class="d-card"><h4>WareHouseOrder</h4><div class="row" style="font-size:11px">CGDH/FHTZ/InOut/XSOUT<br>多类型出入库单管理<br>源单关联+拆子单</div></div>
+    <div class="d-card"><h4>WareHouseStock</h4><div class="row" style="font-size:11px">实时库存查询<br>形态转换/过期延期<br>不良品库存<br>条码精准查库存</div></div>
+    <div class="d-card"><h4>CountOrder 盘点</h4><div class="row" style="font-size:11px">盘点方案→盘点表<br>PDA盘点(盲盘/明盘)<br>差异分析+盘盈盘亏</div></div>
+    <div class="d-card"><h4>Pallet 托盘</h4><div class="row" style="font-size:11px">托盘管理：搜索/库存移动<br>入库/出库托盘关联<br>托标签子条码展开</div></div>
+  </div>
+</section>
+
+<!-- ================================ 11 QMS 模块 ================================ -->
+<section class="slide" data-title="QMS 模块">
+  <p class="kicker">MODULE · QMS</p><h2 class="h2 mt-s">QMS 质量管理模块 (13 Controller)</h2>
+  <div class="card-grid g3 mt-m" style="gap:8px">
+    <div class="d-card"><h4>Defect 不良统计</h4><div class="row" style="font-size:11px">日/月不良品统计分析<br>明细下钻/导出<br>不良品统计图表</div></div>
+    <div class="d-card"><h4>QCHold 质量锁定</h4><div class="row" style="font-size:11px">批次添加/解锁<br>用户+管理员解锁<br>批量解锁/Excel导入<br>QCSnHoldDetail(SN级)</div></div>
+    <div class="d-card"><h4>IPQC 过程控制</h4><div class="row" style="font-size:11px">过程质量检验<br>SPC统计过程控制<br>巡检+首件检验</div></div>
+    <div class="d-card"><h4>OQC/SOP/QC</h4><div class="row" style="font-size:11px">出货检验 OQC<br>PDAQC手持检验<br>WebQC网页检验<br>SOP标准作业程序</div></div>
+  </div>
+</section>
+
+<!-- ================================ 12 外部集成 ================================ -->
+<section class="slide" data-title="外部集成">
+  <p class="kicker">EXTERNAL INTEGRATION</p><h2 class="h2 mt-s">外部系统集成架构</h2>
+  <table class="dt mt-m">
+    <thead><tr><th>外部系统</th><th>地址/协议</th><th>用途</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--accent-2)">金蝶 ERP (K/3 Cloud)</td><td>http://apierp.zy-fst.com/k3cloud/</td><td>IDGERPService → REST API</td></tr>
+      <tr><td style="color:var(--accent-2)">SSO 单点登录</td><td>http://10.1.25.23:7001/</td><td>用户认证统一入口</td></tr>
+      <tr><td style="color:var(--accent-2)">Menu 菜单服务</td><td>http://10.1.25.23:7051/</td><td>动态菜单权限管理</td></tr>
+      <tr><td style="color:var(--accent-2)">File 文件服务(MinIO)</td><td>http://10.1.25.23:7005/minio/</td><td>文件存储/图纸/附件</td></tr>
+      <tr><td style="color:var(--accent-2)">Print 打印服务</td><td>http://192.168.8.206/mom/common/print/</td><td>标签批量打印</td></tr>
+      <tr><td style="color:var(--accent-2)">Batch Print 批打</td><td>http://10.1.15.210:8081/mom/common/print/</td><td>大批量打印服务</td></tr>
+      <tr><td style="color:var(--accent-2)">External System</td><td>http://10.1.15.105:2261/</td><td>外部命名服务</td></tr>
+      <tr><td style="color:var(--accent-2)">Brava 文档查看器</td><td>https://brava.zy-fst.com:7199/</td><td>图纸/文档在线预览</td></tr>
+      <tr><td style="color:var(--accent-2)">PLC Test DB</td><td>10.1.15.232 · MYXIOT</td><td>PLC 测试数据连接</td></tr>
+    </tbody>
+  </table>
+  <div class="co"><b>集成模式：</b> ERP 通过 ExternalContract 接口 + HTTP 调用，其他系统通过各自协议(WCF/WebAPI/MinIO SDK)集成。</div>
+</section>
+
+<!-- ================================ 13 配置管理 ================================ -->
+<section class="slide col2" data-title="配置管理">
+  <div>
+    <p class="kicker">CONFIGURATION</p><h2 class="h2 mt-s">配置管理<br>多环境支持</h2>
+  </div>
+  <div>
+    <div class="card-grid" style="gap:10px">
+      <div class="d-card" style="border-color:var(--accent-2)"><h4>环境配置文件</h4><div class="row" style="font-size:12px">· appsettings.json (基础)<br>· appsettings.Development.json<br>· appsettings.Staging.json<br>· appsettings.DGMOM.json (生产)<br><br>通过 ASPNETCORE_ENVIRONMENT 切换</div></div>
+      <div class="d-card"><h4>关键配置项</h4><div class="row" style="font-size:12px">· 加密 SQL 连接串<br>· ERP 服务地址 + 账套<br>· SSO/Menu/File/Print URLs<br>· 打印授权许可证<br>· 文件上传大小限制<br>· CORS 跨域策略</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 14 横切关注点 ================================ -->
+<section class="slide flow" data-title="横切关注点">
+  <p class="kicker">CROSS-CUTTING CONCERNS</p><h2 class="h2 mt-s">横切关注点设计</h2>
+  <div class="card-grid g2 mt-m">
+    <div class="d-card"><h4>BaseController 基类</h4><div class="row" style="font-size:12px">· Try/Catch UserFriendlyException<br>· TimeHelper 时间工具封装<br>· BaseResponseModel 统一返回<br>· 公共错误处理逻辑</div></div>
+    <div class="d-card"><h4>BaseResponseModel</h4><div class="row" style="font-size:12px">· Code(int) + Msg(string) + Data<br>· ResponseModel&lt;T&gt; 带类型<br>· DataPageResponseModel 分页<br>· 统一 API 响应契约</div></div>
+    <div class="d-card"><h4>SearchCriteriaModel</h4><div class="row" style="font-size:12px">· Page + PageSize 分页<br>· SortField + SortOrder 排序<br>· 泛型 SearchCriteriaModel&lt;T&gt;<br>· 所有查询接口统一入参</div></div>
+    <div class="d-card"><h4>IAuditable 接口</h4><div class="row" style="font-size:12px">· CreateTime/Creator<br>· ModifyTime/Modifier<br>· IsDelete 软删除<br>· 所有实体统一审计追踪</div></div>
+  </div>
+</section>
+
+<!-- ================================ 15 枚举体系 ================================ -->
+<section class="slide" data-title="枚举体系">
+  <p class="kicker">UTILITY · ENUMS</p><h2 class="h2 mt-s">枚举体系: 8 大文件 200+ 枚举值</h2>
+  <table class="dt mt-m">
+    <thead><tr><th>文件</th><th>核心枚举</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--accent-2)">WMSEnum.cs</td><td>ProductionStatus(0-8), InOutStaus, InOutReceiveStatus, FHTZStatus, DGFHTZStatus, XSCKStatus, BusinessType, OrderType, FIFOWareHouse, SwitchType</td></tr>
+      <tr><td style="color:var(--accent-2)">MDMEnum.cs</td><td>MaterialTypeEnum(CP/YC/BCP/QT), LabelStatus(57+值), PackageInOutStatus, PrintStatus</td></tr>
+      <tr><td style="color:var(--accent-2)">IPQC_ParametersEnum.cs</td><td>HoldStatus(Hold/Unhold), QCStatus, DefectType</td></tr>
+      <tr><td style="color:var(--accent-2)">ERPEnum.cs</td><td>ERPOrderType(FHD1/FHD2→XSC1/XSC2), ErpStatus(0/1/2), FormID</td></tr>
+      <tr><td>其他 4 文件</td><td>ShopOrderType, DGBusinessType, FileType, UserRole 等</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================================ 16 EF Core + SqlSugar ================================ -->
+<section class="slide col2" data-title="ORM 设计">
+  <div>
+    <p class="kicker">DATA LAYER · ORM</p><h2 class="h2 mt-s">EF Core +<br>SqlSugar 双 ORM</h2>
+  </div>
+  <div>
+    <div class="card-grid" style="gap:10px">
+      <div class="d-card" style="border-color:var(--accent-2)"><h4>EF Core</h4><div class="row" style="font-size:12px">· ApplicationDBContext 主上下文<br>· DbSet&lt;T&gt; 实体管理<br>· OnModelCreating 配置映射<br>· Migration 数据库迁移<br>· 主 CRUD 操作首选</div></div>
+      <div class="d-card"><h4>SqlSugar</h4><div class="row" style="font-size:12px">· SqlSugarManage 管理类<br>· ERP 接口日志动态查询<br>· SugarRepository 仓储<br>· 复杂条件链式构建<br>· 多表联查 · 分页 · 聚合</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 17 项目结构树 ================================ -->
+<section class="slide" data-title="项目结构">
+  <p class="kicker">PROJECT STRUCTURE</p><h2 class="h2 mt-s">完整项目结构树</h2>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2);line-height:1.8;margin-top:16px">
+    <div style="color:var(--accent)">ZY.MOM.WebApplication.sln</div>
+    <div>└─ src/</div>
+    <div>  ├─ <span style="color:var(--accent-2)">ZY.Basics.*</span>  (3项目: Contract / Model / Service)</div>
+    <div>  ├─ <span style="color:var(--accent-2)">ZY.ERP.*</span>     (3项目: Contract / Model / Service + Manage)</div>
+    <div>  ├─ <span style="color:var(--accent-2)">ZY.MES.*</span>     (3项目: Contract / Model / Service)</div>
+    <div>  ├─ <span style="color:var(--accent-2)">ZY.QMS.*</span>     (3项目: Contract / Model / Service)</div>
+    <div>  ├─ <span style="color:var(--accent-2)">ZY.TPM.*</span>     (3项目: Contract / Model / Service)</div>
+    <div>  ├─ <span style="color:var(--accent-2)">ZY.WMS.*</span>     (3项目: Contract / Model / Service)</div>
+    <div>  ├─ <span style="color:var(--accent-2)">ZY.MOM.DataAccess</span>        (EF Core + SqlSugar + Dapper)</div>
+    <div>  ├─ <span style="color:var(--accent-2)">ZY.MOM.ExternalContract</span>  (IDGERPService 等外部接口)</div>
+    <div>  ├─ <span style="color:var(--accent-2)">ZY.MOM.ExternalModel</span>     (ERP/SSO/Print 等外部模型)</div>
+    <div>  ├─ <span style="color:var(--accent-2)">ZY.MOM.Utility</span>           (Attribute/Constant/Enum/Interface)</div>
+    <div>  ├─ <span style="color:var(--accent-2)">ZY.MOM.WebApi</span>            (Controllers + appsettings)</div>
+    <div>  └─ <span style="color:var(--accent-2)">ZY.MOM.WebModel</span>           (DTO/AddDto/ResponseDto)</div>
+  </div>
+</section>
+
+<!-- ================================ 18 总结 ================================ -->
+<section class="slide full" data-title="总结">
+  <p class="kicker">SUMMARY</p>
+  <h1 class="h1 mt-s">技术栈<span style="color:var(--accent-2)">全景</span></h1>
+  <div class="card-grid g3 mt-l" style="width:100%">
+    <div class="d-card"><h4>框架与语言</h4><div class="row" style="font-size:12px">· .NET 5.0<br>· C#<br>· ASP.NET Core Web API<br>· 依赖注入(DI)</div></div>
+    <div class="d-card"><h4>数据访问</h4><div class="row" style="font-size:12px">· Entity Framework Core<br>· SqlSugar ORM<br>· Dapper (高性能SQL)<br>· SQL Server 2014+</div></div>
+    <div class="d-card"><h4>架构模式</h4><div class="row" style="font-size:12px">· 四层分层架构<br>· 接口驱动设计(Contract)<br>· 仓储模式(Repository)<br>· DTO/Entity 分离</div></div>
+    <div class="d-card"><h4>外部集成</h4><div class="row" style="font-size:12px">· Kingdee K3Cloud REST API<br>· WCF 服务<br>· MinIO 对象存储<br>· 打印服务/Brava</div></div>
+    <div class="d-card"><h4>DevOps</h4><div class="row" style="font-size:12px">· Docker 容器化<br>· Jenkins CI/CD<br>· 多环境配置<br>· Sonar 代码质量</div></div>
+    <div class="d-card"><h4>设计原则</h4><div class="row" style="font-size:12px">· 高内聚低耦合<br>· 单一职责(SRP)<br>· 统一响应/分页模式<br>· 审计追踪全覆盖</div></div>
+  </div>
+  <div class="deck-footer" style="margin-top:32px"><span style="color:var(--text-3)">MOM 系统 · 架构剖析</span><span class="slide-number"></span></div>
+</section>
+
+</div><script src="assets/runtime.js"></script></body></html>

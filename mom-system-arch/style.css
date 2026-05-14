@@ -1,0 +1,111 @@
+/* mom-sales-outbound-flow — engineering-whiteprint */
+.tpl-mf{font-family:'Inter','Noto Sans SC',sans-serif}
+.tpl-mf .slide{padding:52px 68px;background:var(--bg);display:grid;grid-template-columns:1fr;align-content:start}
+.tpl-mf .slide.col2{grid-template-columns:1fr 1fr;gap:40px;align-content:center}
+.tpl-mf .slide.col3{grid-template-columns:1fr 1fr 1fr;gap:24px;align-content:start}
+.tpl-mf .slide.full{display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.tpl-mf .slide.flow{display:flex;flex-direction:column;justify-content:center}
+
+/* typography */
+.tpl-mf .h1{font-family:'JetBrains Mono','Inter',monospace;font-size:68px;line-height:1.06;font-weight:700;color:var(--text-1);text-transform:uppercase}
+.tpl-mf .h2{font-family:'JetBrains Mono','Inter',monospace;font-size:38px;line-height:1.15;font-weight:700;color:var(--text-1)}
+.tpl-mf .h3{font-family:'JetBrains Mono','Inter',monospace;font-size:22px;font-weight:700;color:var(--text-1)}
+.tpl-mf .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--accent-2);letter-spacing:.14em;text-transform:uppercase}
+.tpl-mf .lede{font-size:17px;color:var(--text-2);line-height:1.7;max-width:75ch}
+.tpl-mf .slide.full .h1{font-size:80px}
+
+/* flow step chain — horizontal */
+.tpl-mf .flow-h{display:flex;align-items:stretch;gap:0;margin-top:20px}
+.tpl-mf .flow-h .step{flex:1;border:1.5px solid var(--border-strong);padding:18px 14px;text-align:center;border-right:none;display:flex;flex-direction:column;justify-content:center;background:var(--surface)}
+.tpl-mf .flow-h .step:last-child{border-right:1.5px solid var(--border-strong)}
+.tpl-mf .flow-h .step.hl{border-color:var(--accent-2);background:rgba(30,90,196,.04)}
+.tpl-mf .flow-h .step .num{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--accent-2)}
+.tpl-mf .flow-h .step .t{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--text-1);margin-top:6px}
+.tpl-mf .flow-h .step .d{font-size:11px;color:var(--text-3);margin-top:4px;line-height:1.5}
+.tpl-mf .flow-h .step .api{font-size:10px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:6px;line-height:1.4;word-break:break-all}
+
+/* flow step chain — vertical */
+.tpl-mf .flow-v{display:flex;flex-direction:column;align-items:stretch;gap:6px;margin-top:16px}
+.tpl-mf .flow-v .vstep{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border-strong);padding:10px 16px;background:var(--surface)}
+.tpl-mf .flow-v .vstep.hl{border-color:var(--accent-2)}
+.tpl-mf .flow-v .vstep .vn{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--accent-2);min-width:28px}
+.tpl-mf .flow-v .vstep .vt{font-size:14px;color:var(--text-1);font-weight:600}
+.tpl-mf .flow-v .vstep .vd{font-size:12px;color:var(--text-3);margin-left:auto;font-family:'JetBrains Mono',monospace}
+.tpl-mf .flow-v .vstep .arw{color:var(--accent-2);font-size:16px;margin:0 4px}
+
+/* validation checklist */
+.tpl-mf .check-grid{display:grid;gap:6px;margin-top:12px}
+.tpl-mf .check-grid.g2{grid-template-columns:1fr 1fr}
+.tpl-mf .check-item{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--border);padding:10px 14px;font-size:13px;line-height:1.6}
+.tpl-mf .check-item.pass{border-color:var(--good)}
+.tpl-mf .check-item.fail{border-color:var(--bad)}
+.tpl-mf .check-item .icon{flex:none;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px}
+.tpl-mf .check-item.pass .icon{color:var(--good)}
+.tpl-mf .check-item.fail .icon{color:var(--bad)}
+.tpl-mf .check-item .c-body{color:var(--text-2)}
+.tpl-mf .check-item .c-body b{color:var(--text-1)}
+
+/* data card */
+.tpl-mf .d-card{border:1.5px solid var(--border-strong);padding:18px 22px;background:var(--surface);font-size:13px}
+.tpl-mf .d-card h4{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--accent-2);margin:0 0 8px}
+.tpl-mf .d-card .row{color:var(--text-2);line-height:1.7}
+
+/* table */
+.tpl-mf .dt{width:100%;border-collapse:collapse;font-size:13px}
+.tpl-mf .dt th{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--accent-2);text-align:left;padding:8px 12px;border-bottom:2px solid var(--border-strong);letter-spacing:.06em}
+.tpl-mf .dt td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.6;color:var(--text-2)}
+.tpl-mf .dt td:first-child{font-weight:600;color:var(--text-1);white-space:nowrap}
+
+/* pill */
+.tpl-mf .p{display:inline-block;padding:2px 10px;border:1px solid var(--border-strong);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2)}
+.tpl-mf .p.hl{border-color:var(--accent-2);color:var(--accent-2)}
+.tpl-mf .p.err{border-color:var(--bad);color:var(--bad)}
+.tpl-mf .p.ok{border-color:var(--good);color:var(--good)}
+
+/* callout */
+.tpl-mf .co{border-left:4px solid var(--accent-2);background:var(--surface-2);padding:16px 20px;margin-top:16px;font-size:14px;color:var(--text-2);line-height:1.6}
+.tpl-mf .co b{color:var(--accent-2)}
+
+/* status badge */
+.tpl-mf .badge{display:inline-block;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;border:1px solid}
+.tpl-mf .badge.s0{border-color:var(--text-3);color:var(--text-3)}            /* Create */
+.tpl-mf .badge.s1{border-color:var(--warn);color:var(--warn)}               /* Pick */
+.tpl-mf .badge.s2{border-color:var(--accent-2);color:var(--accent-2)}       /* Send */
+.tpl-mf .badge.se{border-color:var(--bad);color:var(--bad)}                 /* Error */
+
+/* connector arrow */
+.tpl-mf .c-arr{text-align:center;font-size:22px;color:var(--accent-2);font-weight:700;margin:4px 0}
+
+/* metric row */
+.tpl-mf .m-row{display:flex;gap:12px;margin-top:12px}
+.tpl-mf .m-row .m{flex:1;border:1px solid var(--border-strong);padding:14px 16px;text-align:center;background:var(--surface)}
+.tpl-mf .m-row .m .val{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:var(--accent)}
+.tpl-mf .m-row .m .lbl{font-size:11px;color:var(--text-3);margin-top:4px;font-family:'JetBrains Mono',monospace}
+
+/* swimlane */
+.tpl-mf .swimlane{display:grid;grid-template-columns:80px 1fr;gap:0;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:11px}
+.tpl-mf .swimlane .sw-lane{display:contents}
+.tpl-mf .swimlane .sw-label{display:flex;align-items:center;justify-content:center;border:1px solid var(--border-strong);padding:6px;font-weight:700;color:var(--text-1);writing-mode:vertical-rl;text-orientation:mixed;background:var(--surface-2);min-height:60px}
+.tpl-mf .swimlane .sw-row{display:grid;grid-template-columns:repeat(autofill,minmax(90px,1fr));align-items:stretch;gap:0}
+.tpl-mf .swimlane .sw-node{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--border);padding:8px 6px;text-align:center;font-size:10px;min-height:56px}
+.tpl-mf .swimlane .sw-node.sn-hl{border-color:var(--accent-2);background:rgba(30,90,196,.05)}
+.tpl-mf .swimlane .sw-node .sn-t{font-weight:700;color:var(--text-1);font-size:11px}
+.tpl-mf .swimlane .sw-node .sn-sub{color:var(--text-3);font-size:9px;margin-top:2px}
+
+/* grid */
+.tpl-mf .card-grid{display:grid;gap:10px}
+.tpl-mf .card-grid.g2{grid-template-columns:1fr 1fr}
+.tpl-mf .card-grid.g3{grid-template-columns:1fr 1fr 1fr}
+.tpl-mf .card-grid.g4{grid-template-columns:1fr 1fr 1fr 1fr}
+
+/* flow diagram — fork */
+.tpl-mf .fork{display:flex;align-items:center;justify-content:center;gap:0;margin-top:20px}
+.tpl-mf .fork .f-mid{display:flex;flex-direction:column;align-items:center}
+.tpl-mf .fork .f-branch{display:flex;flex-direction:column;align-items:center;flex:1}
+.tpl-mf .fork .f-node{padding:14px 20px;border:1.5px solid var(--border-strong);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--text-1);text-align:center;min-width:120px;background:var(--surface)}
+.tpl-mf .fork .f-node.hl{border-color:var(--accent-2);color:var(--accent-2)}
+.tpl-mf .fork .f-line{width:1.5px;height:20px;background:var(--border-strong);margin:2px 0}
+.tpl-mf .fork .f-line-h{height:1.5px;background:var(--border-strong);flex:1}
+.tpl-mf .fork .f-label{font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:4px;text-align:center}
+
+.tpl-mf .notes{display:none}

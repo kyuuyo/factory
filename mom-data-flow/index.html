@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MOM 系统数据模型与流转</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/themes/engineering-whiteprint.css">
+<link rel="stylesheet" href="assets/animations/animations.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="tpl-mf" data-themes="engineering-whiteprint,blueprint,tokyo-night">
+<div class="deck">
+
+<!-- ================================ 01 COVER ================================ -->
+<section class="slide full" data-title="封面">
+  <p class="kicker">MANUFACTURING OPERATIONS MANAGEMENT</p>
+  <h1 class="h1 mt-s">MOM 系统<br><span style="color:var(--accent-2)">数据模型与流转</span></h1>
+  <p class="lede mt-l">7 大类 30+ 核心表 · 库存/单据/标签状态机 · MOM↔ERP 数据映射 · 枚举体系。</p>
+  <div class="row mt-l" style="gap:10px"><span class="p hl">WareHouseStock</span><span class="p hl">Label</span><span class="p">状态机</span><span class="p">Trace</span><span class="p">DTO</span></div>
+  <div class="deck-footer" style="margin-top:48px"><span style="color:var(--text-3)">MOM 系统 · 数据模型与流转</span><span class="slide-number" data-current="1" data-total="18"></span></div>
+</section>
+
+<!-- ================================ 02 全景导航 ================================ -->
+<section class="slide" data-title="全景导航">
+  <p class="kicker">DATA MODEL OVERVIEW</p><h2 class="h2 mt-s">核心数据表全景 (7 类 30+ 表)</h2>
+  <div class="card-grid g3 mt-m" style="gap:8px">
+    <div class="d-card" style="border-left:4px solid var(--accent-2)"><h4>🔵 库存核心</h4><div class="row" style="font-size:11px;line-height:1.8">WareHouseStock<br>WareHouseStockTrace<br>WareHouseOrder<br>WareHouseOrderDetail<br>WareHouseOrderReceive</div></div>
+    <div class="d-card" style="border-left:4px solid var(--good)"><h4>🟢 标签体系</h4><div class="row" style="font-size:11px;line-height:1.8">Label · LabelTrace<br>IronCorePackaging<br>Pallet<br>WarehouseReceipting</div></div>
+    <div class="d-card" style="border-left:4px solid var(--warn)"><h4>🟠 质量数据</h4><div class="row" style="font-size:11px;line-height:1.8">QCHold · QCSnHoldDetail<br>DefectStatistics<br>IPQC · OQC · SOP</div></div>
+    <div class="d-card" style="border-left:4px solid var(--accent-3)"><h4>🔴 ERP 中间表</h4><div class="row" style="font-size:11px;line-height:1.8">M_WareHouseOrder<br>M_MaterialStockDetail<br>ERP_MESInterFaceLog<br>ERP_MESInterFaceLog_File</div></div>
+    <div class="d-card" style="border-left:4px solid var(--text-1)"><h4>⚫ PDA 业务</h4><div class="row" style="font-size:11px;line-height:1.8">XSCKOrder<br>XSCKOrderReceive<br>CountOrder<br>BorrowReturn · ANDON</div></div>
+    <div class="d-card" style="border-left:4px solid var(--accent)"><h4>⚪ 基础数据</h4><div class="row" style="font-size:11px;line-height:1.8">SU_Material · SU_Route<br>SU_SerialRule · SU_BOM<br>SU_WareHouse · SU_Position<br>SU_ProcessTerminalMapping</div></div>
+  </div>
+</section>
+
+<!-- ================================ 03 库存状态机 ================================ -->
+<section class="slide flow" data-title="库存状态机">
+  <p class="kicker">STATE MACHINE · STOCK</p><h2 class="h2 mt-s">WareHouseStock 库存状态机</h2>
+  <div style="display:flex;align-items:center;justify-content:center;gap:20px;margin-top:24px;flex-wrap:wrap">
+    <div style="border:2px solid var(--text-3);padding:28px 22px;text-align:center"><div style="font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;color:var(--text-3)">0</div><div style="font-size:13px;font-weight:700;color:var(--text-1);margin-top:4px">Create</div><div style="font-size:10px;color:var(--text-3)">在库可用</div></div>
+    <span style="font-size:24px;color:var(--accent-2)">→</span>
+    <div style="border:2px solid var(--warn);padding:28px 22px;text-align:center;background:rgba(180,137,0,.05)"><div style="font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;color:var(--warn)">1</div><div style="font-size:13px;font-weight:700;color:var(--text-1);margin-top:4px">Pick</div><div style="font-size:10px;color:var(--text-3)">已选料(预占)</div></div>
+    <span style="font-size:24px;color:var(--accent-2)">→</span>
+    <div style="border:2px solid var(--accent-2);padding:28px 22px;text-align:center;background:rgba(30,90,196,.05)"><div style="font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;color:var(--accent-2)">2</div><div style="font-size:13px;font-weight:700;color:var(--text-1);margin-top:4px">Send</div><div style="font-size:10px;color:var(--text-3)">已出库</div></div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:16px;margin-top:16px;flex-wrap:wrap">
+    <span class="p" style="font-size:10px">3=Receitping(分条)</span><span class="p" style="font-size:10px">4=CancelReceitping</span>
+    <span class="p" style="font-size:10px">5=BLTransfer(废料转换)</span><span class="p" style="font-size:10px">6=Splitted(拆包)</span>
+    <span class="p" style="font-size:10px">7=OtherOutbound</span><span class="p" style="font-size:10px">8=CX(拆卸)</span>
+  </div>
+  <div class="co" style="margin-top:20px"><b>PDA 路径跳过 Pick(1)：</b> Create(0) 直接 → Send(2)，无中间预占态。Web 路径走完整 0→1→2 三态转换。</div>
+</section>
+
+<!-- ================================ 04 单据状态机 ================================ -->
+<section class="slide flow" data-title="单据状态机">
+  <p class="kicker">STATE MACHINE · ORDERS</p><h2 class="h2 mt-s">单据状态机: InOutStaus / FHTZStatus / DGFHTZStatus</h2>
+  <div class="card-grid g3 mt-m">
+    <div class="d-card" style="border-color:var(--accent-2)"><h4>InOutStaus (出库单)</h4>
+      <div class="flow-v" style="margin-top:8px;gap:4px">
+        <div class="vstep" style="font-size:11px;padding:6px 10px"><span class="vn">1</span><span class="vt">WaitOutbound</span><span class="vd">待出库</span></div>
+        <div class="vstep hl" style="font-size:11px;padding:6px 10px"><span class="vn">2</span><span class="vt">Outbounding</span><span class="vd">出库中</span></div>
+        <div class="vstep" style="font-size:11px;padding:6px 10px"><span class="vn">3</span><span class="vt">Outbounded</span><span class="vd">已出库</span></div>
+      </div>
+    </div>
+    <div class="d-card"><h4>FHTZStatus (发货通知)</h4>
+      <div class="flow-v" style="margin-top:8px;gap:4px">
+        <div class="vstep" style="font-size:11px;padding:6px 10px"><span class="vn">1</span><span class="vt">WaitDeliver</span><span class="vd">待交付</span></div>
+        <div class="vstep" style="font-size:11px;padding:6px 10px"><span class="vn">2</span><span class="vt">Delivering</span><span class="vd">交付未完成</span></div>
+        <div class="vstep hl" style="font-size:11px;padding:6px 10px"><span class="vn">3</span><span class="vt">Delivered</span><span class="vd">交付完成</span></div>
+      </div>
+    </div>
+    <div class="d-card"><h4>DGFHTZ/XSCKStatus (PDA)</h4>
+      <div class="flow-v" style="margin-top:8px;gap:4px">
+        <div class="vstep" style="font-size:11px;padding:6px 10px"><span class="vn">1</span><span class="vt">Normal</span><span class="vd">正常</span></div>
+        <div class="vstep hl" style="font-size:11px;padding:6px 10px"><span class="vn">2</span><span class="vt">AutoClosed</span><span class="vd">自动关闭</span></div>
+        <div class="vstep" style="font-size:11px;padding:6px 10px"><span class="vn">3</span><span class="vt">HandClosed</span><span class="vd">手动关闭</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="co"><b>ErpStatus 独立状态机：</b> 0=待处理 → 1=已推送成功(ErpOrder=ERP单号) → 2=推送失败(ErpMsg=错误)</div>
+</section>
+
+<!-- ================================ 05 WareHouseOrder 三部曲 ================================ -->
+<section class="slide flow" data-title="三部曲">
+  <p class="kicker">CORE ENTITY · 1-N-N</p><h2 class="h2 mt-s">WareHouseOrder → Detail → Receive 三部曲</h2>
+  <div class="flow-h" style="margin-top:20px">
+    <div class="step hl" style="flex:2"><div class="num">1</div><div class="t">WareHouseOrder 主单</div><div class="d">OrderNo · BusinessTypeCode · ProductStatus · SourceOrderNo · CustomerCode · DeliverTime · ErpStatus</div></div>
+    <div class="step" style="flex:1.5"><div class="num">N</div><div class="t">WareHouseOrderDetail</div><div class="d">每条物料一行<br>MaterialId · Qty · ActQty<br>CustomerMaterialCode</div></div>
+    <div class="step" style="flex:1.5"><div class="num">N</div><div class="t">WareHouseOrderReceive</div><div class="d">每个扫描条码一行<br>Barcode · Qty · Lotno<br>Warehouse · Position</div></div>
+  </div>
+  <div class="co"><b>关系：</b> 1 个出库单 → N 条物料行(Detail) → 每行 N 个批次条码(Receive)。所有操作记 Trace。</div>
+</section>
+
+<!-- ================================ 06 WareHouseStock 详解 ================================ -->
+<section class="slide col2" data-title="Stock 详解">
+  <div>
+    <p class="kicker">CORE TABLE · STOCK</p><h2 class="h2 mt-s">WareHouseStock<br>库存主表</h2>
+    <div class="co"><b>全系统最核心的表：</b> 每次出入库操作最终都体现为此表的字段变更。</div>
+  </div>
+  <div>
+    <table class="dt" style="font-size:12px">
+      <thead><tr><th>字段</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--accent-2)">Barcode</td><td>唯一标识条码</td></tr>
+        <tr><td style="color:var(--accent-2)">MaterialId/MaterialCode</td><td>物料</td></tr>
+        <tr><td style="color:var(--accent-2)">Lotno</td><td>批号</td></tr>
+        <tr><td style="color:var(--warn)">ProductionStatus</td><td>库存状态(0-8)</td></tr>
+        <tr><td style="color:var(--accent-2)">Qty / RemainQty / SendQty</td><td>总量/剩余/已发</td></tr>
+        <tr><td style="color:var(--accent-2)">WarehouseId/PositionId</td><td>仓库/库位</td></tr>
+        <tr><td style="color:var(--bad)">QCStatus</td><td>质量锁定(1=锁定)</td></tr>
+        <tr><td>ExpiredDatetime</td><td>有效期</td></tr>
+        <tr><td>CreateTime/Creator</td><td>IAuditable 审计</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================================ 07 Trace 履历 ================================ -->
+<section class="slide flow" data-title="Trace 履历">
+  <p class="kicker">AUDIT · TRACE</p><h2 class="h2 mt-s">WareHouseStockTrace 库存履历表: 每次操作都留痕</h2>
+  <div class="flow-h" style="margin-top:16px">
+    <div class="step hl"><div class="num" style="font-size:20px">Pick</div><div class="t">选料时 Trace</div><div class="d">BusinessType=XSOUT<br>OrderType=OUT<br>Remarks="销售出库"</div></div>
+    <div class="step"><div class="num" style="font-size:20px">OutSave</div><div class="t">扫码时 Trace</div><div class="d">BusinessType=业务类型<br>OrderType=OUT<br>Remarks=描述</div></div>
+    <div class="step hl"><div class="num" style="font-size:20px">CPIN</div><div class="t">成品入库 Trace</div><div class="d">BusinessType=CPIN<br>OrderType=IN<br>Remarks="成品入库"</div></div>
+    <div class="step"><div class="num" style="font-size:20px">SendFinish</div><div class="t">取消选料 Trace</div><div class="d">Remarks="配料完成取消选料"<br>回退操作也留</div></div>
+  </div>
+  <div class="co"><b>Trace 字段克隆模式：</b> 每次操作从 WareHouseStock 克隆到 Trace，记录操作时刻的快照(Qty/Barcode/Status等) + 关联单据号(OrderNo)。</div>
+</section>
+
+<!-- ================================ 08 Label 体系 ================================ -->
+<section class="slide flow" data-title="Label 体系">
+  <p class="kicker">LABEL LIFECYCLE</p><h2 class="h2 mt-s">Label + LabelTrace 标签全生命周期</h2>
+  <div class="card-grid g2 mt-m">
+    <div class="d-card" style="border-color:var(--accent-2)"><h4>Label 标签主表</h4><div class="row" style="font-size:12px">
+      · Barcode 唯一条码<br>
+      · Lotno / PalletNo 批号/托号<br>
+      · MaterialId/Code 物料<br>
+      · Qty 数量<br>
+      · <b>ProductStatus</b> → LabelStatus 枚举 (57+ 值)<br>
+      · Warehouse/Position 库位信息<br>
+      · OrderNo 关联业务单号
+    </div></div>
+    <div class="d-card"><h4>LabelTrace 标签履历</h4><div class="row" style="font-size:12px">
+      · 从 Label 克隆字段<br>
+      · OrderNo = XSCK 出库单号<br>
+      · BusinessTypeCode = XSCK<br>
+      · BusinessTypeName = "销售出库"<br>
+      · 记录标签每次状态变化<br>
+      · PDA XSCK 出库时生成
+    </div></div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:10px;margin-top:16px;flex-wrap:wrap;font-size:10px;font-family:'JetBrains Mono',monospace">
+    <span class="p hl" style="font-size:10px">入库 → Label 生成</span>
+    <span class="p" style="font-size:10px">-> SCFLOut 生产发料</span>
+    <span class="p" style="font-size:10px">-> XSCKOut 销售出库</span>
+    <span class="p" style="font-size:10px">-> WWFLOut 委外发料</span>
+    <span class="p" style="font-size:10px">-> DBOut 调拨出库</span>
+  </div>
+</section>
+
+<!-- ================================ 09 ERP 中间表 ================================ -->
+<section class="slide" data-title="ERP 中间表">
+  <p class="kicker">ERP INTERMEDIATE TABLES</p><h2 class="h2 mt-s">ERP 中间表: MOM ↔ ERP 数据桥</h2>
+  <div class="card-grid g2 mt-m">
+    <div class="d-card" style="border-color:var(--accent-2)">
+      <h4>M_WareHouseOrder (订单映射表)</h4>
+      <table class="dt" style="font-size:11px">
+        <tr><td>OrderNo</td><td>ERP 销售订单号</td></tr>
+        <tr><td>MaterialCode / MaterialQTY</td><td>物料/数量</td></tr>
+        <tr><td>TaxPrice / Price / TaxRate</td><td>价格三要素</td></tr>
+        <tr><td>SOEntryId</td><td>ERP 行 ID (回写关键)</td></tr>
+        <tr><td>ERPOrderType</td><td>FHD1/FHD2 → XSC1/XSC2</td></tr>
+        <tr><td>CustomerCode / CustomerName</td><td>客户信息</td></tr>
+        <tr><td>F_PECL_ASN / F_PECL_CustLot</td><td>ASN/客户批号</td></tr>
+      </table>
+    </div>
+    <div class="d-card">
+      <h4>M_MaterialStockDetail (物料库存中间表)</h4>
+      <table class="dt" style="font-size:11px">
+        <tr><td>OrderNo / ShopOrderSubCode</td><td>工单号</td></tr>
+        <tr><td>MaterialCode / MaterialName</td><td>物料</td></tr>
+        <tr><td>Qty / ActQty</td><td>应发/实发</td></tr>
+        <tr><td>ProductionStatus</td><td>领料状态</td></tr>
+        <tr><td>Barcode / Lotno</td><td>条码/批号</td></tr>
+      </table>
+      <p style="font-size:10px;color:var(--text-3);margin-top:8px">生产领料 Submit 时写入，桥接 MOM 物料库存与 ERP 生产工单。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 10 MOM→ERP 数据映射 ================================ -->
+<section class="slide flow" data-title="MOM→ERP 映射">
+  <p class="kicker">DATA MAPPING</p><h2 class="h2 mt-s">MOM → ERP SAL_OUTSTOCK 19 字段映射流转</h2>
+  <div class="card-grid g2 mt-m" style="gap:10px">
+    <div class="d-card"><h4>MOM 数据源 → ERP 表头</h4>
+      <table class="dt" style="font-size:11px">
+        <tr><td>XSCKOrder.OrderNo</td><td>→ FBillNo</td></tr>
+        <tr><td>ERPOrderType</td><td>→ FBillTypeID.FNUMBER</td></tr>
+        <tr><td>SAL_DELIVERYNOTICE</td><td>→ FCustomerID</td></tr>
+        <tr><td>M_WareHouseOrder</td><td>→ F_PECL_StockOrgId / CustId</td></tr>
+      </table>
+    </div>
+    <div class="d-card"><h4>MOM 数据源 → ERP 行项</h4>
+      <table class="dt" style="font-size:11px">
+        <tr><td>MaterialCode</td><td>→ FMaterialID.FNumber</td></tr>
+        <tr><td>Qty(Lotno/WH)</td><td>→ FRealQty, FLot, FStockID</td></tr>
+        <tr><td>M_WareHouseOrder</td><td>→ FPrice, FTaxPrice, FEntryTaxRate</td></tr>
+        <tr><td>M_WareHouseOrder</td><td>→ FSOEntryId (关键关联)</td></tr>
+        <tr><td>FHTZ单号+明细ID</td><td>→ FEntity_Link (FID+FEntryId)</td></tr>
+        <tr><td>ASN/客户料号</td><td>→ F_PECL_ASN, F_zyu_KHDD</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 11 DTO 模式 ================================ -->
+<section class="slide flow" data-title="DTO 模式">
+  <p class="kicker">DTO / REQUEST / RESPONSE</p><h2 class="h2 mt-s">统一请求响应与分页模式</h2>
+  <div class="card-grid g2 mt-m">
+    <div class="d-card" style="border-color:var(--accent-2)"><h4>SearchCriteriaModel&lt;T&gt; 搜索模式</h4><div class="code" style="background:var(--surface-2);color:var(--text-1);font-size:11px;line-height:1.8;margin-top:8px">
+<span class="cmt">// 前端发送</span>
+{<br>&nbsp;&nbsp;<span class="kw">Page</span>: 1, <span class="kw">PageSize</span>: 20,<br>&nbsp;&nbsp;<span class="kw">SortField</span>: "CreateTime", <span class="kw">SortOrder</span>: "desc",<br>&nbsp;&nbsp;<span class="kw">Search</span>: { MaterialCode: "A001" }<br>}
+      </div></div>
+    <div class="d-card"><h4>BaseResponseModel 响应模式</h4><div class="code" style="background:var(--surface-2);color:var(--text-1);font-size:11px;line-height:1.8;margin-top:8px">
+<span class="cmt">// 常规响应</span>
+{ <span class="kw">Code</span>: 200, <span class="kw">Msg</span>: "success", <span class="kw">Data</span>: {...} }<br><br>
+<span class="cmt">// 分页响应 DataPageResponseModel</span>
+{ <span class="kw">Code</span>: 200, <span class="kw">Data</span>: {<br>&nbsp;&nbsp;<span class="kw">Total</span>: 100, <span class="kw">Page</span>: 1,<br>&nbsp;&nbsp;<span class="kw">List</span>: [...] } }
+      </div></div>
+  </div>
+</section>
+
+<!-- ================================ 12 质量数据 ================================ -->
+<section class="slide" data-title="质量数据">
+  <p class="kicker">QUALITY DATA</p><h2 class="h2 mt-s">质量数据体系: QCHold + Defect + SPC</h2>
+  <div class="card-grid g3 mt-m" style="gap:10px">
+    <div class="d-card" style="border-color:var(--bad)">
+      <h4>QCHold 质量锁定</h4><div class="row" style="font-size:11px;line-height:1.8">
+        · ProductStatus: Hold/Unhold<br>
+        · 批次级锁定(批号维度)<br>
+        · 添加/解锁/批量解锁<br>
+        · Excel 导入批量锁定<br>
+        · 解锁权限: 用户 vs 管理员
+      </div>
+    </div>
+    <div class="d-card" style="border-color:var(--bad)">
+      <h4>QCSnHoldDetail SN 锁定</h4><div class="row" style="font-size:11px;line-height:1.8">
+        · PackNo = 条码号<br>
+        · ProductStatus: Hold/Unhold<br>
+        · 精确到单个 SN 的锁定<br>
+        · 出库时两表联查拦截
+      </div>
+    </div>
+    <div class="d-card" style="border-color:var(--warn)">
+      <h4>Defect 不良统计</h4><div class="row" style="font-size:11px;line-height:1.8">
+        · 日报/月报统计<br>
+        · 按物料/工序/班组聚合<br>
+        · 明细下钻(详情报工记录)<br>
+        · 导出 Excel 报表
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 13 设备数据 ================================ -->
+<section class="slide col2" data-title="设备数据">
+  <div>
+    <p class="kicker">TPM DATA</p><h2 class="h2 mt-s">TPM 设备<br>相关数据模型</h2>
+  </div>
+  <div>
+    <div class="card-grid" style="gap:10px">
+      <div class="d-card" style="border-color:var(--accent-2)"><h4>ANDON 绑定</h4><div class="row" style="font-size:12px">· 模具→设备 关联表<br>· 设备→模具 反向映射<br>· 绑定/解绑操作<br>· 绑定时效管理</div></div>
+      <div class="d-card"><h4>BorrowReturn 借用归还</h4><div class="row" style="font-size:12px">· 设备/工具借用申请<br>· 借用时间/归还时间<br>· 超期未还提醒<br>· 借用人/审核人</div></div>
+      <div class="d-card"><h4>PickInbound 领用入库</h4><div class="row" style="font-size:12px">· 设备/模具领用操作<br>· 关联入库单据<br>· 库存状态变更</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 14 序列号 ================================ -->
+<section class="slide flow" data-title="序列号">
+  <p class="kicker">SERIAL NUMBER</p><h2 class="h2 mt-s">序列号生成与管理: SerialRule + SN_Status</h2>
+  <div class="flow-h" style="margin-top:16px">
+    <div class="step hl"><div class="num" style="font-size:20px">1</div><div class="t">SU_SerialRule</div><div class="d">序列号规则配置<br>前缀+日期+流水号<br>每种 BusinessType 一个</div></div>
+    <div class="step"><div class="num" style="font-size:20px">2</div><div class="t">GetSerialNo()</div><div class="d">每次创建单据调用<br>根据规则生成<br>保证唯一 + 递增</div></div>
+    <div class="step hl"><div class="num" style="font-size:20px">3</div><div class="t">SU_SN_Status</div><div class="d">SN 使用状态跟踪<br>已分配/已使用/已作废</div></div>
+    <div class="step"><div class="num" style="font-size:20px">4</div><div class="t">SU_SNUseLog</div><div class="d">SN 使用日志<br>哪个单据哪个时刻</div></div>
+  </div>
+  <div class="co"><b>应用场景：</b> WareHouseOrder.OrderNo、XSCKOrder.OrderNo、Label.Barcode 等所有需要唯一标识的单据和标签。</div>
+</section>
+
+<!-- ================================ 15 接口日志 ================================ -->
+<section class="slide col2" data-title="接口日志">
+  <div>
+    <p class="kicker">INTERFACE LOG</p><h2 class="h2 mt-s">ERP_MES<br>InterFaceLog</h2>
+  </div>
+  <div>
+    <div class="card-grid" style="gap:10px">
+      <div class="d-card" style="border-color:var(--accent-2)">
+        <h4>ERP_MESInterFaceLog 主日志表</h4>
+        <div class="row" style="font-size:12px">
+          · FormID: 金蝶表单 ID (SAL_OUTSTOCK)<br>
+          · RequestJson: 请求体 (截断 60,000 字节)<br>
+          · ResponseJson: 响应体 (截断 60,000 字节)<br>
+          · CallTime: 调用时间<br>
+          · IsSuccess: 成功/失败标志<br>
+          · IP/Port: 目标地址<br>
+          · 每次 MOM→ERP 调用都写入
+        </div>
+      </div>
+      <div class="d-card">
+        <h4>ERP_MESInterFaceLog_File 备用日志</h4>
+        <div class="row" style="font-size:12px">
+          · 与主表结构相同<br>
+          · 超长或特殊场景的日志<br>
+          · 并行双写保证不丢失<br>
+          · SqlSugar 动态查询
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 16 审计接口 ================================ -->
+<section class="slide col2" data-title="审计接口">
+  <div>
+    <p class="kicker">IAUDITABLE</p><h2 class="h2 mt-s">IAuditable<br>统一审计接口</h2>
+  </div>
+  <div>
+    <table class="dt" style="font-size:12px">
+      <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--accent-2)">CreateTime</td><td>DateTime</td><td>记录创建时间</td></tr>
+        <tr><td style="color:var(--accent-2)">Creator</td><td>string</td><td>创建人</td></tr>
+        <tr><td style="color:var(--accent-2)">ModifyTime</td><td>DateTime?</td><td>最后修改时间</td></tr>
+        <tr><td style="color:var(--accent-2)">Modifier</td><td>string</td><td>最后修改人</td></tr>
+        <tr><td style="color:var(--accent-2)">IsDelete</td><td>bool</td><td>软删除标记</td></tr>
+      </tbody>
+    </table>
+    <div class="co" style="margin-top:12px"><b>应用范围：</b> 所有实体类实现 IAuditable，通过 EF Core 拦截器自动填充 CreateTime/Creator，保证全表审计覆盖。</div>
+  </div>
+</section>
+
+<!-- ================================ 17 枚举体系 ================================ -->
+<section class="slide" data-title="枚举体系">
+  <p class="kicker">ENUM SYSTEM</p><h2 class="h2 mt-s">枚举文件体系: 8 大 Enum 200+ 枚举值</h2>
+  <table class="dt mt-m">
+    <thead><tr><th>文件</th><th>核心枚举</th><th>示例值</th></tr></thead>
+    <tbody>
+      <tr><td class="p hl">WMSEnum.cs</td><td>ProductionStatus 库存状态</td><td>Create=0, Pick=1, Send=2, Receitping=3, ..., CX=8</td></tr>
+      <tr><td class="p hl">WMSEnum.cs</td><td>InOutStaus 单据状态</td><td>WaitOutbound, Outbounding, Outbounded, CancelOutbound</td></tr>
+      <tr><td class="p hl">WMSEnum.cs</td><td>SwitchType 系统开关</td><td>XSOUTFIFO, XSOUTSUBMITFIFO, MJCHECKFIFO 等</td></tr>
+      <tr><td class="p hl">WMSEnum.cs</td><td>FIFOWareHouse FIFO仓库</td><td>XSOUTFIFOWareHouse, YCGDOUTFIFOWareHouse 等</td></tr>
+      <tr><td class="p hl">MDMEnum.cs</td><td>LabelStatus 标签状态</td><td>57+ 值: CGSLReceived, SCFLOut, XSCKOut, WWFLOut 等</td></tr>
+      <tr><td class="p hl">MDMEnum.cs</td><td>MaterialTypeEnum 物料类型</td><td>CP=1(成品), YC=2(原材料), BCP=3(半成品), QT=4(其他)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================================ 18 总结 ================================ -->
+<section class="slide full" data-title="总结">
+  <p class="kicker">SUMMARY</p>
+  <h1 class="h1 mt-s">数据模型<span style="color:var(--accent-2)">设计要点</span></h1>
+  <div class="card-grid g3 mt-l" style="width:100%">
+    <div class="d-card"><h4>1-N-N 单据结构</h4><div class="row" style="font-size:12px">WareHouseOrder(主) → Detail(物料行) → Receive(批次行)，层级清晰，每层独立 Trace。</div></div>
+    <div class="d-card"><h4>双状态机驱动</h4><div class="row" style="font-size:12px">ProductionStatus(库存0-8) + InOutStaus(单据) + FHTZStatus，三状态机协同推进。</div></div>
+    <div class="d-card"><h4>IAuditable 全覆盖</h4><div class="row" style="font-size:12px">所有实体统一实现 CreateTime/Creator/ModifyTime/Modifier/IsDelete，审计追踪零遗漏。</div></div>
+    <div class="d-card"><h4>Trace 快照模式</h4><div class="row" style="font-size:12px">WareHouseStockTrace + LabelTrace 每次操作克隆快照，记录时刻全量状态 + 关联单据。</div></div>
+    <div class="d-card"><h4>ERP 解耦设计</h4><div class="row" style="font-size:12px">M_WareHouseOrder 中间表缓存 ERP 数据，MOM 本地存取，按需同步，降低 ERP 依赖。</div></div>
+    <div class="d-card"><h4>统一请求响应</h4><div class="row" style="font-size:12px">SearchCriteriaModel 搜索 + BaseResponseModel 响应 + DataPageResponseModel 分页，全 API 统一契约。</div></div>
+  </div>
+  <div class="deck-footer" style="margin-top:32px"><span style="color:var(--text-3)">MOM 系统 · 数据模型与流转</span><span class="slide-number"></span></div>
+</section>
+
+</div><script src="assets/runtime.js"></script></body></html>

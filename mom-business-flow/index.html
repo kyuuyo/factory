@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MOM 系统核心业务流程图谱</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/themes/engineering-whiteprint.css">
+<link rel="stylesheet" href="assets/animations/animations.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="tpl-mf" data-themes="engineering-whiteprint,blueprint,tokyo-night">
+<div class="deck">
+
+<!-- ================================ 01 COVER ================================ -->
+<section class="slide full" data-title="封面">
+  <p class="kicker">MANUFACTURING OPERATIONS MANAGEMENT</p>
+  <h1 class="h1 mt-s">MOM 系统<br>核心业务<span style="color:var(--accent-2)">流程图谱</span></h1>
+  <p class="lede mt-l">基于金蝶云星空 ERP + DG-MOM 系统，16 大核心业务流程全景展现。</p>
+  <div class="row mt-l" style="gap:10px"><span class="p hl">销售出库</span><span class="p hl">生产领料</span><span class="p hl">采购入库</span><span class="p">质量检验</span><span class="p">库存盘点</span><span class="p">委外管理</span></div>
+  <div class="deck-footer" style="margin-top:48px"><span style="color:var(--text-3)">MOM 系统 · 核心业务流程图谱</span><span class="slide-number" data-current="1" data-total="20"></span></div>
+</section>
+
+<!-- ================================ 02 全景导航 ================================ -->
+<section class="slide" data-title="全景导航">
+  <p class="kicker">OVERVIEW · 6 BUSINESS DOMAINS</p>
+  <h2 class="h2 mt-s">16 大核心业务流程全景</h2>
+  <div class="card-grid g3 mt-m" style="gap:8px">
+    <div class="d-card" style="border-left:4px solid var(--accent-2)"><h4>🔵 仓储出库</h4><div class="row" style="font-size:12px;line-height:1.8">销售出库 · 生产领料<br>采购退货 · 不良报废<br>其他出库</div></div>
+    <div class="d-card" style="border-left:4px solid var(--good)"><h4>🟢 仓储入库</h4><div class="row" style="font-size:12px;line-height:1.8">采购入库 · 成品入库<br>委外入库 · 其他入库<br>调拨入库</div></div>
+    <div class="d-card" style="border-left:4px solid var(--warn)"><h4>🟠 质量管理</h4><div class="row" style="font-size:12px;line-height:1.8">IQC 来料检验 · IPQC 过程<br>OQC 出货 · QC 锁定<br>不良品处置</div></div>
+    <div class="d-card" style="border-left:4px solid var(--accent-3)"><h4>🔴 库存管理</h4><div class="row" style="font-size:12px;line-height:1.8">库存盘点 · 形态转换<br>调拨管理 · 批号调整<br>包装管理</div></div>
+    <div class="d-card" style="border-left:4px solid var(--text-1)"><h4>⚫ 设备/委外</h4><div class="row" style="font-size:12px;line-height:1.8">委外发料 · 委外入库<br>ANDON 绑定 · 模具管理<br>设备借用归还</div></div>
+    <div class="d-card" style="border-left:4px solid var(--accent)"><h4>⚪ 标签/审批</h4><div class="row" style="font-size:12px;line-height:1.8">标签打印 · 打印校验<br>BPM 审批流 · 不良品评审</div></div>
+  </div>
+</section>
+
+<!-- ================================ 03 销售出库 ================================ -->
+<section class="slide flow" data-title="销售出库">
+  <p class="kicker">BUSINESS FLOW · 01</p><h2 class="h2 mt-s">销售出库全流程</h2>
+  <div class="flow-h" style="margin-top:20px">
+    <div class="step hl"><div class="num">1</div><div class="t">ERP销售订单同步</div><div class="d">后台定时拉取<br>→ M_WareHouseOrder</div></div>
+    <div class="step"><div class="num">2</div><div class="t">创建FHTZ发货通知</div><div class="d">手动/Excel导入<br>关联ERP订单号</div></div>
+    <div class="step hl"><div class="num">3</div><div class="t">选料 Pick</div><div class="d">FIFO校验+5道关卡<br>Create(0)→Pick(1)</div></div>
+    <div class="step hl"><div class="num">4</div><div class="t">扫码 OutSave</div><div class="d">9道关卡逐件扫描<br>Pick(1)→Send(2)</div></div>
+    <div class="step"><div class="num">5</div><div class="t">提交 Submit</div><div class="d">满数卡控<br>自动拆子单</div></div>
+    <div class="step hl"><div class="num">6</div><div class="t">ERP SAL_OUTSTOCK</div><div class="d">19字段回写金蝶<br>FEntity_Link关联</div></div>
+  </div>
+</section>
+
+<!-- ================================ 04 生产领料 ================================ -->
+<section class="slide flow" data-title="生产领料">
+  <p class="kicker">BUSINESS FLOW · 02</p><h2 class="h2 mt-s">生产领料 (YCOUT/FGOUT)</h2>
+  <div class="flow-h" style="margin-top:20px">
+    <div class="step hl"><div class="num">1</div><div class="t">生产工单</div><div class="d">ERP车间工单下发<br>ShopOrderSub</div></div>
+    <div class="step"><div class="num">2</div><div class="t">BOM齐套检查</div><div class="d">子件物料匹配<br>ShopOrderBomSend</div></div>
+    <div class="step hl"><div class="num">3</div><div class="t">选料 Pick</div><div class="d">工单关联批号<br>YCOUT/FGOUT区分</div></div>
+    <div class="step hl"><div class="num">4</div><div class="t">扫码 OutSave</div><div class="d">条码校验+数量校验<br>Pick(1)→Send(2)</div></div>
+    <div class="step"><div class="num">5</div><div class="t">Submit 提交</div><div class="d">工单校验<br>全部发完</div></div>
+    <div class="step hl"><div class="num">6</div><div class="t">ERP PRD_PickMtrl</div><div class="d">写入生产领料单<br>库存同步金蝶</div></div>
+  </div>
+  <div class="co"><b>FGOUT 特殊处理：</b>返工工单(type=返工)使用 BusinessType=FGOUT，OutSave 时<b>豁免 QC 质量锁定校验</b>，允许对锁定批次进行返工领料。</div>
+</section>
+
+<!-- ================================ 05 采购入库 ================================ -->
+<section class="slide flow" data-title="采购入库">
+  <p class="kicker">BUSINESS FLOW · 03</p><h2 class="h2 mt-s">采购入库流程</h2>
+  <div class="flow-h" style="margin-top:20px">
+    <div class="step hl"><div class="num">1</div><div class="t">ERP采购订单</div><div class="d">金蝶采购订单下发</div></div>
+    <div class="step"><div class="num">2</div><div class="t">到货通知 CGDH</div><div class="d">采购到货单创建<br>BusinessType=CGDH</div></div>
+    <div class="step hl"><div class="num">3</div><div class="t">IQC 来料检验</div><div class="d">抽样方案AQL<br>合格/让步/退货</div></div>
+    <div class="step"><div class="num">4</div><div class="t">上架入库</div><div class="d">条码打印+贴标<br>库位分配上架</div></div>
+    <div class="step hl"><div class="num">5</div><div class="t">CPIN/InBound</div><div class="d">Stock 创建<br>ProductionStatus=Create(0)</div></div>
+    <div class="step"><div class="num">6</div><div class="t">ERP STK_InStock</div><div class="d">回写采购入库单<br>与采购订单关联</div></div>
+  </div>
+</section>
+
+<!-- ================================ 06 成品入库 ================================ -->
+<section class="slide flow" data-title="成品入库">
+  <p class="kicker">BUSINESS FLOW · 04</p><h2 class="h2 mt-s">成品入库流程</h2>
+  <div class="flow-h" style="margin-top:20px">
+    <div class="step hl"><div class="num">1</div><div class="t">ERP生产订单</div><div class="d">金蝶生产订单下发<br>→ 生成车间工单</div></div>
+    <div class="step"><div class="num">2</div><div class="t">完工汇报</div><div class="d">工序完成→报工<br>良品/不良品统计</div></div>
+    <div class="step hl"><div class="num">3</div><div class="t">包装</div><div class="d">产品包装打标签<br>IronCorePkg关联</div></div>
+    <div class="step"><div class="num">4</div><div class="t">OQC出货检验</div><div class="d">成品抽检+判定</div></div>
+    <div class="step hl"><div class="num">5</div><div class="t">CPIN/InBound入库</div><div class="d">Stock 创建<br>Label 状态更新</div></div>
+    <div class="step"><div class="num">6</div><div class="t">ERP PRD_INSTOCK</div><div class="d">生产入库单回写<br>PRD_MO→PRD_MORPT</div></div>
+  </div>
+</section>
+
+<!-- ================================ 07 IQC 来料检验 ================================ -->
+<section class="slide col2" data-title="IQC 来料检验">
+  <div>
+    <p class="kicker">BUSINESS FLOW · 05</p><h2 class="h2 mt-s">IQC 来料检验<br>全流程</h2>
+    <div class="co"><b>触发点：</b>采购到货(CGDH)后 → 库管创建检验任务 → IQC 执行</div>
+  </div>
+  <div>
+    <div class="flow-v">
+      <div class="vstep hl"><span class="vn">1</span><span class="vt">到货通知</span><span class="vd">CGDH 创建</span></div>
+      <div class="vstep"><span class="vn">2</span><span class="vt">抽样方案(AQL)</span><span class="vd">GB2828 查表确定样本量</span></div>
+      <div class="vstep hl"><span class="vn">3</span><span class="vt">检验执行</span><span class="vd">外观/尺寸/性能测试</span></div>
+      <div class="vstep"><span class="vn">4</span><span class="vt">判定结果 → 三条路径</span><span class="vd">合格/让步/退货</span></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <div class="d-card" style="flex:1;border-color:var(--good)"><h4>✓ 合格</h4><div class="row" style="font-size:11px">放行入库<br>→ 上架生成Stock</div></div>
+      <div class="d-card" style="flex:1;border-color:var(--warn)"><h4>△ 让步接收</h4><div class="row" style="font-size:11px">标识让步标识<br>→ 有条件入库</div></div>
+      <div class="d-card" style="flex:1;border-color:var(--bad)"><h4>✗ 退货</h4><div class="row" style="font-size:11px">PUR_MRB 退货<br>→ 退回供应商</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 08 IPQC + OQC ================================ -->
+<section class="slide col2" data-title="过程+出货检验">
+  <div>
+    <p class="kicker">BUSINESS FLOW · 06</p><h2 class="h2 mt-s">IPQC 过程检验<br>+ OQC 出货检验</h2>
+    <div class="co"><b>IPQC：</b>生产过程中巡检，关键工序必检。<br><b>OQC：</b>成品出库前最终检验。</div>
+  </div>
+  <div>
+    <div class="card-grid" style="gap:10px">
+      <div class="d-card" style="border-color:var(--accent-2)">
+        <h4>IPQC 过程质量控制</h4>
+        <div class="row" style="font-size:12px">
+          · 首件检验：每班/换模首件必检<br>
+          · 巡检：定时抽检工序半成品<br>
+          · SPC 控制图实时判异<br>
+          · CPK 过程能力指数计算<br>
+          · 异常 → 触发 QCHold 锁定
+        </div>
+      </div>
+      <div class="d-card">
+        <h4>OQC 出货质量检验</h4>
+        <div class="row" style="font-size:12px">
+          · 成品出货前 AQL 抽检<br>
+          · PDA 扫描检验(PDAQC)<br>
+          · Web 端检验(WebQC)<br>
+          · 合格 → 生成合格证<br>
+          · 不合格 → 返工/BLBFOUT
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 09 库存盘点 ================================ -->
+<section class="slide flow" data-title="库存盘点">
+  <p class="kicker">BUSINESS FLOW · 07</p><h2 class="h2 mt-s">库存盘点流程</h2>
+  <div class="flow-h" style="margin-top:20px">
+    <div class="step hl"><div class="num">1</div><div class="t">创建盘点方案</div><div class="d">可选择仓库/物料范围<br>循环盘点/全盘</div></div>
+    <div class="step"><div class="num">2</div><div class="t">生成盘点表</div><div class="d">CountOrder 生成<br>PDA端查询显示</div></div>
+    <div class="step hl"><div class="num">3</div><div class="t">PDA 现场盘点</div><div class="d">扫描条码+输入实盘数<br>支持盲盘/明盘</div></div>
+    <div class="step"><div class="num">4</div><div class="t">差异分析</div><div class="d">系统自动比对<br>账面 vs 实盘</div></div>
+    <div class="step hl"><div class="num">5</div><div class="t">盘盈盘亏调整</div><div class="d">盘盈入库/盘亏出库<br>Stock 数量调整</div></div>
+    <div class="step"><div class="num">6</div><div class="t">ERP 库存同步</div><div class="d">差异数据推送金蝶<br>ERP 账面库存同步</div></div>
+  </div>
+</section>
+
+<!-- ================================ 10 委外管理 ================================ -->
+<section class="slide flow" data-title="委外管理">
+  <p class="kicker">BUSINESS FLOW · 08</p><h2 class="h2 mt-s">委外管理流程</h2>
+  <div class="flow-h" style="margin-top:20px">
+    <div class="step hl"><div class="num">1</div><div class="t">委外订单</div><div class="d">ERP委外订单下发<br>SUB 类型</div></div>
+    <div class="step"><div class="num">2</div><div class="t">委外发料</div><div class="d">原材料出库<br>WWFLOut(委外仓)</div></div>
+    <div class="step hl"><div class="num">3</div><div class="t">委外加工</div><div class="d">供应商加工期间<br>委外在途库存跟踪</div></div>
+    <div class="step"><div class="num">4</div><div class="t">委外完工入库</div><div class="d">成品入库<br>自动核销已发物料</div></div>
+    <div class="step hl"><div class="num">5</div><div class="t">委外退料</div><div class="d">剩余物料退回<br>委外仓→正常仓</div></div>
+    <div class="step"><div class="num">6</div><div class="t">ERP 委外单据</div><div class="d">SUB_PickMtrl 发料<br>PRD_INSTOCK 入库</div></div>
+  </div>
+</section>
+
+<!-- ================================ 11 调拨管理 ================================ -->
+<section class="slide flow" data-title="调拨管理">
+  <p class="kicker">BUSINESS FLOW · 09</p><h2 class="h2 mt-s">调拨管理流程</h2>
+  <div class="flow-h" style="margin-top:20px">
+    <div class="step hl"><div class="num">1</div><div class="t">调拨申请</div><div class="d">组织间/仓库间<br>调拨需求</div></div>
+    <div class="step"><div class="num">2</div><div class="t">调拨出库</div><div class="d">源仓库装车出库<br>ProductionStatus→Send(2)</div></div>
+    <div class="step hl"><div class="num">3</div><div class="t">在途跟踪</div><div class="d">TransferIn/Out 记录<br>在途库存可视化</div></div>
+    <div class="step"><div class="num">4</div><div class="t">调拨入库</div><div class="d">目标仓库收货<br>Stock 创建入库</div></div>
+    <div class="step hl"><div class="num">5</div><div class="t">ERP 直接调拨</div><div class="d">STK_TransferDirect<br>金蝶同步</div></div>
+  </div>
+  <div class="co"><b>DBOut/调拨出库类型：</b>Label 状态标记为 DBOut，Trace 记录 BusinessTypeCode=DBOut。</div>
+</section>
+
+<!-- ================================ 12 不良品处理 ================================ -->
+<section class="slide col2" data-title="不良品处理">
+  <div>
+    <p class="kicker">BUSINESS FLOW · 10</p><h2 class="h2 mt-s">不良品处理<br>多路径</h2>
+  </div>
+  <div>
+    <div class="flow-v">
+      <div class="vstep hl"><span class="vn">1</span><span class="vt">不良品发现</span><span class="vd">IQC/IPQC/OQC/生产</span></div>
+      <div class="vstep"><span class="vn">2</span><span class="vt">QC Hold 质量锁定</span><span class="vd">批次级+SN级双锁</span></div>
+      <div class="vstep hl"><span class="vn">3</span><span class="vt">不良品评审(8D)</span><span class="vd">BPM审批流判定</span></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <div class="d-card" style="flex:1;border-color:var(--warn)"><h4>返工</h4><div class="row" style="font-size:11px">FGOUT 返工领料<br>豁免QC锁定</div></div>
+      <div class="d-card" style="flex:1;border-color:var(--bad)"><h4>报废</h4><div class="row" style="font-size:11px">BLBFOUT 报废出库<br>→ 废料仓</div></div>
+      <div class="d-card" style="flex:1;border-color:var(--bad)"><h4>MRB退货</h4><div class="row" style="font-size:11px">PUR_MRB 退供应商</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 13 标签打印 ================================ -->
+<section class="slide flow" data-title="标签打印">
+  <p class="kicker">BUSINESS FLOW · 11</p><h2 class="h2 mt-s">标签打印与管理</h2>
+  <div class="flow-h" style="margin-top:20px">
+    <div class="step hl"><div class="num">1</div><div class="t">标签生成</div><div class="d">入库/包装时<br>自动生成条码</div></div>
+    <div class="step"><div class="num">2</div><div class="t">打印机校验</div><div class="d">PrintLicense 验证<br>打印机授权检查</div></div>
+    <div class="step hl"><div class="num">3</div><div class="t">标签打印</div><div class="d">BatchLabelPrint<br>IP+端口+模板</div></div>
+    <div class="step"><div class="num">4</div><div class="t">打印记录</div><div class="d">Receipting+<br>ReceiptingPrint 双表</div></div>
+    <div class="step hl"><div class="num">5</div><div class="t">标签状态跟踪</div><div class="d">创建→打印→入库<br>→出库→完成</div></div>
+  </div>
+</section>
+
+<!-- ================================ 14 设备 ANDON ================================ -->
+<section class="slide col2" data-title="设备ANDON">
+  <div>
+    <p class="kicker">BUSINESS FLOW · 12</p><h2 class="h2 mt-s">TPM 设备<br>ANDON 管理</h2>
+  </div>
+  <div>
+    <div class="flow-v">
+      <div class="vstep hl"><span class="vn">1</span><span class="vt">模具→设备绑定</span><span class="vd">ANDON 绑定关系</span></div>
+      <div class="vstep"><span class="vn">2</span><span class="vt">设备→模具绑定</span><span class="vd">反向映射建立</span></div>
+      <div class="vstep hl"><span class="vn">3</span><span class="vt">设备借用</span><span class="vd">BorrowReturn 借用记录</span></div>
+      <div class="vstep"><span class="vn">4</span><span class="vt">设备归还</span><span class="vd">归还操作+状态恢复</span></div>
+      <div class="vstep hl"><span class="vn">5</span><span class="vt">设备领用入库</span><span class="vd">PickInbound 操作</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 15 FHTZ 管理 ================================ -->
+<section class="slide col2" data-title="FHTZ管理">
+  <div>
+    <p class="kicker">BUSINESS FLOW · 13</p><h2 class="h2 mt-s">FHTZ 发货通知<br>全生命周期</h2>
+  </div>
+  <div>
+    <div class="flow-v">
+      <div class="vstep hl"><span class="vn">1</span><span class="vt">创建 FHTZ</span><span class="vd">手动/Excel导入</span></div>
+      <div class="vstep"><span class="vn">2</span><span class="vt">状态: WaitDeliver</span><span class="vd">待交付</span></div>
+      <div class="vstep hl"><span class="vn">3</span><span class="vt">创建XSOUT选料出库</span><span class="vd">关联FHTZ单号</span></div>
+      <div class="vstep"><span class="vn">4</span><span class="vt">扫码→ActQty累加</span><span class="vd">状态→Delivering</span></div>
+      <div class="vstep hl"><span class="vn">5</span><span class="vt">全部发出</span><span class="vd">→ Delivered(Web)<br>→ AutoClosed(PDA)</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 16 包装管理 ================================ -->
+<section class="slide flow" data-title="包装管理">
+  <p class="kicker">BUSINESS FLOW · 14</p><h2 class="h2 mt-s">包装管理流程</h2>
+  <div class="flow-h" style="margin-top:20px">
+    <div class="step hl"><div class="num">1</div><div class="t">包装创建</div><div class="d">产品→包装容器<br>包装操作记录</div></div>
+    <div class="step"><div class="num">2</div><div class="t">扫码关联</div><div class="d">产品条码<br>与包装容器绑定</div></div>
+    <div class="step hl"><div class="num">3</div><div class="t">包装打印</div><div class="d">包装标签生成<br>打印校验</div></div>
+    <div class="step"><div class="num">4</div><div class="t">入库</div><div class="d">包装入库<br>标签+库存关联</div></div>
+    <div class="step hl"><div class="num">5</div><div class="t">出库</div><div class="d">包装出库<br>IronCorePkg.InOutStatus→2</div></div>
+  </div>
+</section>
+
+<!-- ================================ 17 BPM 审批 ================================ -->
+<section class="slide col2" data-title="BPM审批">
+  <div>
+    <p class="kicker">BUSINESS FLOW · 15</p><h2 class="h2 mt-s">BPM 审批流<br>不良品评审 8D</h2>
+    <div class="co"><b>触发：</b>QC Hold 质量锁定后 → 启动不良品评审流程</div>
+  </div>
+  <div>
+    <div class="flow-v">
+      <div class="vstep hl"><span class="vn">1</span><span class="vt">不良品锁定</span><span class="vd">QC Hold 触发</span></div>
+      <div class="vstep"><span class="vn">2</span><span class="vt">缺陷审批提交</span><span class="vd">workRepoetDefectExamine</span></div>
+      <div class="vstep hl"><span class="vn">3</span><span class="vt">8D 报告流</span><span class="vd">D1建组→D2描述→D3遏制→D4根因→D5纠正→D6验证→D7预防→D8总结</span></div>
+      <div class="vstep"><span class="vn">4</span><span class="vt">CAPA 闭环</span><span class="vd">纠正预防措施执行+验证</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 18 异常处理 ================================ -->
+<section class="slide flow" data-title="异常处理">
+  <p class="kicker">BUSINESS FLOW · 16</p><h2 class="h2 mt-s">异常处理机制</h2>
+  <div class="card-grid g2 mt-m">
+    <div class="d-card" style="border-color:var(--bad)"><h4>DeleteOut 扫码回退</h4>
+      <div class="flow-v" style="margin-top:8px;gap:4px">
+        <div class="vstep" style="font-size:11px"><span class="vn">1</span><span class="vt">校验未Outbounded</span></div>
+        <div class="vstep" style="font-size:11px"><span class="vn">2</span><span class="vt">ActQty 扣回</span></div>
+        <div class="vstep" style="font-size:11px"><span class="vn">3</span><span class="vt">Stock→Create(0)</span></div>
+        <div class="vstep" style="font-size:11px"><span class="vn">4</span><span class="vt">FHTZ Source 回退</span></div>
+        <div class="vstep" style="font-size:11px"><span class="vn">5</span><span class="vt">Order→WaitOutbound</span></div>
+      </div>
+    </div>
+    <div class="d-card" style="border-color:var(--warn)"><h4>ERP 推送失败重推</h4>
+      <div class="flow-v" style="margin-top:8px;gap:4px">
+        <div class="vstep" style="font-size:11px"><span class="vn">1</span><span class="vt">ErpStatus=2 发现</span></div>
+        <div class="vstep" style="font-size:11px"><span class="vn">2</span><span class="vt">rePush→重置为 0</span></div>
+        <div class="vstep" style="font-size:11px"><span class="vn">3</span><span class="vt">后台Job 重推</span></div>
+        <div class="vstep" style="font-size:11px"><span class="vn">4</span><span class="vt">成功→1 失败→2</span></div>
+        <div class="vstep" style="font-size:11px"><span class="vn">5</span><span class="vt">超 N 次→人工</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ 19 Web vs PDA ================================ -->
+<section class="slide" data-title="路径对比">
+  <p class="kicker">PATH COMPARISON</p><h2 class="h2 mt-s">Web vs PDA 操作路径对比</h2>
+  <table class="dt mt-m">
+    <thead><tr><th>维度</th><th>Web/PC 端</th><th>PDA/DG 端</th></tr></thead>
+    <tbody>
+      <tr><td>选料方式</td><td>Pick 预选中批次→占库存</td><td>直接扫描标签→即时出库</td></tr>
+      <tr><td>操作步骤</td><td>Pick→OutSave→Submit 三步</td><td>LabelCheck→SaveXSCK→PushToErp 三步</td></tr>
+      <tr><td>库存状态</td><td>0→1→2 两次转换</td><td>0→2 一次跳过</td></tr>
+      <tr><td>校验次数</td><td>5(Pick)+9(OutSave)+Submit</td><td>5(LabelCheck)+11(SaveXSCK)</td></tr>
+      <tr><td>FIFO 时机</td><td>Pick 时校验</td><td>SaveXSCK 时校验</td></tr>
+      <tr><td>ERP 推送</td><td>Submit 后自动触发</td><td>手动 pushToErp 触发</td></tr>
+      <tr><td>标签更新</td><td>无(Labels 不走)</td><td>Label→XSCKOut+LabelTrace</td></tr>
+      <tr><td>典型场景</td><td>计划员 PC 操作</td><td>仓库员 PDA 操作</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================================ 20 总结 ================================ -->
+<section class="slide full" data-title="总结">
+  <p class="kicker">SUMMARY</p>
+  <h1 class="h1 mt-s">16 大业务流程<br><span style="color:var(--accent-2)">核心共性</span></h1>
+  <div class="card-grid g3 mt-l" style="width:100%">
+    <div class="d-card"><h4>统一入口</h4><div class="row" style="font-size:13px">所有入库/出库都以 WareHouseOrder 为核心单据载体，Detail 管理物料行，Receive 管理批次行。</div></div>
+    <div class="d-card"><h4>状态驱动</h4><div class="row" style="font-size:13px">库存 ProductionStatus(0→1→2) + 单据 InOutStaus + FHTZStatus 多状态机驱动流程推进。</div></div>
+    <div class="d-card"><h4>多层校验</h4><div class="row" style="font-size:13px">每一步操作都有完整的前置校验：条码/库存状态/质量/有效期/FIFO/客户料号/数量。</div></div>
+    <div class="d-card"><h4>审计可追溯</h4><div class="row" style="font-size:13px">WareHouseStockTrace + LabelTrace + ERP_MESInterFaceLog 三套日志保证全流程可审计。</div></div>
+    <div class="d-card"><h4>ERP 闭环</h4><div class="row" style="font-size:13px">MOM 本地操作 → 通过 19 种 ERP Service 回写金蝶。ErpStatus 状态机保证最终一致性。</div></div>
+    <div class="d-card"><h4>容错回退</h4><div class="row" style="font-size:13px">DeleteOut 扫码回退 + ERP 推送失败重推 + Submit 自动拆子单。异常路径完备覆盖。</div></div>
+  </div>
+  <div class="deck-footer" style="margin-top:40px"><span style="color:var(--text-3)">MOM 系统 · 核心业务流程图谱</span><span class="slide-number"></span></div>
+</section>
+
+</div><script src="assets/runtime.js"></script></body></html>
