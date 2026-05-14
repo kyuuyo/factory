@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MOM 系统销售出库全流程详解</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/themes/engineering-whiteprint.css">
+<link rel="stylesheet" href="assets/animations/animations.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="tpl-mf" data-themes="engineering-whiteprint,blueprint,tokyo-night">
+<div class="deck">
+
+<!-- ================================================================ -->
+<!-- 01. COVER -->
+<!-- ================================================================ -->
+<section class="slide full" data-title="封面">
+  <p class="kicker">MANUFACTURING OPERATIONS MANAGEMENT</p>
+  <h1 class="h1 mt-s">MOM 系统<br>销售出库<span style="color:var(--accent-2)">全流程</span></h1>
+  <p class="lede mt-l">基于 DG-MOM .NET Core 代码分析，从 ERP 销售订单同步到 MOM 内部流转再到回写金蝶 ERP 的完整链路。</p>
+  <div class="row mt-l" style="gap:12px">
+    <span class="p hl">Web 选料扫码路径</span>
+    <span class="p hl">PDA 扫描出库路径</span>
+    <span class="p">9 道系统校验</span>
+    <span class="p">FIFO 先进先出</span>
+    <span class="p">QC 质量锁定</span>
+  </div>
+  <div class="deck-footer" style="margin-top:48px"><span style="color:var(--text-3)">MOM 系统 · 销售出库流程详解</span><span class="slide-number" data-current="1" data-total="28"></span></div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 02. 四阶段全景 -->
+<!-- ================================================================ -->
+<section class="slide flow" data-title="四阶段全景">
+  <p class="kicker">OVERVIEW · 4 PHASES</p>
+  <h2 class="h2 mt-s">从 ERP 销售订单到销售出库四阶段</h2>
+  <div class="flow-h" style="margin-top:32px">
+    <div class="step hl"><div class="num">P1</div><div class="t">数据接入</div><div class="d">ERP 销售订单同步<br>→ M_WareHouseOrder</div></div>
+    <div class="step"><div class="num">P2</div><div class="t">FHTZ 发货通知</div><div class="d">创建发货通知单<br>手动/Excel 导入</div><div class="api">/api/wms/fhtz</div></div>
+    <div class="step hl"><div class="num">P3</div><div class="t">仓库出库执行</div><div class="d">选料→扫码→提交<br>两条路径并行</div><div class="api">/api/wms/inout<br>/api/wms/dg/fhtz</div></div>
+    <div class="step"><div class="num">P4</div><div class="t">ERP 回写</div><div class="d">MOM → 金蝶 ERP<br>SAL_OUTSTOCK Save</div><div class="api">K3Cloud WebAPI</div></div>
+  </div>
+  <div class="co"><b>核心链路：</b> 金蝶 ERP 销售订单 → 定时同步 → MOM 本地表 → FHTZ 发货通知 → Web选料扫码 或 PDA扫描 → Submit → ERP SAL_OUTSTOCK 回写</div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 03. 两条路径分叉 -->
+<!-- ================================================================ -->
+<section class="slide" data-title="两条路径">
+  <p class="kicker">PHASE 3 · TWO PATHS</p>
+  <h2 class="h2 mt-s">P3 阶段的两条并行路径</h2>
+  <div class="card-grid g2 mt-m" style="gap:16px">
+    <div class="d-card" style="border-color:var(--accent-2)">
+      <h4>路径 A · Web/PC 端</h4>
+      <div class="flow-v" style="margin-top:10px">
+        <div class="vstep hl"><span class="vn">1</span><span class="vt">Pick 选料</span><span class="vd">saleOutPickMaterialSave</span></div>
+        <div class="vstep hl"><span class="vn">2</span><span class="vt">OutSave 扫码</span><span class="vd">outSave</span></div>
+        <div class="vstep hl"><span class="vn">3</span><span class="vt">Submit 提交</span><span class="vd">submit / submitByWarehouse</span></div>
+      </div>
+      <p style="font-size:12px;color:var(--text-3);margin-top:10px">流程：先选料(预占库存) → 再逐件扫码(AI) → 全部发完提交</p>
+    </div>
+    <div class="d-card">
+      <h4>路径 B · PDA/DG 端</h4>
+      <div class="flow-v" style="margin-top:10px">
+        <div class="vstep"><span class="vn">1</span><span class="vt">Label 校验</span><span class="vd">GetXSCKLabelInfo</span></div>
+        <div class="vstep"><span class="vn">2</span><span class="vt">SaveXSCK 出库</span><span class="vd">saveXSCK</span></div>
+        <div class="vstep"><span class="vn">3</span><span class="vt">PushToErp 回写</span><span class="vd">pushToErp</span></div>
+      </div>
+      <p style="font-size:12px;color:var(--text-3);margin-top:10px">流程：扫码标签 → 校验+出库一步完成 → 手动触发 ERP 回写</p>
+    </div>
+  </div>
+  <div class="co"><b>关键差异：</b> Web 路径"Pick + OutSave"两步操作，库存分两次状态转换(0→1→2)；PDA 路径一步到位(0→2)。Web 路径 Submit 时自动触发出库后推 ERP；PDA 路径需手动触发 pushToErp。</div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 04. 阶段1: ERP 销售订单同步 -->
+<!-- ================================================================ -->
+<section class="slide col2" data-title="阶段1 同步">
+  <div>
+    <p class="kicker">PHASE 1 · DATA SYNC</p>
+    <h2 class="h2 mt-s">ERP 销售订单<br>→ MOM 数据同步</h2>
+    <p class="lede mt-m" style="font-size:15px">MOM 通过后台定时任务周期性地从金蝶 ERP 拉取销售订单数据，存入本地表 <code>M_WareHouseOrder</code>。</p>
+    <div class="co"><b>数据源：</b> Kingdee K/3 Cloud · 组织编码 207 · 账套 SZMES</div>
+  </div>
+  <div>
+    <h4 style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent-2);margin:0 0 8px">M_WareHouseOrder 关键字段</h4>
+    <table class="dt">
+      <tr><td>OrderNo</td><td>ERP 销售订单号</td></tr>
+      <tr><td>CustomerCode / CustomerName</td><td>客户编码 / 名称</td></tr>
+      <tr><td>MaterialCode</td><td>物料编码</td></tr>
+      <tr><td>MaterialQTY / Seq</td><td>订单数量 / 行号</td></tr>
+      <tr><td>TaxPrice / Price / TaxRate</td><td>含税单价 / 不含税单价 / 税率</td></tr>
+      <tr><td>SOEntryId</td><td>ERP 行内码(回写关联关键)</td></tr>
+      <tr><td>F_PECL_ASN</td><td>客户 ASN 号</td></tr>
+      <tr><td>ERPOrderType</td><td>单据类型(FHD1标准/FHD2寄售等)</td></tr>
+    </table>
+    <p style="font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:8px">处理: ErpDAO 后台调度 → 导入 MOM 本地数据库</p>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 05. FHTZ 创建: 两种方式 -->
+<!-- ================================================================ -->
+<section class="slide col2" data-title="FHTZ 创建">
+  <div>
+    <p class="kicker">PHASE 2 · FHTZ CREATION</p>
+    <h2 class="h2 mt-s">FHTZ 发货通知单<br>两种创建方式</h2>
+    <p class="lede mt-m" style="font-size:15px">FHTZ 关联 ERP 销售订单号(SourceOrderNo)，是出库流程的入口单据。</p>
+  </div>
+  <div>
+    <div class="card-grid" style="gap:10px">
+      <div class="d-card" style="border-color:var(--accent-2)">
+        <h4>方式一: Web 手动创建</h4>
+        <div class="row" style="font-size:12px">
+          API: <code style="color:var(--accent-2)">POST /api/wms/fhtz/addFHTZWareHouseOrder</code><br><br>
+          输入: SourceOrderNo / MaterialCode / Qty / DeliverTime / CustomerName<br><br>
+          生成: WareHouseOrder(BusinessType=FHTZ, ProductStatus=WaitDeliver)<br>
+          &nbsp;&nbsp;+ WareHouseOrderDetail(物料明细行)
+        </div>
+      </div>
+      <div class="d-card">
+        <h4>方式二: Excel 批量导入</h4>
+        <div class="row" style="font-size:12px">
+          API: <code>POST /api/wms/fhtz/import</code><br><br>
+          上传 Excel 模板 → 批量生成多条 FHTZ<br><br>
+          适合: 大批量发货通知集中导入场景
+        </div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:12px">PDA 端: GET /api/wms/dg/fhtz/getFTTZDetail 查询 FHTZ 明细</p>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 06. FHTZ 数据模型 -->
+<!-- ================================================================ -->
+<section class="slide" data-title="FHTZ 数据模型">
+  <p class="kicker">PHASE 2 · DATA MODEL</p>
+  <h2 class="h2 mt-s">FHTZ 发货通知单数据模型</h2>
+  <div class="card-grid g2 mt-m">
+    <div class="d-card"><h4>WareHouseOrder (主单)</h4>
+      <table class="dt" style="font-size:12px">
+        <tr><td>OrderNo</td><td>FHTZ 单据号(序列号规则生成)</td></tr>
+        <tr><td>SourceOrderNo</td><td>ERP 销售订单号 ← 关联点</td></tr>
+        <tr><td>BusinessTypeCode</td><td>FHTZ</td></tr>
+        <tr><td>ProductStatus</td><td>WaitDeliver → Delivering → Delivered</td></tr>
+        <tr><td>CustomerCode</td><td>客户编码</td></tr>
+        <tr><td>DeliverTime</td><td>要求交付日期</td></tr>
+      </table>
+    </div>
+    <div class="d-card"><h4>WareHouseOrderDetail (明细行)</h4>
+      <table class="dt" style="font-size:12px">
+        <tr><td>OrderId</td><td>关联主单 ID</td></tr>
+        <tr><td>MaterialId / MaterialCode</td><td>物料 ID / 编码</td></tr>
+        <tr><td>Qty</td><td>发货数量</td></tr>
+        <tr><td>ActQty</td><td>实际已发数量(扫码累加)</td></tr>
+        <tr><td>CustomerMaterialCode</td><td>客户料号</td></tr>
+        <tr><td>ProductStatus</td><td>WaitDeliver → Delivering → Delivered</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 07. Web Pick 选料: 入口与校验 -->
+<!-- ================================================================ -->
+<section class="slide col2" data-title="Pick 入口校验">
+  <div>
+    <p class="kicker">PHASE 3 · WEB PATH · PICK</p>
+    <h2 class="h2 mt-s">选料 Pick:<br>入口与校验</h2>
+    <p class="lede mt-m" style="font-size:14px;color:var(--text-2)">
+      API: <code style="color:var(--accent-2)">POST /api/wms/inout/saleOutPickMaterialSave</code><br><br>
+      方法: <code>XSOutPickMaterialSave()</code><br>
+      输入: FHTZ OrderNo + 选中的批次清单
+    </p>
+  </div>
+  <div>
+    <h4 style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent-2);margin:0 0 8px">5 道入口校验</h4>
+    <div class="check-grid">
+      <div class="check-item pass"><span class="icon">✓</span><div class="c-body">FHTZ 发货通知单号 <b>不可为空</b></div></div>
+      <div class="check-item pass"><span class="icon">✓</span><div class="c-body">FHTZ 单号必须在 WareHouseOrder 表中<b>存在</b></div></div>
+      <div class="check-item pass"><span class="icon">✓</span><div class="c-body">至少选中 <b>一个批次</b></div></div>
+      <div class="check-item pass"><span class="icon">✓</span><div class="c-body"><b>工厂信息</b>已配置(SerialRule for XSOUT)</div></div>
+      <div class="check-item pass"><span class="icon">✓</span><div class="c-body">单据序列号规则 <b>已配置</b></div></div>
+    </div>
+    <p style="font-size:12px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:10px">批次检查: CheckWareHouseStock() — Barcode存在 && RemainQty>0 && ProductionStatus==0</p>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 08. FIFO 校验 -->
+<!-- ================================================================ -->
+<section class="slide col2" data-title="FIFO 校验">
+  <div>
+    <p class="kicker">PHASE 3 · WEB PATH · PICK</p>
+    <h2 class="h2 mt-s">FIFO 先进先出<br>校验算法</h2>
+    <div class="co"><b>原则：</b>同一物料，先入库的批次必须先被选料出库。不允许跳过更早的批次去取较晚批次。</div>
+  </div>
+  <div>
+    <h4 style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent-2);margin:0 0 8px">FIFO 校验算法（按物料分组）</h4>
+    <div class="flow-v">
+      <div class="vstep hl"><span class="vn">1</span><span class="vt">取选中批次中最晚的 CreateTime</span><span class="vd">SelectedLatestDate</span></div>
+      <div class="vstep"><span class="vn">2</span><span class="vt">查同物料未选批中最晚的 CreateTime</span><span class="vd">UnselectedEarliestDate</span></div>
+      <div class="vstep"><span class="vn">3</span><span class="vt">比较: SelectedLatestDate &gt; UnselectedEarliestDate ?</span><span class="vd">按天截断对比</span></div>
+    </div>
+    <div class="card-grid g2 mt-s" style="gap:8px">
+      <div class="check-item pass"><span class="icon">✓</span><div class="c-body">选中最晚 &lt;= 未选最早 → 通过</div></div>
+      <div class="check-item fail"><span class="icon">✗</span><div class="c-body">选中最晚 &gt; 未选最早 → <b>"批次{code}未遵守先进先出原则"</b></div></div>
+    </div>
+    <p style="font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:8px">筛选条件: IsDelete==0, ProductionStatus==0, RemainQty>0, Warehouse in [01,42], ExpiredDatetime > Now</p>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 09. Pick 创建的数据库记录 -->
+<!-- ================================================================ -->
+<section class="slide" data-title="Pick 数据记录">
+  <p class="kicker">PHASE 3 · WEB PATH · PICK</p>
+  <h2 class="h2 mt-s">Pick 阶段创建的 5 类数据库记录</h2>
+  <table class="dt mt-m">
+    <thead><tr><th>表</th><th>创建/更新</th><th>关键字段</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--accent-2)">WareHouseOrder</td><td>INSERT</td><td>BusinessTypeCode=XSOUT, ProductStatus=WaitOutbound, SourceOrderNo=FHTZ号, CustomerCode</td></tr>
+      <tr><td style="color:var(--accent-2)">WareHouseOrderDetail</td><td>INSERT</td><td>每个物料一行, Qty, ProductStatus=WaitOutbound, CustomerMaterialCode从FHTZ拷贝</td></tr>
+      <tr><td style="color:var(--accent-2)">WareHouseOrderReceive</td><td>INSERT</td><td>每个条码一行, Barcode, Qty=Stock.RemainQty, Warehouse+Position从Stock拷贝, ProductStatus=WaitFinish</td></tr>
+      <tr><td class="p hl" style="color:var(--warn)">WareHouseStock</td><td>UPDATE</td><td style="color:var(--warn)">ProductionStatus <b>0 → 1 (Pick)</b></td></tr>
+      <tr><td class="p hl">WareHouseStockTrace</td><td>INSERT</td><td>从Stock克隆, OrderNo=出库单号, BusinessTypeCode=XSOUT, OrderType=OUT, Remarks="销售出库"</td></tr>
+    </tbody>
+  </table>
+  <div class="co"><b>关键状态转换：</b> <span class="badge s0">Create(0)</span> <span class="c-arr" style="font-size:14px">→</span> <span class="badge s1">Pick(1)</span> — 库存被选料预占，其他人不能再选该批次</div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 10. 库存状态转换 Create→Pick -->
+<!-- ================================================================ -->
+<section class="slide flow" data-title="库存状态 Pick">
+  <p class="kicker">PHASE 3 · WEB PATH · PICK</p>
+  <h2 class="h2 mt-s">库存状态转换: Create(0) → Pick(1)</h2>
+  <div style="display:flex;align-items:center;justify-content:center;gap:40px;margin-top:40px">
+    <div style="border:2px solid var(--text-3);padding:40px 36px;text-align:center">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:700;color:var(--text-3)">0</div>
+      <div style="font-size:16px;font-weight:700;color:var(--text-1);margin-top:8px">Create</div>
+      <div style="font-size:12px;color:var(--text-3);margin-top:4px">在库可用</div>
+    </div>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;color:var(--accent-2)">→</span>
+    <div style="border:2px solid var(--warn);padding:40px 36px;text-align:center;background:rgba(180,137,0,.05)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:700;color:var(--warn)">1</div>
+      <div style="font-size:16px;font-weight:700;color:var(--text-1);margin-top:8px">Pick</div>
+      <div style="font-size:12px;color:var(--text-3);margin-top:4px">已选料(预占)</div>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:24px;margin-top:32px">
+    <div class="d-card" style="min-width:200px">
+      <h4>效果</h4>
+      <div class="row">该批次被出库单预占<br>不能再被其他单据选料<br>等待扫码确认出库</div>
+    </div>
+    <div class="d-card" style="min-width:200px">
+      <h4>履历</h4>
+      <div class="row">插入 WareHouseStockTrace<br>Remarks = "销售出库"<br>完整审计追踪记录</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 11. OutSave 9道关卡 -->
+<!-- ================================================================ -->
+<section class="slide flow" data-title="OutSave 9 关">
+  <p class="kicker">PHASE 3 · WEB PATH · OUTSAVE</p>
+  <h2 class="h2 mt-s">扫码 OutSave: 9 道系统校验关卡</h2>
+  <p class="lede" style="font-size:14px">API: <code style="color:var(--accent-2)">POST /api/wms/inout/outSave</code> — 每扫一个条码都走完整 9 道校验</p>
+  <div class="card-grid g3 mt-m" style="gap:8px">
+    <div class="check-item pass"><span class="icon">1</span><div class="c-body">条码首字符 <b>≠ 'D'</b> — D开头=不良品，拒绝出库</div></div>
+    <div class="check-item pass"><span class="icon">2</span><div class="c-body">批次在 WareHouseStock <b>存在</b></div></div>
+    <div class="check-item fail"><span class="icon">3</span><div class="c-body">ProductionStatus <b>≠ 2 (Send)</b> — 已出库不可重复扫</div></div>
+    <div class="check-item fail"><span class="icon">4</span><div class="c-body">ExpiredDatetime >= <b>当前时间</b> — 过期拒绝(XSOUT/FGOUT豁免)</div></div>
+    <div class="check-item fail"><span class="icon">5</span><div class="c-body">QCStatus <b>≠ 1</b> — 质量锁定拒绝(返工FGOUT豁免)</div></div>
+    <div class="check-item fail"><span class="icon">6</span><div class="c-body">QCSnHoldDetail.ProductStatus <b>≠ Hold</b> — SN级锁定</div></div>
+    <div class="check-item pass"><span class="icon">7</span><div class="c-body">客户料号与出库单明细 <b>匹配</b>(XSOUT Only)</div></div>
+    <div class="check-item pass"><span class="icon">8</span><div class="c-body">客户周标签与包装周标签 <b>一致</b>(IsCheckWeek=Y时)</div></div>
+    <div class="check-item fail"><span class="icon">9</span><div class="c-body">扫码数量 ≤ 明细 <b>Qty - ActQty</b> — 不超需发量</div></div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 12. 质量锁定详解 -->
+<!-- ================================================================ -->
+<section class="slide col2" data-title="质量锁定">
+  <div>
+    <p class="kicker">PHASE 3 · WEB PATH · OUTSAVE</p>
+    <h2 class="h2 mt-s">质量锁定拦截<br>两层检查机制</h2>
+    <div class="co"><b>核心原则：</b>被质量锁定的批次和 SN 码不得出库，确保不合格品不流向客户。</div>
+  </div>
+  <div>
+    <div class="card-grid" style="gap:10px">
+      <div class="d-card" style="border-color:var(--bad)">
+        <h4>第一层: 批次级 QCStatus</h4>
+        <div class="row">
+          <code style="color:var(--bad);font-size:13px">WareHouseStock.QCStatus == 1</code><br><br>
+          整批次被质量部门标记为锁定<br>
+          → 拒绝出库: <b>"批次已被质量锁定"</b><br><br>
+          例外: FGOUT(返工发料)不检查此项
+        </div>
+      </div>
+      <div class="d-card" style="border-color:var(--bad)">
+        <h4>第二层: SN 级 QCSnHoldDetail</h4>
+        <div class="row">
+          <code style="color:var(--bad);font-size:13px">QCSnHoldDetail.ProductStatus == Hold</code><br><br>
+          精确到单个 SN 的质量锁定<br>
+          PackNo = 条码号 → 查到即锁定<br>
+          → 拒绝出库: <b>"批次已被质量锁定"</b><br><br>
+          例外: FGOUT(返工发料)不检查此项
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 13. 客户料号与周标签 -->
+<!-- ================================================================ -->
+<section class="slide col2" data-title="客户校验">
+  <div>
+    <p class="kicker">PHASE 3 · WEB PATH · OUTSAVE</p>
+    <h2 class="h2 mt-s">客户料号校验<br>&amp; 周标签校验</h2>
+    <p class="lede mt-m" style="font-size:14px">XSOUT 销售出库专属的两项额外校验，确保发给客户的物料和标识完全正确。</p>
+  </div>
+  <div>
+    <div class="card-grid" style="gap:10px">
+      <div class="d-card">
+        <h4>客户料号校验 (IsCheckCustomerMaterial=Y)</h4>
+        <div class="row" style="font-size:12px">
+          对比 IronCorePackaging 中的客户料号 vs 出库单明细中的 CustomerMaterialCode<br><br>
+          匹配 → <b>AgreeQty 统计+1</b><br>
+          不匹配 → <b>DifQty 统计+1 (差异记录)</b>
+        </div>
+      </div>
+      <div class="d-card">
+        <h4>周标签校验 (IsCheckWeek=Y)</h4>
+        <div class="row" style="font-size:12px">
+          提取包装标签(IronCorePackaging.CreateTime)的 ISO 周号<br>
+          对比客户二维码(CustomerQRCode)第5段的周号<br><br>
+          不一致 → <b>"客户标签日期与包装标签日期不一致"</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 14. OutSave 库存转换 -->
+<!-- ================================================================ -->
+<section class="slide flow" data-title="OutSave 状态转换">
+  <p class="kicker">PHASE 3 · WEB PATH · OUTSAVE</p>
+  <h2 class="h2 mt-s">OutSave: 库存 Pick(1) → Send(2)</h2>
+  <p class="lede" style="font-size:14px">扫码通过所有校验后，执行以下状态转换和数据更新：</p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:40px;margin-top:24px">
+    <div style="border:2px solid var(--warn);padding:36px 30px;text-align:center;background:rgba(180,137,0,.05)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;color:var(--warn)">1</div><div style="font-size:14px;font-weight:700;color:var(--text-1);margin-top:6px">Pick</div>
+    </div>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;color:var(--accent-2)">→</span>
+    <div style="border:2px solid var(--accent-2);padding:36px 30px;text-align:center;background:rgba(30,90,196,.05)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;color:var(--accent-2)">2</div><div style="font-size:14px;font-weight:700;color:var(--text-1);margin-top:6px">Send</div>
+    </div>
+  </div>
+  <table class="dt mt-m">
+    <thead><tr><th>操作对象</th><th>字段</th><th>新值</th></tr></thead>
+    <tbody>
+      <tr><td>WareHouseStock</td><td>ProductionStatus</td><td style="color:var(--accent-2)">Send (2)</td></tr>
+      <tr><td>WareHouseStock</td><td>RemainQty / SendQty</td><td>0 / 原 RemainQty</td></tr>
+      <tr><td>WareHouseOrderDetail</td><td>ActQty</td><td>+= 扫码量</td></tr>
+      <tr><td>WareHouseOrderDetail</td><td>ProductStatus</td><td>Outbounded(发完) / Outbounding(未发完)</td></tr>
+      <tr><td>WareHouseOrder</td><td>ProductStatus</td><td>Outbounding</td></tr>
+      <tr><td>FHTZ Source</td><td>Detail.ActQty / Status</td><td>累加 / Delivering 或 Delivered</td></tr>
+      <tr><td>WareHouseStockTrace</td><td>INSERT 履历</td><td>Remarks=业务类型描述</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================================================================ -->
+<!-- 15. Submit 提交 -->
+<!-- ================================================================ -->
+<section class="slide col2" data-title="Submit 提交">
+  <div>
+    <p class="kicker">PHASE 3 · WEB PATH · SUBMIT</p>
+    <h2 class="h2 mt-s">Submit 提交:<br>完成出库</h2>
+    <p class="lede mt-m" style="font-size:14px">API: <code style="color:var(--accent-2)">GET /api/wms/inout/submit/{id}</code><br>或 <code style="color:var(--accent-2)">POST /api/wms/inout/submitByWarehouse</code></p>
+    <div class="co"><b>SubmitByWarehouse 额外：</b> XSOUTSUBMITFIFO 系统开关为"Y"时，阻止部分发货提交，必须全部发完。</div>
+  </div>
+  <div>
+    <h4 style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent-2);margin:0 0 8px">Submit 执行逻辑</h4>
+    <div class="flow-v">
+      <div class="vstep"><span class="vn">1</span><span class="vt">校验: 至少有一行 ActQty > 0</span><span class="vd">"请先扫码后再提交"</span></div>
+      <div class="vstep"><span class="vn">2</span><span class="vt">XSOUT: 有剩余数量?</span><span class="vd">自动拆子单</span></div>
+      <div class="vstep hl"><span class="vn">3</span><span class="vt">子单序列递增, 未发量转移到子单</span><span class="vd">OrderNo+1</span></div>
+      <div class="vstep"><span class="vn">4</span><span class="vt">主单 → Outbounded, ErpStatus=0</span><span class="vd">等待推 ERP</span></div>
+    </div>
+    <p style="font-size:12px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:10px">ErpStatus 状态: 0=待处理, 1=已成功推送, 2=推送失败</p>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 16. Submit 后的 ERP 状态 -->
+<!-- ================================================================ -->
+<section class="slide flow" data-title="Submit ERP 状态">
+  <p class="kicker">PHASE 3 · WEB PATH · SUBMIT</p>
+  <h2 class="h2 mt-s">Submit 后: Order → Outbounded, ErpStatus=0</h2>
+  <div class="flow-h" style="margin-top:32px">
+    <div class="step hl"><div class="num">0</div><div class="t">待处理</div><div class="d">Submit 后初始状态<br>等待后台Job推送</div></div>
+    <div class="step"><div class="num">1</div><div class="t">已推送</div><div class="d">ERP 回写成功<br>ErpOrder=ERP单号</div></div>
+    <div class="step" style="border-color:var(--bad)"><div class="num" style="color:var(--bad)">2</div><div class="t">推送失败</div><div class="d">ERP 返回错误<br>ErpMsg=错误信息</div></div>
+  </div>
+  <div style="display:flex;gap:16px;margin-top:24px">
+    <div class="d-card" style="flex:1;border-color:var(--bad)">
+      <h4>失败恢复机制</h4>
+      <div class="row">API: <code>POST /api/wms/kt/rePushXSOutToErp</code><br>将 ErpStatus=2 重置为 0<br>→ 后台 Job 检测到 0→重新推送</div>
+    </div>
+    <div class="d-card" style="flex:1">
+      <h4>拆子单机制</h4>
+      <div class="row">XSOutPickMaterialSave 创建的出库单有 10 条物料行，只发出 7 条<br>→ Submit 自动创建子单<br>→ 子单包含未发的 3 行，OrderNo 后缀递增</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 17. PDA GetXSCKLabelInfo -->
+<!-- ================================================================ -->
+<section class="slide col2" data-title="PDA 标签校验">
+  <div>
+    <p class="kicker">PHASE 3 · PDA PATH · LABEL CHECK</p>
+    <h2 class="h2 mt-s">PDA 路径: 标签<br>预扫描校验</h2>
+    <p class="lede mt-m" style="font-size:14px;color:var(--text-2)">
+      API: <code style="color:var(--accent-2)">GET /api/wms/dg/fhtz/getXSCKLabelInfo</code><br><br>
+      PDA 操作员扫描条码后，系统先做预校验，通过后才允许出库。托标签自动展开子条码。
+    </p>
+  </div>
+  <div>
+    <h4 style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent-2);margin:0 0 8px">5 道预校验</h4>
+    <div class="check-grid">
+      <div class="check-item fail"><span class="icon">1</span><div class="c-body">Label <b>存在</b> → "标签{barcode}不存在"</div></div>
+      <div class="check-item fail"><span class="icon">2</span><div class="c-body">WareHouseStock <b>存在</b> → "批次库存信息不存在"</div></div>
+      <div class="check-item fail"><span class="icon">3</span><div class="c-body">ProductionStatus <b>≠ Send(2)</b> → "批次已出库"</div></div>
+      <div class="check-item fail"><span class="icon">4</span><div class="c-body"><b>RemainQty > 0</b> 且 QCStatus ≠ 1</div></div>
+      <div class="check-item pass"><span class="icon">5</span><div class="c-body">MaterialId <b>匹配</b> + 数量不超需发 + 仓库在 FIFO 白名单</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 18. PDA SaveXSCK 11 道校验 -->
+<!-- ================================================================ -->
+<section class="slide flow" data-title="PDA 11 校验">
+  <p class="kicker">PHASE 3 · PDA PATH · SAVE XSCK</p>
+  <h2 class="h2 mt-s">PDA SaveXSCK: 11 道系统校验</h2>
+  <p class="lede" style="font-size:14px">API: <code style="color:var(--accent-2)">POST /api/wms/dg/fhtz/saveXSCK</code></p>
+  <div class="card-grid g2 mt-m" style="gap:6px">
+    <div class="check-item pass"><span class="icon">1</span><div class="c-body">WareHouseStockList <b>不能为空</b></div></div>
+    <div class="check-item pass"><span class="icon">2</span><div class="c-body">发货单明细 <b>存在</b></div></div>
+    <div class="check-item fail"><span class="icon">3</span><div class="c-body">detail.Qty > detail.ActQty — <b>未全部发出</b></div></div>
+    <div class="check-item fail"><span class="icon">4</span><div class="c-body">扫码总量 ≤ <b>剩余需发量</b></div></div>
+    <div class="check-item pass"><span class="icon">5</span><div class="c-body">FHTZ 发货通知单 <b>存在</b></div></div>
+    <div class="check-item pass"><span class="icon">6</span><div class="c-body">工厂 + 序列号规则 <b>已配置</b></div></div>
+    <div class="check-item fail"><span class="icon">7</span><div class="c-body">ProductionStatus <b>== Create(0)</b> — 必须是在库状态</div></div>
+    <div class="check-item fail"><span class="icon">8</span><div class="c-body">RemainQty <b>> 0</b></div></div>
+    <div class="check-item fail"><span class="icon">9</span><div class="c-body">QCStatus <b>≠ 1</b> — 质量锁定拒绝</div></div>
+    <div class="check-item pass"><span class="icon">10</span><div class="c-body">Label <b>存在</b></div></div>
+    <div class="check-item fail"><span class="icon">11</span><div class="c-body"><b>FIFO 校验</b>(XSOUTFIFO=Y时) — 同物料选中 vs 未选日期对比</div></div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 19. PDA SaveXSCK 创建记录 -->
+<!-- ================================================================ -->
+<section class="slide" data-title="PDA 创建记录">
+  <p class="kicker">PHASE 3 · PDA PATH · SAVE XSCK</p>
+  <h2 class="h2 mt-s">PDA SaveXSCK 创建的数据库记录</h2>
+  <table class="dt mt-m">
+    <thead><tr><th>表</th><th>操作</th><th>关键字段</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--accent-2)">XSCKOrder</td><td>INSERT</td><td>ProductStatus=Normal, SourceOrderNo=FHTZ号, CustomerOrder=客户订单号</td></tr>
+      <tr><td style="color:var(--accent-2)">XSCKOrderReceive</td><td>INSERT</td><td>每个条码一行, Barcode, Lotno, Pallet, ASN, CustomerLot, Warehouse+Position</td></tr>
+      <tr><td style="color:var(--accent-2)">LabelTrace</td><td>INSERT</td><td>从 Label 克隆, BusinessTypeCode=XSCK, BusinessTypeName="销售出库"</td></tr>
+      <tr><td class="p hl">WareHouseStock</td><td>UPDATE</td><td style="color:var(--accent-2)">SendQty=扫码量, RemainQty=0, ProductionStatus <b>→ Send(2)</b></td></tr>
+      <tr><td class="p hl">Label</td><td>UPDATE</td><td>ProductStatus → LabelStatus.XSCKOut</td></tr>
+      <tr><td class="p hl">WareHouseOrderDetail(FHTZ)</td><td>UPDATE</td><td>ActQty += 扫码量</td></tr>
+      <tr><td class="p hl">FHTZ Order</td><td>UPDATE</td><td>全部发完 → ProductStatus = AutoClosed</td></tr>
+    </tbody>
+  </table>
+  <div class="co"><b>关键区别：</b> PDA 路径库存从 Create(0) 直接跳到 Send(2)，跳过了 Pick(1) 中间态。Label 同步更新为 XSCKOut。</div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 20. PDA 库存一步到位 -->
+<!-- ================================================================ -->
+<section class="slide flow" data-title="PDA 库存转换">
+  <p class="kicker">PHASE 3 · PDA PATH · STOCK TRANSITION</p>
+  <h2 class="h2 mt-s">PDA: 库存 Create(0) → 一步到位 → Send(2)</h2>
+  <div style="display:flex;align-items:center;justify-content:center;gap:40px;margin-top:36px">
+    <div style="border:2px solid var(--text-3);padding:36px 30px;text-align:center">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;color:var(--text-3)">0</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text-1);margin-top:6px">Create</div>
+    </div>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;color:var(--accent-2)">→</span>
+    <div style="border:2px solid var(--accent-2);padding:36px 30px;text-align:center;background:rgba(30,90,196,.05)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;color:var(--accent-2)">2</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text-1);margin-top:6px">Send</div>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:20px;margin-top:28px">
+    <div class="d-card" style="min-width:180px"><h4>跳过 Pick(1)</h4><div class="row">PDA 路径不预占库存<br>扫码即出库<br>无中间状态</div></div>
+    <div class="d-card" style="min-width:180px"><h4>Label 同步</h4><div class="row">Label.ProductStatus<br>→ XSCKOut<br>LabelTrace 生成</div></div>
+    <div class="d-card" style="min-width:180px"><h4>ERP 异步</h4><div class="row">出库不自动推 ERP<br>需手动 pushToErp<br>或后台 Job 推送</div></div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 21. 阶段4: ERP 回写调用链 -->
+<!-- ================================================================ -->
+<section class="slide flow" data-title="ERP 回写调用链">
+  <p class="kicker">PHASE 4 · ERP WRITEBACK</p>
+  <h2 class="h2 mt-s">阶段4: MOM → 金蝶 ERP 回写调用链</h2>
+  <p class="lede" style="font-size:14px">方法: <code style="color:var(--accent-2)">ERP_SAL_OUTSTOCKService.SAL_OUTSTOCKSave()</code></p>
+  <div class="flow-v" style="margin:20px auto 0;max-width:800px">
+    <div class="vstep hl"><span class="vn">1</span><span class="vt">Login: 获取 KDSVCSessionId</span><span class="vd">HTTP POST K3Cloud → ValidateUser</span></div>
+    <div class="vstep"><span class="vn">2</span><span class="vt">Query: 查询 FHTZ 对应 ERP 视图</span><span class="vd">MOM_Query(formid=SAL_DELIVERYNOTICE)</span></div>
+    <div class="vstep"><span class="vn">3</span><span class="vt">Build: 组装 ERP_SAL_OUTSTOCK 请求体</span><span class="vd">表头 + FEntity 行项 19个字段</span></div>
+    <div class="vstep hl"><span class="vn">4</span><span class="vt">Push: 下推 FHTZ→OutStock</span><span class="vd">Saved → Set IsAutoSubmitAndAudit=true</span></div>
+    <div class="vstep"><span class="vn">5</span><span class="vt">Log: 记录 ERP_MESInterFaceLog</span><span class="vd">请求/响应 JSON(截断 60KB)</span></div>
+    <div class="vstep hl"><span class="vn">6</span><span class="vt">Result: 成功→ErpStatus=1, 失败→Rollback</span><span class="vd">失败时 UnAudit + Delete</span></div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 22. MOM-ERP 数据映射 -->
+<!-- ================================================================ -->
+<section class="slide" data-title="数据映射表">
+  <p class="kicker">PHASE 4 · DATA MAPPING</p>
+  <h2 class="h2 mt-s">MOM → ERP SAL_OUTSTOCK 数据映射</h2>
+  <div class="card-grid g2 mt-m" style="gap:16px">
+    <div>
+      <h4 style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent-2);margin:0 0 8px">表头 (ModelSAL_OUTSTOCK)</h4>
+      <table class="dt" style="font-size:12px">
+        <tr><td>FBillTypeID.FNUMBER</td><td>ERPOrderType → 单据类型(XSC1/XSC2)</td></tr>
+        <tr><td>FBillNo</td><td>XSCKOrder.OrderNo</td></tr>
+        <tr><td>FSaleOrgId.FNUMBER</td><td>OrgNo 销售组织</td></tr>
+        <tr><td>FCustomerID.FNUMBER</td><td>SAL_DELIVERYNOTICE → 客户</td></tr>
+        <tr><td>F_PECL_StockOrgId</td><td>M_WareHouseOrder → 对应组织</td></tr>
+        <tr><td>F_PECL_CustId</td><td>M_WareHouseOrder.Number → 终端客户</td></tr>
+      </table>
+    </div>
+    <div>
+      <h4 style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent-2);margin:0 0 8px">行项 (FEntitySAL_OUTSTOCK)</h4>
+      <table class="dt" style="font-size:12px">
+        <tr><td>FMaterialID.FNumber</td><td>MaterialCode</td></tr>
+        <tr><td>FUnitID / FRealQty</td><td>单位 / 实发数量</td></tr>
+        <tr><td>FLot.FNumber</td><td>批号 Lotno</td></tr>
+        <tr><td>FStockID / FStockStatusID</td><td>仓库编码 / 库存状态</td></tr>
+        <tr><td>FSrcBillNo</td><td>FHTZ 发货通知单号</td></tr>
+        <tr><td>FPrice / FTaxPrice</td><td>单价 / 含税单价</td></tr>
+        <tr><td>FSOEntryId</td><td>ERP 销售订单行 ID (关键)</td></tr>
+        <tr><td>FEntity_Link</td><td>关联 FHTZ: 通知单FID+FEntryId</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="co"><b>FEntity_Link 是关键：</b> 金蝶下推规则 FHTZ→OutStock 通过 FID+FEntryId 建立单据间关联，确保 ERP 侧可追溯源头。</div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 23. ERPLoginService HTTP 通信 -->
+<!-- ================================================================ -->
+<section class="slide col2" data-title="HTTP 通信">
+  <div>
+    <p class="kicker">PHASE 4 · COMMUNICATION</p>
+    <h2 class="h2 mt-s">ERPLoginService<br>HTTP 通信机制</h2>
+    <div class="co"><b>服务地址：</b> <code>http://apierp.zy-fst.com/k3cloud/</code><br><b>账套：</b> 组织 207 · 用户 SZMES</div>
+  </div>
+  <div>
+    <h4 style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent-2);margin:0 0 8px">5 个 ERP API 操作</h4>
+    <table class="dt" style="font-size:12px">
+      <tr><td>MOM_Query</td><td>DynamicFormService.View</td><td>查询 CRM 单据</td></tr>
+      <tr><td>MOM_BillQuery</td><td>DynamicFormService.ExecuteBillQuery</td><td>执行单据查询</td></tr>
+      <tr><td>MOM_Push</td><td>DynamicFormService.Push</td><td>下推(如工单→报工)</td></tr>
+      <tr><td>MOM_Save</td><td>DynamicFormService.Save</td><td>保存(含自动提交审核)</td></tr>
+      <tr><td>MOM_Delete</td><td>DynamicFormService.Delete</td><td>删除/反审核</td></tr>
+    </table>
+    <p style="font-size:12px;color:var(--text-3);font-family:'JetBrains Mono',monospace;margin-top:10px">每次调用携带 Header: kdservice-sessionid (登录获取)</p>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 24. 日志与 ErpStatus 状态机 -->
+<!-- ================================================================ -->
+<section class="slide flow" data-title="日志状态机">
+  <p class="kicker">PHASE 4 · LOGGING</p>
+  <h2 class="h2 mt-s">接口日志 & ErpStatus 状态机</h2>
+  <div class="card-grid g2 mt-m">
+    <div class="d-card"><h4>ERP_MESInterFaceLog 日志表</h4>
+      <div class="row" style="font-size:12px">
+        每次 MOM → ERP 调用都写入此表：<br>
+        · 请求 JSON (截断 60,000 字节)<br>
+        · 响应 JSON (截断 60,000 字节)<br>
+        · 调用时间、表单 ID、操作类型<br>
+        · 成功/失败状态<br><br>
+        附加: ERP_MESInterFaceLog_File 备用日志表
+      </div>
+    </div>
+    <div class="d-card"><h4>ErpStatus 状态机</h4>
+      <div class="row" style="font-size:12px">
+        <b style="color:var(--text-3)">0 → 待处理</b> Submit后初始状态，后台Job检测<br>
+        <b style="color:var(--good)">1 → 成功</b> ERP返回单据号，写入ErpOrder字段<br>
+        <b style="color:var(--bad)">2 → 失败</b> ERP返回错误，ErpMsg记录错误信息<br><br>
+        <b>失败恢复:</b> POST /api/wms/kt/rePushXSOutToErp<br>
+        将 ErpStatus=2 重置为 0 → 触发重推
+      </div>
+    </div>
+  </div>
+  <div class="co"><b>失败 Rollback 机制：</b> ERP 保存失败时，执行 UnAudit + Delete 回滚 ERP 侧已创建（但未审核）的单据，确保两端数据一致。</div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 25. DeleteOut 扫码回退 -->
+<!-- ================================================================ -->
+<section class="slide flow" data-title="DeleteOut 回退">
+  <p class="kicker">EXCEPTION HANDLING</p>
+  <h2 class="h2 mt-s">异常处理: DeleteOut 扫码回退</h2>
+  <p class="lede" style="font-size:14px">当操作员扫错条码或需要撤销时，调用 <code style="color:var(--accent-2)">DeleteOut</code> 反向恢复。</p>
+  <div class="flow-v" style="max-width:700px;margin:16px auto 0">
+    <div class="vstep"><span class="vn">1</span><span class="vt">校验: Order 不能已是 Outbounded</span><span class="vd">"该出库单已出库完成，不可删除"</span></div>
+    <div class="vstep"><span class="vn">2</span><span class="vt">Detail.ActQty -= receive.Qty</span><span class="vd">扣回已发量</span></div>
+    <div class="vstep"><span class="vn">3</span><span class="vt">Stock: ProductionStatus → Create(0)</span><span class="vd">RemainQty=SendQty, SendQty=0</span></div>
+    <div class="vstep"><span class="vn">4</span><span class="vt">FHTZ Source: receive 软删除</span><span class="vd">Source Detail/Order 状态回退</span></div>
+    <div class="vstep"><span class="vn">5</span><span class="vt">Receive: pick-mode → WaitFinish</span><span class="vd">direct-scan → IsDelete=1</span></div>
+    <div class="vstep hl"><span class="vn">6</span><span class="vt">Order Status: Outbounding → WaitOutbound</span><span class="vd">Detail Status 对应回退</span></div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 26. ErpStatus 重推异常恢复 -->
+<!-- ================================================================ -->
+<section class="slide col2" data-title="重推机制">
+  <div>
+    <p class="kicker">EXCEPTION HANDLING</p>
+    <h2 class="h2 mt-s">ERP 推送失败<br>重推机制</h2>
+    <p class="lede mt-m" style="font-size:14px">当 MOM → ERP 回写失败时，系统提供手动和自动两种恢复方式，确保数据最终一致性。</p>
+  </div>
+  <div>
+    <div class="card-grid" style="gap:10px">
+      <div class="d-card" style="border-color:var(--accent-2)">
+        <h4>手动重推</h4>
+        <div class="row" style="font-size:12px">
+          API: <code>POST /api/wms/kt/rePushXSOutToErp</code><br><br>
+          1. 查询 ErpStatus=2 的单据<br>
+          2. 将 ErpStatus 重置为 0<br>
+          3. 后台 Job 检测到 0 → 重新调用 SAL_OUTSTOCKSave()<br>
+          4. 成功 → 1, 失败 → 2(保留错误信息)
+        </div>
+      </div>
+      <div class="d-card">
+        <h4>自动重试</h4>
+        <div class="row" style="font-size:12px">
+          后台定时任务周期性扫描：<br><br>
+          · 扫描 ErpStatus = 0 的待推送单据<br>
+          · 调用对应 ERP Service 推送<br>
+          · 成功标记 ErpStatus=1<br><br>
+          同一单据最多重试 N 次<br>
+          超过阈值 → 人工介入
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 27. 全流程泳道图 -->
+<!-- ================================================================ -->
+<section class="slide flow" data-title="泳道图">
+  <p class="kicker">END-TO-END LANE DIAGRAM</p>
+  <h2 class="h2 mt-s">全流程泳道图: ERP ↔ MOM ↔ 仓库库存</h2>
+  <div class="flow-h" style="margin-top:20px;font-size:11px">
+    <div class="step hl" style="flex:1.5">
+      <div class="num">P1</div><div class="t">ERP 销售订单</div>
+      <div class="d">K3Cloud 销售订单<br>→ 后台同步 <br>→ M_WareHouseOrder</div>
+    </div>
+    <div class="step" style="flex:1.5">
+      <div class="num">P2</div><div class="t">FHTZ 创建</div>
+      <div class="d">手动/Excel创建<br>发货通知单<br>关联ERP订单号</div>
+    </div>
+    <div class="step hl" style="flex:2">
+      <div class="num">P3 Web</div><div class="t">选料 Pick</div>
+      <div class="d">5道校验+FIFO<br>生单 Create(0)→Pick(1)<br>StockTrace 履历</div>
+    </div>
+    <div class="step hl" style="flex:2">
+      <div class="num">P3 Web</div><div class="t">扫码 OutSave</div>
+      <div class="d">9道关卡 逐件扫描<br>Pick(1)→Send(2)<br>Detail.ActQty 累加</div>
+    </div>
+    <div class="step" style="flex:1.5">
+      <div class="num">P3 Web</div><div class="t">Submit</div>
+      <div class="d">提交出库<br>拆子单<br>ErpStatus=0</div>
+    </div>
+    <div class="step" style="flex:2">
+      <div class="num">P3 PDA</div><div class="t">PDA 出库</div>
+      <div class="d">Label校验+Save<br>Create(0)→Send(2)<br>Label→XSCKOut</div>
+    </div>
+    <div class="step" style="flex:1.5">
+      <div class="num">P3 PDA</div><div class="t">PushToErp</div>
+      <div class="d">手动触发<br>组装请求体<br>调用ERP Save</div>
+    </div>
+    <div class="step hl" style="flex:2">
+      <div class="num">P4</div><div class="t">ERP SAL_OUTSTOCK</div>
+      <div class="d">MOM_Save 回写ERP<br>含FID+FEntryId<br>AutoSubmitAndAudit</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:16px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-3)">
+    <span style="flex:1.5">上游: 金蝶 ERP</span>
+    <span style="flex:1.5">···</span>
+    <span style="flex:2;color:var(--accent-2)">MOM Web端</span>
+    <span style="flex:2;color:var(--accent-2)">MOM Web端</span>
+    <span style="flex:1.5;color:var(--accent-2)">···</span>
+    <span style="flex:2;color:var(--warn)">MOM PDA端</span>
+    <span style="flex:1.5;color:var(--warn)">···</span>
+    <span style="flex:2">金蝶 ERP</span>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- 28. 总结 -->
+<!-- ================================================================ -->
+<section class="slide full" data-title="总结">
+  <p class="kicker">SUMMARY</p>
+  <h1 class="h1 mt-s">MOM 系统设计<br><span style="color:var(--accent-2)">核心要点</span></h1>
+  <div class="card-grid g3 mt-l" style="width:100%">
+    <div class="d-card"><h4>两层架构设计</h4><div class="row">Web 端(PC): Pick→OutSave→Submit 三步操作<br>PDA 端(手持): 扫码→出库一步完成<br>满足不同岗位操作习惯</div></div>
+    <div class="d-card"><h4>全链路校验体系</h4><div class="row">9+11 道系统校验<br>条码格式 · 库存状态 · 质量锁定· 有效期 · FIFO · 客户料号 · 周标签</div></div>
+    <div class="d-card"><h4>ERP 闭环对接</h4><div class="row">ERPLoginService 统一 HTTP 层<br>19 个字段精确映射<br>FID+FEntryId 双向关联<br>ErpStatus 状态机 + 重推</div></div>
+    <div class="d-card"><h4>审计可追溯</h4><div class="row">WareHouseStockTrace 库存履历<br>LabelTrace 标签履历<br>ERP_MESInterFaceLog 接口日志<br>每步操作有据可查</div></div>
+    <div class="d-card"><h4>回退与容错</h4><div class="row">DeleteOut 扫码回退 6 步恢复<br>Submit 自动拆子单<br>ERP 失败 Rollback + 重推<br>ErpStatus=2 → 0 恢复</div></div>
+    <div class="d-card"><h4>库存状态机</h4><div class="row">Create(0) → Pick(1) → Send(2)<br>清晰三态转换<br>PDA 路径 0→2 跳过1<br>灵活适应不同场景</div></div>
+  </div>
+  <div class="deck-footer" style="margin-top:40px"><span style="color:var(--text-3)">MOM 系统 · 销售出库流程详解</span><span class="slide-number"></span></div>
+</section>
+
+</div>
+<script src="assets/runtime.js"></script>
+</body>
+</html>
